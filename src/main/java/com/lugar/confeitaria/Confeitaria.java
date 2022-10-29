@@ -4,6 +4,12 @@
  */
 package com.lugar.confeitaria;
 
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+
 /**
  *
  * @author lugar
@@ -11,6 +17,8 @@ package com.lugar.confeitaria;
 public class Confeitaria {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+
+        Login login = new Login(640, 480);
+        login.configuraGUI();
     }
 }
