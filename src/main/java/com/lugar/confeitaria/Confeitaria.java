@@ -12,8 +12,8 @@ public class Confeitaria {
 
     public static void main(String[] args) {
 
-        Login login = new Login(640, 480);
-        login.configuraGUI();
-        login.configuraOuvintesBotao();
+        Login login = new Login();
+        login.setVisible(true);
+
     }
 }
