@@ -11,9 +11,8 @@ package com.lugar.confeitaria;
 public class Confeitaria {
 
     public static void main(String[] args) {
-
-        Login login = new Login();
-        login.setVisible(true);
+        GUI gui = new GUI();
+        gui.setVisible(true);
 
     }
 }
