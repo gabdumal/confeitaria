@@ -9,6 +9,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -35,7 +38,7 @@ public class Conexao {
     /**
      * Seleciona todas as linhas em uma tabela
      */
-    public ResultSet selecionaTodas(String[] campos, String tabela) {
+    private String constroiQuery(String[] campos, String tabela) {
         String sql = "SELECT ";
         for (int i = 0; i < campos.length; i++) {
             sql += campos[i];
@@ -46,17 +49,27 @@ public class Conexao {
             }
         }
         sql += "FROM " + tabela + ";";
+        return sql;
+    }
 
+    public ArrayList<Usuario> buscaTodosUsuarios() {
+        String sql = constroiQuery(new String[]{"id", "nome", "nomeUsuario", "senhaHash", "admin"}, "usuario");
         try ( Connection conexao = this.criaConexao();  Statement stmt = conexao.createStatement();  ResultSet rs = stmt.executeQuery(sql)) {
-//            while (rs.next()) {
-//                System.out.println(rs.getInt("id") + "\t"
-//                        + rs.getString("nome"));
-//            }
-            return rs;
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            ArrayList<Usuario> listaUsuarios = new ArrayList<Usuario>();
+            while (rs.next()) {
+                Usuario usuario = new Usuario(
+                        rs.getInt("id"),
+                        rs.getString("nome"),
+                        rs.getString("nomeUsuario"),
+                        rs.getString("senhaHash"),
+                        rs.getInt("admin") == 1
+                );
+                listaUsuarios.add(usuario);
+            }
+            return listaUsuarios;
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
     }
-
 }

@@ -4,6 +4,7 @@
  */
 package com.lugar.confeitaria;
 
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 /**
@@ -12,11 +13,19 @@ import javax.swing.JOptionPane;
  */
 public class Login extends javax.swing.JDialog {
 
+    private ArrayList<Usuario> listaUsuarios;
+
     /**
      * Creates new form Login
      */
     public Login(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
+        initComponents();
+    }
+
+    public Login(java.awt.Frame parent, boolean modal, ArrayList<Usuario> listaUsuariosP) {
+        super(parent, modal);
+        listaUsuarios = listaUsuariosP;
         initComponents();
     }
 
@@ -136,13 +145,16 @@ public class Login extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botaoLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoLoginActionPerformed
-        String usuario = campoUsuario.getText();
-        char[] senha = campoSenha.getPassword();
-        if (verificaLogin(usuario, senha)) {
-            dispose();
-        } else {
-            JOptionPane.showMessageDialog(null, "Usuário ou senha não correspondem");
+        String usuarioForm = campoUsuario.getText();
+        char[] senhaForm = campoSenha.getPassword();
+        for (Usuario usuario : listaUsuarios) {
+            if (usuario.getNomeUsuario().compareTo(usuarioForm) == 0
+                    && usuario.getSenhaHash().compareTo(String.valueOf(senhaForm)) == 0) {
+                dispose();
+                return;
+            }
         }
+        JOptionPane.showMessageDialog(null, "Usuário ou senha não correspondem");
     }//GEN-LAST:event_botaoLoginActionPerformed
 
     private void botaoCadastroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCadastroActionPerformed

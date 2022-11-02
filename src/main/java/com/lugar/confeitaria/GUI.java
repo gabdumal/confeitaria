@@ -4,6 +4,8 @@
  */
 package com.lugar.confeitaria;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author lugar
@@ -17,6 +19,12 @@ public class GUI extends javax.swing.JFrame {
      */
     public GUI() {
         dialogLogin = new Login(this, true);
+        dialogLogin.setVisible(true);
+        initComponents();
+    }
+
+    public GUI(ArrayList<Usuario> listaUsuarios) {
+        dialogLogin = new Login(this, true, listaUsuarios);
         dialogLogin.setVisible(true);
         initComponents();
     }

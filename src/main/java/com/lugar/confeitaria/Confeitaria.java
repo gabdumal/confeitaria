@@ -4,6 +4,8 @@
  */
 package com.lugar.confeitaria;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author lugar
@@ -11,10 +13,10 @@ package com.lugar.confeitaria;
 public class Confeitaria {
 
     public static void main(String[] args) {
-//        GUI gui = new GUI();
-//        gui.setVisible(true);
-
         Conexao conexao = new Conexao();
-        conexao.selecionaTodas(new String[]{"id", "nome", "nomeUsuario"}, "usuario");
+        ArrayList<Usuario> listaUsuarios = conexao.buscaTodosUsuarios();
+
+        GUI gui = new GUI(listaUsuarios);
+        gui.setVisible(true);
     }
 }
