@@ -53,7 +53,7 @@ public class Conexao {
     }
 
     public ArrayList<Usuario> buscaTodosUsuarios() {
-        String sql = constroiQuery(new String[]{"id", "nome", "nomeUsuario", "senhaHash", "admin"}, "usuario");
+        String sql = constroiQuery(new String[]{"id", "nome", "nomeUsuario", "senhaHash", "admin"}, "Usuario");
         try ( Connection conexao = this.criaConexao();  Statement stmt = conexao.createStatement();  ResultSet rs = stmt.executeQuery(sql)) {
             ArrayList<Usuario> listaUsuarios = new ArrayList<Usuario>();
             while (rs.next()) {
@@ -67,6 +67,26 @@ public class Conexao {
                 listaUsuarios.add(usuario);
             }
             return listaUsuarios;
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+
+    public ArrayList<Produto> buscaTodosProdutos() {
+        String sql = constroiQuery(new String[]{"id", "nome", "valor", "quantidade"}, "Produto");
+        try ( Connection conexao = this.criaConexao();  Statement stmt = conexao.createStatement();  ResultSet rs = stmt.executeQuery(sql)) {
+            ArrayList<Produto> listaProdutos = new ArrayList<Produto>();
+            while (rs.next()) {
+                Produto produto = new Produto(
+                        rs.getInt("id"),
+                        rs.getString("nome"),
+                        rs.getDouble("valor"),
+                        rs.getInt("quantidade")
+                );
+                listaProdutos.add(produto);
+            }
+            return listaProdutos;
         } catch (SQLException ex) {
             Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
             return null;
