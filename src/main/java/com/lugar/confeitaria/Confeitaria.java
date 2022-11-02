@@ -11,8 +11,10 @@ package com.lugar.confeitaria;
 public class Confeitaria {
 
     public static void main(String[] args) {
-        GUI gui = new GUI();
-        gui.setVisible(true);
+//        GUI gui = new GUI();
+//        gui.setVisible(true);
 
+        Conexao conexao = new Conexao();
+        conexao.selecionaTodas(new String[]{"id", "nome", "nomeUsuario"}, "usuario");
     }
 }
