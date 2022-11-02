@@ -6,6 +6,7 @@ package com.lugar.confeitaria;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -38,7 +39,7 @@ public class Conexao {
     /**
      * Seleciona todas as linhas em uma tabela
      */
-    private String constroiQuery(String[] campos, String tabela) {
+    private String constroiSelectQuery(String[] campos, String tabela) {
         String sql = "SELECT ";
         for (int i = 0; i < campos.length; i++) {
             sql += campos[i];
@@ -53,7 +54,7 @@ public class Conexao {
     }
 
     public ArrayList<Usuario> buscaTodosUsuarios() {
-        String sql = constroiQuery(new String[]{"id", "nome", "nomeUsuario", "senhaHash", "admin"}, "Usuario");
+        String sql = constroiSelectQuery(new String[]{"id", "nome", "nomeUsuario", "senhaHash", "admin"}, "Usuario");
         try ( Connection conexao = this.criaConexao();  Statement stmt = conexao.createStatement();  ResultSet rs = stmt.executeQuery(sql)) {
             ArrayList<Usuario> listaUsuarios = new ArrayList<Usuario>();
             while (rs.next()) {
@@ -73,8 +74,30 @@ public class Conexao {
         }
     }
 
+    public int insereUsuario(String nome, String nomeUsuario, String senhaHash) {
+        String sql = "INSERT INTO Usuario(nome, nomeUsuario, senhaHash, admin) VALUES(?, ?, ?, ?)";
+        try ( Connection conexao = this.criaConexao();  PreparedStatement pstmt = conexao.prepareStatement(sql)) {
+            pstmt.setString(1, nome);
+            pstmt.setString(2, nomeUsuario);
+            pstmt.setString(3, senhaHash);
+            pstmt.setInt(4, 0);
+            pstmt.executeUpdate();
+            return 0;
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexao.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            if (ex.getMessage().substring(0, 26)
+                    .compareTo("[SQLITE_CONSTRAINT_UNIQUE]") == 0) {
+                return 1;
+            } else {
+                return 2;
+            }
+        }
+    }
+
     public ArrayList<Produto> buscaTodosProdutos() {
-        String sql = constroiQuery(new String[]{"id", "nome", "valor", "quantidade"}, "Produto");
+        String sql = constroiSelectQuery(
+                new String[]{"id", "nome", "valor", "quantidade"}, "Produto");
         try ( Connection conexao = this.criaConexao();  Statement stmt = conexao.createStatement();  ResultSet rs = stmt.executeQuery(sql)) {
             ArrayList<Produto> listaProdutos = new ArrayList<Produto>();
             while (rs.next()) {
