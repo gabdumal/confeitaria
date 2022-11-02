@@ -16,7 +16,7 @@ public class Confeitaria {
         Conexao conexao = new Conexao();
         ArrayList<Usuario> listaUsuarios = conexao.buscaTodosUsuarios();
 
-        GUI gui = new GUI(listaUsuarios);
-        gui.setVisible(true);
+        Login login = new Login(listaUsuarios);
+        login.setVisible(true);
     }
 }

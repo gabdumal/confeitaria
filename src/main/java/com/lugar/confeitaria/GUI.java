@@ -12,20 +12,17 @@ import java.util.ArrayList;
  */
 public class GUI extends javax.swing.JFrame {
 
-    private Login dialogLogin;
+    private Usuario usuario;
 
     /**
      * Creates new form GUI
      */
     public GUI() {
-        dialogLogin = new Login(this, true);
-        dialogLogin.setVisible(true);
         initComponents();
     }
 
-    public GUI(ArrayList<Usuario> listaUsuarios) {
-        dialogLogin = new Login(this, true, listaUsuarios);
-        dialogLogin.setVisible(true);
+    public GUI(Usuario usuarioP) {
+        usuario = usuarioP;
         initComponents();
     }
 
@@ -37,9 +34,9 @@ public class GUI extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("LUGAR");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

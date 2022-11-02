@@ -1,6 +1,6 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package com.lugar.confeitaria;
 
@@ -11,27 +11,20 @@ import javax.swing.JOptionPane;
  *
  * @author lugar
  */
-public class Login extends javax.swing.JDialog {
+public class Login extends javax.swing.JFrame {
 
     private ArrayList<Usuario> listaUsuarios;
 
     /**
      * Creates new form Login
      */
-    public Login(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
+    public Login() {
         initComponents();
     }
 
-    public Login(java.awt.Frame parent, boolean modal, ArrayList<Usuario> listaUsuariosP) {
-        super(parent, modal);
+    public Login(ArrayList<Usuario> listaUsuariosP) {
+        initComponents();
         listaUsuarios = listaUsuariosP;
-        initComponents();
-    }
-
-    private boolean verificaLogin(String usuario, char[] senha) {
-        return usuario.compareTo("admin") == 0
-                && String.valueOf(senha).compareTo("1234") == 0;
     }
 
     /**
@@ -54,12 +47,8 @@ public class Login extends javax.swing.JDialog {
         botaoLogin = new javax.swing.JButton();
         botaoCadastro = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                formWindowClosing(evt);
-            }
-        });
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("LUGAR - Login");
 
         painelFormulario.setLayout(new java.awt.GridBagLayout());
 
@@ -150,7 +139,9 @@ public class Login extends javax.swing.JDialog {
         for (Usuario usuario : listaUsuarios) {
             if (usuario.getNomeUsuario().compareTo(usuarioForm) == 0
                     && usuario.getSenhaHash().compareTo(String.valueOf(senhaForm)) == 0) {
-                dispose();
+                GUI gui = new GUI(usuario);
+                this.setVisible(false);
+                gui.setVisible(true);
                 return;
             }
         }
@@ -160,10 +151,6 @@ public class Login extends javax.swing.JDialog {
     private void botaoCadastroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCadastroActionPerformed
         System.out.println("Registrar-se!");
     }//GEN-LAST:event_botaoCadastroActionPerformed
-
-    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        System.exit(0);
-    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
@@ -179,38 +166,23 @@ public class Login extends javax.swing.JDialog {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
-
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Login.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
+            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Login.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
+            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Login.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
+            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Login.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
-        /* Create and display the dialog */
+        /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                Login dialog = new Login(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
+                new Login().setVisible(true);
             }
         });
     }
