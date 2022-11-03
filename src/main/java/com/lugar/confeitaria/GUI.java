@@ -21,17 +21,14 @@ public class GUI extends javax.swing.JFrame {
         initComponents();
     }
 
-    public GUI(Usuario usuarioP) {
-        usuario = usuarioP;
+    public GUI(Usuario usuario) {
+        this.usuario = usuario;
         initComponents();
     }
 
     private ProdutosTableModel criaModeloTabela() {
         Conexao conexao = new Conexao();
         ArrayList<Produto> listaProdutos = conexao.buscaTodosProdutos();
-        for (Produto produto : listaProdutos) {
-            System.out.println(produto.getNome());
-        }
         ProdutosTableModel modeloTabela = new ProdutosTableModel(listaProdutos);
         return modeloTabela;
     }

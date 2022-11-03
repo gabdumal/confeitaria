@@ -30,8 +30,8 @@ public class Conexao {
         Connection conexao = null;
         try {
             conexao = DriverManager.getConnection(url);
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
         }
         return conexao;
     }
@@ -54,7 +54,8 @@ public class Conexao {
     }
 
     public ArrayList<Usuario> buscaTodosUsuarios() {
-        String sql = constroiSelectQuery(new String[]{"id", "nome", "nomeUsuario", "senhaHash", "admin"}, "Usuario");
+        String sql = constroiSelectQuery(
+                new String[]{"id", "nome", "nomeUsuario", "senhaHash", "admin"}, "Usuario");
         try ( Connection conexao = this.criaConexao();  Statement stmt = conexao.createStatement();  ResultSet rs = stmt.executeQuery(sql)) {
             ArrayList<Usuario> listaUsuarios = new ArrayList<Usuario>();
             while (rs.next()) {

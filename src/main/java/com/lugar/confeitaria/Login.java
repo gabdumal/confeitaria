@@ -22,9 +22,9 @@ public class Login extends javax.swing.JFrame {
         initComponents();
     }
 
-    public Login(ArrayList<Usuario> listaUsuariosP) {
+    public Login(ArrayList<Usuario> listaUsuarios) {
         initComponents();
-        listaUsuarios = listaUsuariosP;
+        this.listaUsuarios = listaUsuarios;
     }
 
     /**

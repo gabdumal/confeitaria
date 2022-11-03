@@ -17,17 +17,17 @@ public class Usuario {
     private boolean admin;
 
     public Usuario(
-            int idP,
-            String nomeP,
-            String nomeUsuarioP,
-            String senhaHashP,
-            boolean adminP
+            int id,
+            String nome,
+            String nomeUsuario,
+            String senhaHash,
+            boolean admin
     ) {
-        id = idP;
-        nome = nomeP;
-        nomeUsuario = nomeUsuarioP;
-        senhaHash = senhaHashP;
-        admin = adminP;
+        this.id = id;
+        this.nome = nome;
+        this.nomeUsuario = nomeUsuario;
+        this.senhaHash = senhaHash;
+        this.admin = admin;
     }
 
     public String getNome() {

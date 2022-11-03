@@ -21,8 +21,8 @@ public class ProdutosTableModel extends AbstractTableModel {
     private final int COLUNA_VALOR = 2;
     private final int COLUNA_ESTOQUE = 3;
 
-    public ProdutosTableModel(ArrayList<Produto> listaProdutosP) {
-        this.listaProdutos = listaProdutosP;
+    public ProdutosTableModel(ArrayList<Produto> listaProdutos) {
+        this.listaProdutos = listaProdutos;
     }
 
     @Override
