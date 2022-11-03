@@ -76,7 +76,7 @@ public class Conexao {
     }
 
     public int insereUsuario(String nome, String nomeUsuario, String senhaHash) {
-        String sql = "INSERT INTO Usuario(nome, nomeUsuario, senhaHash, admin) VALUES(?, ?, ?, ?)";
+        String sql = "INSERT INTO Usuario(nome, nomeUsuario, senhaHash, admin) VALUES(?, ?, ?, ?);";
         try ( Connection conexao = this.criaConexao();  PreparedStatement pstmt = conexao.prepareStatement(sql)) {
             pstmt.setString(1, nome);
             pstmt.setString(2, nomeUsuario);
@@ -114,6 +114,25 @@ public class Conexao {
         } catch (SQLException ex) {
             Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
             return null;
+        }
+    }
+
+    public int insereProduto(String nome, double valor) {
+        String sql = "INSERT INTO Produto(nome, valor, quantidade) VALUES(?, ?, 0);";
+        try ( Connection conexao = this.criaConexao();  PreparedStatement pstmt = conexao.prepareStatement(sql)) {
+            pstmt.setString(1, nome);
+            pstmt.setDouble(2, valor);
+            pstmt.executeUpdate();
+            return 0;
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexao.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            if (ex.getMessage().substring(0, 26)
+                    .compareTo("[SQLITE_CONSTRAINT_UNIQUE]") == 0) {
+                return 1;
+            } else {
+                return 2;
+            }
         }
     }
 }

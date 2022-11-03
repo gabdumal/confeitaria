@@ -4,32 +4,49 @@
  */
 package com.lugar.confeitaria;
 
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import javax.swing.JTable;
 
 /**
  *
  * @author lugar
  */
-public class GUI extends javax.swing.JFrame {
+public class TabelaProdutos extends javax.swing.JFrame {
 
     private Usuario usuario;
+    private ProdutosTableModel modeloTabela;
 
     /**
-     * Creates new form GUI
+     * Creates new form TabelaProdutos
      */
-    public GUI() {
+    public TabelaProdutos() {
         initComponents();
     }
 
-    public GUI(Usuario usuario) {
+    public TabelaProdutos(Usuario usuario) {
         this.usuario = usuario;
         initComponents();
+        tabelaProdutos.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent mouseEvent) {
+                JTable tabela = (JTable) mouseEvent.getSource();
+                Point ponto = mouseEvent.getPoint();
+                int linha = tabela.rowAtPoint(ponto);
+                if (mouseEvent.getClickCount() == 2 && tabela.getSelectedRow() != -1) {
+                    System.out.println(linha);
+                }
+            }
+        });
+
     }
 
     private ProdutosTableModel criaModeloTabela() {
         Conexao conexao = new Conexao();
         ArrayList<Produto> listaProdutos = conexao.buscaTodosProdutos();
-        ProdutosTableModel modeloTabela = new ProdutosTableModel(listaProdutos);
+        this.modeloTabela = new ProdutosTableModel(listaProdutos);
         return modeloTabela;
     }
 
@@ -43,15 +60,18 @@ public class GUI extends javax.swing.JFrame {
     private void initComponents() {
 
         painelTabela = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        painelRolavelTabela = new javax.swing.JScrollPane();
         tabelaProdutos = new javax.swing.JTable();
+        barraMenu = new javax.swing.JMenuBar();
+        menuProdutos = new javax.swing.JMenu();
+        itemMenuAdicionarProduto = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("LUGAR");
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         tabelaProdutos.setModel(this.criaModeloTabela());
-        jScrollPane1.setViewportView(tabelaProdutos);
+        painelRolavelTabela.setViewportView(tabelaProdutos);
 
         javax.swing.GroupLayout painelTabelaLayout = new javax.swing.GroupLayout(painelTabela);
         painelTabela.setLayout(painelTabelaLayout);
@@ -59,21 +79,41 @@ public class GUI extends javax.swing.JFrame {
             painelTabelaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelTabelaLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 800, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(painelRolavelTabela, javax.swing.GroupLayout.PREFERRED_SIZE, 800, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         painelTabelaLayout.setVerticalGroup(
             painelTabelaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelTabelaLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(painelRolavelTabela, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         getContentPane().add(painelTabela, new java.awt.GridBagConstraints());
 
+        menuProdutos.setText("Produtos");
+
+        itemMenuAdicionarProduto.setText("Adicionar produto");
+        itemMenuAdicionarProduto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemMenuAdicionarProdutoActionPerformed(evt);
+            }
+        });
+        menuProdutos.add(itemMenuAdicionarProduto);
+
+        barraMenu.add(menuProdutos);
+
+        setJMenuBar(barraMenu);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void itemMenuAdicionarProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMenuAdicionarProdutoActionPerformed
+        CadastroProduto cadastroProduto = new CadastroProduto(this, true);
+        cadastroProduto.setVisible(true);
+        tabelaProdutos.setModel(this.criaModeloTabela());
+    }//GEN-LAST:event_itemMenuAdicionarProdutoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -92,28 +132,33 @@ public class GUI extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TabelaProdutos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TabelaProdutos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TabelaProdutos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TabelaProdutos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new GUI().setVisible(true);
+                new TabelaProdutos().setVisible(true);
             }
         });
 
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JMenuBar barraMenu;
+    private javax.swing.JMenuItem itemMenuAdicionarProduto;
+    private javax.swing.JMenu menuProdutos;
+    private javax.swing.JScrollPane painelRolavelTabela;
     private javax.swing.JPanel painelTabela;
     private javax.swing.JTable tabelaProdutos;
     // End of variables declaration//GEN-END:variables
