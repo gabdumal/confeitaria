@@ -2,8 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package com.lugar.confeitaria;
+package com.lugar.view;
 
+import com.lugar.controller.Conexao;
+import com.lugar.model.Usuario;
+import com.lugar.model.ProdutosTableModel;
+import com.lugar.model.Produto;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;

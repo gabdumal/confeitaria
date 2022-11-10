@@ -4,7 +4,10 @@
  */
 package com.lugar.confeitaria;
 
-import java.util.ArrayList;
+import com.lugar.controller.Conexao;
+import com.lugar.model.Usuario;
+import com.lugar.view.Login;
+import java.util.List;
 
 /**
  *
@@ -14,7 +17,7 @@ public class Confeitaria {
 
     public static void main(String[] args) {
         Conexao conexao = new Conexao();
-        ArrayList<Usuario> listaUsuarios = conexao.buscaTodosUsuarios();
+        List<Usuario> listaUsuarios = conexao.buscaTodosUsuarios();
 
         Login login = new Login(listaUsuarios);
         login.setVisible(true);

@@ -1,23 +1,31 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package com.lugar.confeitaria;
+package com.lugar.view;
 
+import com.lugar.model.Usuario;
+import java.util.List;
 import javax.swing.JOptionPane;
 
 /**
  *
  * @author lugar
  */
-public class CadastroCliente extends javax.swing.JDialog {
+public class Login extends javax.swing.JFrame {
+
+    private List<Usuario> listaUsuarios;
 
     /**
-     * Creates new form CadastroCliente
+     * Creates new form Login
      */
-    public CadastroCliente(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
+    public Login() {
         initComponents();
+    }
+
+    public Login(List<Usuario> listaUsuarios) {
+        initComponents();
+        this.listaUsuarios = listaUsuarios;
     }
 
     /**
@@ -32,22 +40,23 @@ public class CadastroCliente extends javax.swing.JDialog {
 
         painelFormulario = new javax.swing.JPanel();
         titulo = new javax.swing.JLabel();
-        textoNome = new javax.swing.JLabel();
-        campoNome = new javax.swing.JFormattedTextField();
         textoUsuario = new javax.swing.JLabel();
         campoUsuario = new javax.swing.JFormattedTextField();
         textoSenha = new javax.swing.JLabel();
         campoSenha = new javax.swing.JPasswordField();
         painelBotoes = new javax.swing.JPanel();
+        botaoLogin = new javax.swing.JButton();
         botaoCadastro = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("LUGAR - Login");
+        setMinimumSize(new java.awt.Dimension(400, 148));
 
         painelFormulario.setLayout(new java.awt.GridBagLayout());
 
         titulo.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         titulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        titulo.setText("Cadastro");
+        titulo.setText("LUGAR");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -55,33 +64,14 @@ public class CadastroCliente extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 0);
         painelFormulario.add(titulo, gridBagConstraints);
 
-        textoNome.setText("Nome:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
-        painelFormulario.add(textoNome, gridBagConstraints);
-
-        campoNome.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                campoNomeActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
-        painelFormulario.add(campoNome, gridBagConstraints);
-
         textoUsuario.setText("Usuário:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
         painelFormulario.add(textoUsuario, gridBagConstraints);
 
+        campoUsuario.setText("anam");
         campoUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 campoUsuarioActionPerformed(evt);
@@ -89,7 +79,7 @@ public class CadastroCliente extends javax.swing.JDialog {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
@@ -98,22 +88,26 @@ public class CadastroCliente extends javax.swing.JDialog {
         textoSenha.setText("Senha:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
         painelFormulario.add(textoSenha, gridBagConstraints);
 
-        campoSenha.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                campoSenhaActionPerformed(evt);
-            }
-        });
+        campoSenha.setText("s1234");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         painelFormulario.add(campoSenha, gridBagConstraints);
 
         painelBotoes.setLayout(new java.awt.GridLayout(1, 0, 10, 0));
+
+        botaoLogin.setText("Entrar");
+        botaoLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoLoginActionPerformed(evt);
+            }
+        });
+        painelBotoes.add(botaoLogin);
 
         botaoCadastro.setText("Cadastrar-se");
         botaoCadastro.addActionListener(new java.awt.event.ActionListener() {
@@ -125,7 +119,7 @@ public class CadastroCliente extends javax.swing.JDialog {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.insets = new java.awt.Insets(20, 0, 0, 0);
         painelFormulario.add(painelBotoes, gridBagConstraints);
@@ -150,36 +144,29 @@ public class CadastroCliente extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void campoNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoNomeActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_campoNomeActionPerformed
+    private void botaoLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoLoginActionPerformed
+        String usuarioForm = campoUsuario.getText();
+        char[] senhaForm = campoSenha.getPassword();
+        for (Usuario usuario : listaUsuarios) {
+            if (usuario.getNomeUsuario().compareTo(usuarioForm) == 0
+                    && usuario.getSenhaHash().compareTo(String.valueOf(senhaForm)) == 0) {
+                TabelaProdutos tabelaProdutosGui = new TabelaProdutos(usuario);
+                this.setVisible(false);
+                tabelaProdutosGui.setVisible(true);
+                return;
+            }
+        }
+        JOptionPane.showMessageDialog(null, "Usuário ou senha não correspondem!");
+    }//GEN-LAST:event_botaoLoginActionPerformed
+
+    private void botaoCadastroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCadastroActionPerformed
+        CadastroCliente cadastroCliente = new CadastroCliente(this, true);
+        cadastroCliente.setVisible(true);
+    }//GEN-LAST:event_botaoCadastroActionPerformed
 
     private void campoUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoUsuarioActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_campoUsuarioActionPerformed
-
-    private void campoSenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoSenhaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_campoSenhaActionPerformed
-
-    private void botaoCadastroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCadastroActionPerformed
-        String nomeForm = campoNome.getText().trim();
-        String usuarioForm = campoUsuario.getText().trim();
-        String senhaForm = String.valueOf(campoSenha.getPassword()).trim();
-
-        if (!nomeForm.isBlank() && !usuarioForm.isBlank() && !senhaForm.isBlank()) {
-            Conexao conexao = new Conexao();
-            int resultado = conexao.insereUsuario(nomeForm, usuarioForm, senhaForm);
-            if (resultado == 0) {
-                JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!");
-                this.dispose();
-            } else if (resultado == 1) {
-                JOptionPane.showMessageDialog(null, "Não foi possível realizar o cadastro! O usuário preenchido já existe no sistema.");
-            } else {
-                JOptionPane.showMessageDialog(null, "Não foi possível realizar o cadastro! Tente novamente mais tarde.");
-            }
-        }
-    }//GEN-LAST:event_botaoCadastroActionPerformed
 
     /**
      * @param args the command line arguments
@@ -198,39 +185,31 @@ public class CadastroCliente extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CadastroCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CadastroCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CadastroCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CadastroCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
-        /* Create and display the dialog */
+        /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                CadastroCliente dialog = new CadastroCliente(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
+                new Login().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botaoCadastro;
-    private javax.swing.JFormattedTextField campoNome;
+    private javax.swing.JButton botaoLogin;
     private javax.swing.JPasswordField campoSenha;
     private javax.swing.JFormattedTextField campoUsuario;
     private javax.swing.JPanel painelBotoes;
     private javax.swing.JPanel painelFormulario;
-    private javax.swing.JLabel textoNome;
     private javax.swing.JLabel textoSenha;
     private javax.swing.JLabel textoUsuario;
     private javax.swing.JLabel titulo;
