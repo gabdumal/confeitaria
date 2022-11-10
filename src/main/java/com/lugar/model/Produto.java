@@ -39,19 +39,27 @@ public class Produto {
     }
 
     public void setId(int id) {
-        this.id = id;
+        if (id >= 0) {
+            this.id = id;
+        }
     }
 
     public void setNome(String nome) {
-        this.nome = nome;
+        if (!nome.isBlank()) {
+            this.nome = nome;
+        }
     }
 
     public void setValor(double valor) {
-        this.valor = valor;
+        if (valor >= 0) {
+            this.valor = valor;
+        }
     }
 
     public void setQuantidade(int quantidade) {
-        this.quantidade = quantidade;
+        if (quantidade >= 0) {
+            this.quantidade = quantidade;
+        }
     }
 
 }

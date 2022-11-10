@@ -5,7 +5,7 @@
 package com.lugar.model;
 
 import com.lugar.model.Produto;
-import java.util.ArrayList;
+import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
 /**
@@ -15,14 +15,14 @@ import javax.swing.table.AbstractTableModel;
 public class ProdutosTableModel extends AbstractTableModel {
 
     private String colunas[] = {"#", "Produto", "Valor", "Estoque"};
-    private ArrayList<Produto> listaProdutos;
+    private List<Produto> listaProdutos;
 
     private final int COLUNA_ID = 0;
     private final int COLUNA_PRODUTO = 1;
     private final int COLUNA_VALOR = 2;
     private final int COLUNA_ESTOQUE = 3;
 
-    public ProdutosTableModel(ArrayList<Produto> listaProdutos) {
+    public ProdutosTableModel(List<Produto> listaProdutos) {
         this.listaProdutos = listaProdutos;
     }
 
