@@ -5,20 +5,34 @@
 package com.lugar.view;
 
 import com.lugar.controller.Conexao;
+import com.lugar.model.Produto;
 import javax.swing.JOptionPane;
 
 /**
  *
  * @author lugar
  */
-public class CadastroProduto extends javax.swing.JDialog {
+public class EdicaoProduto extends javax.swing.JDialog {
+
+    int id;
 
     /**
      * Creates new form CadastroCliente
      */
-    public CadastroProduto(java.awt.Frame parent, boolean modal) {
+    public EdicaoProduto(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+    }
+
+    public EdicaoProduto(java.awt.Frame parent, boolean modal, int id) {
+        super(parent, modal);
+        this.id = id;
+        initComponents();
+
+        Conexao conexao = new Conexao();
+        Produto produto = conexao.buscaProduto(id);
+        campoNome.setText(produto.getNome());
+        campoValor.setText(String.valueOf(produto.getValor()));
     }
 
     /**
@@ -38,7 +52,8 @@ public class CadastroProduto extends javax.swing.JDialog {
         textoValor = new javax.swing.JLabel();
         campoValor = new javax.swing.JFormattedTextField();
         painelBotoes = new javax.swing.JPanel();
-        botaoCadastro = new javax.swing.JButton();
+        botaoEdicao = new javax.swing.JButton();
+        botaoDelecao = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -46,7 +61,7 @@ public class CadastroProduto extends javax.swing.JDialog {
 
         titulo.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         titulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        titulo.setText("Cadastro de Produto");
+        titulo.setText("Edição de Produto");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -96,13 +111,21 @@ public class CadastroProduto extends javax.swing.JDialog {
 
         painelBotoes.setLayout(new java.awt.GridLayout(1, 0, 10, 0));
 
-        botaoCadastro.setText("Cadastrar");
-        botaoCadastro.addActionListener(new java.awt.event.ActionListener() {
+        botaoEdicao.setText("Editar");
+        botaoEdicao.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botaoCadastroActionPerformed(evt);
+                botaoEdicaoActionPerformed(evt);
             }
         });
-        painelBotoes.add(botaoCadastro);
+        painelBotoes.add(botaoEdicao);
+
+        botaoDelecao.setText("Deletar");
+        botaoDelecao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoDelecaoActionPerformed(evt);
+            }
+        });
+        painelBotoes.add(botaoDelecao);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -139,23 +162,26 @@ public class CadastroProduto extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_campoValorActionPerformed
 
-    private void botaoCadastroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCadastroActionPerformed
+    private void botaoEdicaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoEdicaoActionPerformed
         String nomeForm = campoNome.getText().trim();
         String valorForm = campoValor.getText().trim();
 
         if (!nomeForm.isBlank() && !valorForm.isBlank()) {
             Conexao conexao = new Conexao();
-            int resultado = conexao.insereProduto(nomeForm, Double.parseDouble(valorForm));
+            Produto produtoEditado = new Produto(id, nomeForm, Double.parseDouble(valorForm), 0);
+            int resultado = conexao.atualizaProduto(produtoEditado);
             if (resultado == 0) {
-                JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!");
+                JOptionPane.showMessageDialog(null, "Edição realizada com sucesso!");
                 this.dispose();
-            } else if (resultado == 1) {
-                JOptionPane.showMessageDialog(null, "Não foi possível realizar o cadastro! O produto preenchido já existe no sistema.");
             } else {
-                JOptionPane.showMessageDialog(null, "Não foi possível realizar o cadastro! Tente novamente mais tarde.");
+                JOptionPane.showMessageDialog(null, "Não foi possível realizar a edição! Tente novamente mais tarde.");
             }
         }
-    }//GEN-LAST:event_botaoCadastroActionPerformed
+    }//GEN-LAST:event_botaoEdicaoActionPerformed
+
+    private void botaoDelecaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoDelecaoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_botaoDelecaoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -174,21 +200,23 @@ public class CadastroProduto extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CadastroProduto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EdicaoProduto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CadastroProduto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EdicaoProduto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CadastroProduto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EdicaoProduto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CadastroProduto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EdicaoProduto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                CadastroProduto dialog = new CadastroProduto(new javax.swing.JFrame(), true);
+                EdicaoProduto dialog = new EdicaoProduto(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -201,7 +229,8 @@ public class CadastroProduto extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton botaoCadastro;
+    private javax.swing.JButton botaoDelecao;
+    private javax.swing.JButton botaoEdicao;
     private javax.swing.JFormattedTextField campoNome;
     private javax.swing.JFormattedTextField campoValor;
     private javax.swing.JPanel painelBotoes;

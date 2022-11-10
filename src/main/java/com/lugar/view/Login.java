@@ -150,7 +150,7 @@ public class Login extends javax.swing.JFrame {
         for (Usuario usuario : listaUsuarios) {
             if (usuario.getNomeUsuario().compareTo(usuarioForm) == 0
                     && usuario.getSenhaHash().compareTo(String.valueOf(senhaForm)) == 0) {
-                TabelaProdutos tabelaProdutosGui = new TabelaProdutos(usuario);
+                ExibicaoProdutos tabelaProdutosGui = new ExibicaoProdutos(usuario);
                 this.setVisible(false);
                 tabelaProdutosGui.setVisible(true);
                 return;
