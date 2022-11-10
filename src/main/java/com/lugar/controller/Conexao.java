@@ -101,7 +101,6 @@ public class Conexao {
 
     public Produto buscaProduto(int id) {
         String sql = "SELECT nome, valor, quantidade FROM Produto WHERE id=" + id + ";";
-
         try ( Connection conexao = this.criaConexao();  Statement stmt = conexao.createStatement();  ResultSet rs = stmt.executeQuery(sql)) {
             Produto produto;
             if (rs.next()) {
@@ -118,6 +117,20 @@ public class Conexao {
         } catch (SQLException ex) {
             Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
             return null;
+        }
+    }
+
+    public int buscaEstoqueProduto(int id) {
+        String sql = "SELECT quantidade FROM Produto WHERE id=" + id + ";";
+        try ( Connection conexao = this.criaConexao();  Statement stmt = conexao.createStatement();  ResultSet rs = stmt.executeQuery(sql)) {
+            if (rs.next()) {
+                return rs.getInt("quantidade");
+            } else {
+                return 0;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
+            return 0;
         }
     }
 
@@ -167,6 +180,20 @@ public class Conexao {
             pstmt.setString(1, produto.getNome());
             pstmt.setDouble(2, produto.getValor());
             pstmt.setInt(3, produto.getId());
+            pstmt.executeUpdate();
+            return 0;
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexao.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            return 1;
+        }
+    }
+
+    public int atualizaEstoqueProduto(int id, int estoque) {
+        String sql = "UPDATE Produto SET quantidade = ? WHERE id = ?;";
+        try ( Connection conexao = this.criaConexao();  PreparedStatement pstmt = conexao.prepareStatement(sql)) {
+            pstmt.setInt(1, estoque);
+            pstmt.setInt(2, id);
             pstmt.executeUpdate();
             return 0;
         } catch (SQLException ex) {

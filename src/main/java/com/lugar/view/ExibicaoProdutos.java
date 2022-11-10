@@ -46,6 +46,7 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
                 if (mouseEvent.getClickCount() == 2 && tabela.getSelectedRow() != -1) {
                     if (coluna == 3) {
                         // Tela de estoque
+                        chamaTelaEdicaoEstoque((int) modeloTabela.getValueAt(linha, 0));
                     } else {
                         // Tela de edição
                         chamaTelaEdicao((int) modeloTabela.getValueAt(linha, 0));
@@ -53,6 +54,12 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
                 }
             }
         });
+    }
+
+    private void chamaTelaEdicaoEstoque(int id) {
+        EdicaoEstoqueProduto edicaoEstoqueProduto = new EdicaoEstoqueProduto(this, true, id);
+        edicaoEstoqueProduto.setVisible(true);
+        tabelaProdutos.setModel(criaModeloTabela());
     }
 
     private void chamaTelaEdicao(int id) {
