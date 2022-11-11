@@ -202,4 +202,17 @@ public class Conexao {
             return 1;
         }
     }
+
+    public int deletaProduto(int idProduto) {
+        String sql = "DELETE FROM Produto WHERE id = ?;";
+        try ( Connection conexao = this.criaConexao();  PreparedStatement pstmt = conexao.prepareStatement(sql)) {
+            pstmt.setInt(1, idProduto);
+            pstmt.executeUpdate();
+            return 0;
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexao.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            return 1;
+        }
+    }
 }
