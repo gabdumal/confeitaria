@@ -8,6 +8,9 @@ import com.lugar.controller.Conexao;
 import com.lugar.model.Usuario;
 import com.lugar.model.ProdutosTableModel;
 import com.lugar.model.Produto;
+import com.view.funcionario.CadastroProduto;
+import com.view.funcionario.EdicaoEstoqueProduto;
+import com.view.funcionario.EdicaoProduto;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -35,25 +38,28 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
 
         initComponents();
 
-        tabelaProdutos.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent mouseEvent) {
-                JTable tabela = (JTable) mouseEvent.getSource();
-                Point ponto = mouseEvent.getPoint();
-                int linha = tabela.rowAtPoint(ponto);
-                int coluna = tabela.columnAtPoint(ponto);
-                // Clique duplo
-                if (mouseEvent.getClickCount() == 2 && tabela.getSelectedRow() != -1) {
-                    if (coluna == 3) {
-                        // Tela de estoque
-                        chamaTelaEdicaoEstoque((int) modeloTabela.getValueAt(linha, 0));
-                    } else {
-                        // Tela de edição
-                        chamaTelaEdicao((int) modeloTabela.getValueAt(linha, 0));
+        if (usuario.isAdmin()) {
+
+            tabelaProdutos.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent mouseEvent) {
+                    JTable tabela = (JTable) mouseEvent.getSource();
+                    Point ponto = mouseEvent.getPoint();
+                    int linha = tabela.rowAtPoint(ponto);
+                    int coluna = tabela.columnAtPoint(ponto);
+                    // Clique duplo
+                    if (mouseEvent.getClickCount() == 2 && tabela.getSelectedRow() != -1) {
+                        if (coluna == 3) {
+                            // Tela de estoque
+                            chamaTelaEdicaoEstoque((int) modeloTabela.getValueAt(linha, 0));
+                        } else {
+                            // Tela de edição
+                            chamaTelaEdicao((int) modeloTabela.getValueAt(linha, 0));
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
     }
 
     private void chamaTelaEdicaoEstoque(int id) {
@@ -90,6 +96,8 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
         barraMenu = new javax.swing.JMenuBar();
         menuProdutos = new javax.swing.JMenu();
         itemMenuAdicionarProduto = new javax.swing.JMenuItem();
+        menuPedidos = new javax.swing.JMenu();
+        itemMenuCarrinho = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("LUGAR");
@@ -119,15 +127,31 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
 
         menuProdutos.setText("Produtos");
 
-        itemMenuAdicionarProduto.setText("Adicionar produto");
-        itemMenuAdicionarProduto.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                itemMenuAdicionarProdutoActionPerformed(evt);
-            }
-        });
-        menuProdutos.add(itemMenuAdicionarProduto);
+        if(usuario.isAdmin()){
+            itemMenuAdicionarProduto.setText("Adicionar produto");
+            itemMenuAdicionarProduto.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    itemMenuAdicionarProdutoActionPerformed(evt);
+                }
+            });
+            menuProdutos.add(itemMenuAdicionarProduto);
+        }
 
         barraMenu.add(menuProdutos);
+
+        menuPedidos.setText("Pedidos");
+
+        if(usuario.isAdmin()){
+            itemMenuCarrinho.setText("Carrinho");
+            itemMenuCarrinho.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    itemMenuCarrinhoActionPerformed(evt);
+                }
+            });
+            menuPedidos.add(itemMenuCarrinho);
+        }
+
+        barraMenu.add(menuPedidos);
 
         setJMenuBar(barraMenu);
 
@@ -139,6 +163,10 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
         cadastroProduto.setVisible(true);
         tabelaProdutos.setModel(this.criaModeloTabela());
     }//GEN-LAST:event_itemMenuAdicionarProdutoActionPerformed
+
+    private void itemMenuCarrinhoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMenuCarrinhoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_itemMenuCarrinhoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -186,6 +214,8 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuBar barraMenu;
     private javax.swing.JMenuItem itemMenuAdicionarProduto;
+    private javax.swing.JMenuItem itemMenuCarrinho;
+    private javax.swing.JMenu menuPedidos;
     private javax.swing.JMenu menuProdutos;
     private javax.swing.JScrollPane painelRolavelTabela;
     private javax.swing.JPanel painelTabela;

@@ -2,38 +2,36 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
-package com.lugar.view;
+package com.view.funcionario;
 
 import com.lugar.controller.Conexao;
 import com.lugar.model.Produto;
-import java.awt.Component;
 import javax.swing.JOptionPane;
 
 /**
  *
  * @author lugar
  */
-public class EdicaoProduto extends javax.swing.JDialog {
+public class EdicaoEstoqueProduto extends javax.swing.JDialog {
 
     int id;
 
     /**
      * Creates new form CadastroCliente
      */
-    public EdicaoProduto(java.awt.Frame parent, boolean modal) {
+    public EdicaoEstoqueProduto(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
     }
 
-    public EdicaoProduto(java.awt.Frame parent, boolean modal, int id) {
+    public EdicaoEstoqueProduto(java.awt.Frame parent, boolean modal, int id) {
         super(parent, modal);
         this.id = id;
         initComponents();
 
         Conexao conexao = new Conexao();
-        Produto produto = conexao.buscaProduto(id);
-        campoNome.setText(produto.getNome());
-        campoValor.setText(String.valueOf(produto.getValor()));
+        int estoque = conexao.buscaEstoqueProduto(id);
+        campoEstoque.setText(String.valueOf(estoque));
     }
 
     /**
@@ -48,13 +46,10 @@ public class EdicaoProduto extends javax.swing.JDialog {
 
         painelFormulario = new javax.swing.JPanel();
         titulo = new javax.swing.JLabel();
-        textoNome = new javax.swing.JLabel();
-        campoNome = new javax.swing.JFormattedTextField();
-        textoValor = new javax.swing.JLabel();
-        campoValor = new javax.swing.JFormattedTextField();
+        textoEstoque = new javax.swing.JLabel();
+        campoEstoque = new javax.swing.JFormattedTextField();
         painelBotoes = new javax.swing.JPanel();
         botaoEdicao = new javax.swing.JButton();
-        botaoDelecao = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -62,7 +57,7 @@ public class EdicaoProduto extends javax.swing.JDialog {
 
         titulo.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         titulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        titulo.setText("Edição de Produto");
+        titulo.setText("Edição de estoque do Produto");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -70,16 +65,16 @@ public class EdicaoProduto extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 0);
         painelFormulario.add(titulo, gridBagConstraints);
 
-        textoNome.setText("Nome:");
+        textoEstoque.setText("Estoque:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
-        painelFormulario.add(textoNome, gridBagConstraints);
+        painelFormulario.add(textoEstoque, gridBagConstraints);
 
-        campoNome.addActionListener(new java.awt.event.ActionListener() {
+        campoEstoque.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                campoNomeActionPerformed(evt);
+                campoEstoqueActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -88,27 +83,7 @@ public class EdicaoProduto extends javax.swing.JDialog {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
-        painelFormulario.add(campoNome, gridBagConstraints);
-
-        textoValor.setText("Valor:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
-        painelFormulario.add(textoValor, gridBagConstraints);
-
-        campoValor.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                campoValorActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
-        painelFormulario.add(campoValor, gridBagConstraints);
+        painelFormulario.add(campoEstoque, gridBagConstraints);
 
         painelBotoes.setLayout(new java.awt.GridLayout(1, 0, 10, 0));
 
@@ -119,14 +94,6 @@ public class EdicaoProduto extends javax.swing.JDialog {
             }
         });
         painelBotoes.add(botaoEdicao);
-
-        botaoDelecao.setText("Deletar");
-        botaoDelecao.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botaoDelecaoActionPerformed(evt);
-            }
-        });
-        painelBotoes.add(botaoDelecao);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -155,55 +122,26 @@ public class EdicaoProduto extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void campoNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoNomeActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_campoNomeActionPerformed
-
-    private void campoValorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoValorActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_campoValorActionPerformed
-
     private void botaoEdicaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoEdicaoActionPerformed
-        String nomeForm = campoNome.getText().trim();
-        String valorForm = campoValor.getText().trim();
+        String estoqueForm = campoEstoque.getText().trim();
 
-        if (!nomeForm.isBlank() && !valorForm.isBlank()) {
-            boolean confirmacao = JOptionPane.showConfirmDialog(null,
-                    "Deseja editar este produto?",
-                    "Edição de Produto", JOptionPane.YES_NO_OPTION,
-                    JOptionPane.WARNING_MESSAGE) == 0;
-
-            if (confirmacao) {
-                Conexao conexao = new Conexao();
-                Produto produtoEditado = new Produto(id, nomeForm, Double.parseDouble(valorForm), 0);
-                int resultado = conexao.atualizaProduto(produtoEditado);
-                if (resultado == 0) {
-                    JOptionPane.showMessageDialog(null, "Edição realizada com sucesso!");
-                    this.dispose();
-                } else {
-                    JOptionPane.showMessageDialog(null, "Não foi possível realizar a edição! Tente novamente mais tarde.");
-                }
+        if (!estoqueForm.isBlank()) {
+            Conexao conexao = new Conexao();
+            int resultado = conexao.atualizaEstoqueProduto(this.id,
+                    Integer.parseInt(estoqueForm)
+            );
+            if (resultado == 0) {
+                JOptionPane.showMessageDialog(null, "Edição realizada com sucesso!");
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(null, "Não foi possível realizar a edição! Tente novamente mais tarde.");
             }
         }
     }//GEN-LAST:event_botaoEdicaoActionPerformed
 
-    private void botaoDelecaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoDelecaoActionPerformed
-        boolean confirmacao = JOptionPane.showConfirmDialog(null,
-                "Deseja deletar este produto permanentemente?",
-                "Deleção de Produto", JOptionPane.YES_NO_OPTION,
-                JOptionPane.WARNING_MESSAGE) == 0;
-
-        if (confirmacao) {
-            Conexao conexao = new Conexao();
-            int resultado = conexao.deletaProduto(this.id);
-            if (resultado == 0) {
-                JOptionPane.showMessageDialog(null, "Deleção realizada com sucesso!");
-                this.dispose();
-            } else {
-                JOptionPane.showMessageDialog(null, "Não foi possível realizar a deleção! Tente novamente mais tarde.");
-            }
-        }
-    }//GEN-LAST:event_botaoDelecaoActionPerformed
+    private void campoEstoqueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoEstoqueActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_campoEstoqueActionPerformed
 
     /**
      * @param args the command line arguments
@@ -222,14 +160,18 @@ public class EdicaoProduto extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(EdicaoProduto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EdicaoEstoqueProduto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(EdicaoProduto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EdicaoEstoqueProduto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(EdicaoProduto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EdicaoEstoqueProduto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(EdicaoProduto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EdicaoEstoqueProduto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -238,7 +180,7 @@ public class EdicaoProduto extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                EdicaoProduto dialog = new EdicaoProduto(new javax.swing.JFrame(), true);
+                EdicaoEstoqueProduto dialog = new EdicaoEstoqueProduto(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -251,14 +193,11 @@ public class EdicaoProduto extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton botaoDelecao;
     private javax.swing.JButton botaoEdicao;
-    private javax.swing.JFormattedTextField campoNome;
-    private javax.swing.JFormattedTextField campoValor;
+    private javax.swing.JFormattedTextField campoEstoque;
     private javax.swing.JPanel painelBotoes;
     private javax.swing.JPanel painelFormulario;
-    private javax.swing.JLabel textoNome;
-    private javax.swing.JLabel textoValor;
+    private javax.swing.JLabel textoEstoque;
     private javax.swing.JLabel titulo;
     // End of variables declaration//GEN-END:variables
 }

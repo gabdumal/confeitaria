@@ -71,7 +71,7 @@ public class Login extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
         painelFormulario.add(textoUsuario, gridBagConstraints);
 
-        campoUsuario.setText("anam");
+        campoUsuario.setText("brunin");
         campoUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 campoUsuarioActionPerformed(evt);
@@ -92,7 +92,12 @@ public class Login extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
         painelFormulario.add(textoSenha, gridBagConstraints);
 
-        campoSenha.setText("s1234");
+        campoSenha.setText("senha");
+        campoSenha.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                campoSenhaActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
@@ -150,9 +155,9 @@ public class Login extends javax.swing.JFrame {
         for (Usuario usuario : listaUsuarios) {
             if (usuario.getNomeUsuario().compareTo(usuarioForm) == 0
                     && usuario.getSenhaHash().compareTo(String.valueOf(senhaForm)) == 0) {
-                ExibicaoProdutos tabelaProdutosGui = new ExibicaoProdutos(usuario);
+                ExibicaoProdutos exibicaoProdutos = new ExibicaoProdutos(usuario);
                 this.setVisible(false);
-                tabelaProdutosGui.setVisible(true);
+                exibicaoProdutos.setVisible(true);
                 return;
             }
         }
@@ -167,6 +172,10 @@ public class Login extends javax.swing.JFrame {
     private void campoUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoUsuarioActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_campoUsuarioActionPerformed
+
+    private void campoSenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoSenhaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_campoSenhaActionPerformed
 
     /**
      * @param args the command line arguments
