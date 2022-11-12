@@ -25,14 +25,17 @@ public class AdicaoProdutoCarrinho extends javax.swing.JDialog {
         initComponents();
     }
 
-    public AdicaoProdutoCarrinho(java.awt.Frame parent, boolean modal, Produto produto) {
+    public AdicaoProdutoCarrinho(java.awt.Frame parent, boolean modal, Produto produto, int quantidadeCarrinho) {
         super(parent, modal);
         this.quantidadeMaxima = produto.getQuantidade();
-        this.quantidade = 0;
+        if (quantidadeCarrinho > 0) {
+            this.quantidade = quantidadeCarrinho;
+        } else {
+            this.quantidade = 1;
+        }
         initComponents();
         this.textoNomeProduto.setText(produto.getNome());
         this.textoPrecoProduto.setText("R$ " + produto.getValor());
-        this.campoQuantidade.setValue(this.quantidadeMaxima);
     }
 
     /**
@@ -55,7 +58,7 @@ public class AdicaoProdutoCarrinho extends javax.swing.JDialog {
         campoQuantidade = new javax.swing.JSpinner();
         painelBotoes = new javax.swing.JPanel();
         botaoCancelar = new javax.swing.JButton();
-        botaoAdicionar = new javax.swing.JButton();
+        botaoEnviar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Adicionar produto ao Carrinho");
@@ -73,15 +76,19 @@ public class AdicaoProdutoCarrinho extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 0);
         painelFormulario.add(titulo, gridBagConstraints);
 
-        painelInformacoesProduto.setLayout(new java.awt.GridLayout(1, 0, 10, 0));
+        painelInformacoesProduto.setLayout(new java.awt.GridBagLayout());
 
         textoNomeProduto.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        textoNomeProduto.setText("Cupcake");
-        painelInformacoesProduto.add(textoNomeProduto);
+        textoNomeProduto.setText("Sorvete de manga apimentada");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
+        painelInformacoesProduto.add(textoNomeProduto, gridBagConstraints);
 
         textoPrecoProduto.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         textoPrecoProduto.setText("R$ 5,67");
-        painelInformacoesProduto.add(textoPrecoProduto);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
+        painelInformacoesProduto.add(textoPrecoProduto, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -101,7 +108,7 @@ public class AdicaoProdutoCarrinho extends javax.swing.JDialog {
         gridBagConstraints.ipadx = 30;
         painelCampos.add(textoQuantidade, gridBagConstraints);
 
-        campoQuantidade.setModel(new javax.swing.SpinnerNumberModel(1, 1, this.quantidadeMaxima, 1));
+        campoQuantidade.setModel(new javax.swing.SpinnerNumberModel(this.quantidade, 0, this.quantidadeMaxima, 1));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -126,13 +133,13 @@ public class AdicaoProdutoCarrinho extends javax.swing.JDialog {
         });
         painelBotoes.add(botaoCancelar);
 
-        botaoAdicionar.setText("Adicionar");
-        botaoAdicionar.addActionListener(new java.awt.event.ActionListener() {
+        botaoEnviar.setText("Enviar");
+        botaoEnviar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botaoAdicionarActionPerformed(evt);
+                botaoEnviarActionPerformed(evt);
             }
         });
-        painelBotoes.add(botaoAdicionar);
+        painelBotoes.add(botaoEnviar);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -151,10 +158,10 @@ public class AdicaoProdutoCarrinho extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void botaoAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAdicionarActionPerformed
+    private void botaoEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoEnviarActionPerformed
         this.quantidade = (int) campoQuantidade.getValue();
         this.dispose();
-    }//GEN-LAST:event_botaoAdicionarActionPerformed
+    }//GEN-LAST:event_botaoEnviarActionPerformed
 
     private void botaoCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCancelarActionPerformed
         // TODO add your handling code here:
@@ -235,8 +242,8 @@ public class AdicaoProdutoCarrinho extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton botaoAdicionar;
     private javax.swing.JButton botaoCancelar;
+    private javax.swing.JButton botaoEnviar;
     private javax.swing.JSpinner campoQuantidade;
     private javax.swing.JPanel painelBotoes;
     private javax.swing.JPanel painelCampos;

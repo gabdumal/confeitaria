@@ -66,18 +66,31 @@ public class EdicaoEstoqueProduto extends javax.swing.JDialog {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 0);
         painelFormulario.add(titulo, gridBagConstraints);
 
-        painelInformacoesProduto.setLayout(new java.awt.GridLayout(1, 0, 10, 0));
+        painelInformacoesProduto.setLayout(new java.awt.GridBagLayout());
 
         textoNomeProduto.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        textoNomeProduto.setText("Cupcake");
-        painelInformacoesProduto.add(textoNomeProduto);
+        textoNomeProduto.setText("Sorvete de manga apimentada");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
+        painelInformacoesProduto.add(textoNomeProduto, gridBagConstraints);
 
         textoPrecoProduto.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         textoPrecoProduto.setText("R$ 5,67");
-        painelInformacoesProduto.add(textoPrecoProduto);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
+        painelInformacoesProduto.add(textoPrecoProduto, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -127,7 +140,9 @@ public class EdicaoEstoqueProduto extends javax.swing.JDialog {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         getContentPane().add(painelFormulario, gridBagConstraints);
 

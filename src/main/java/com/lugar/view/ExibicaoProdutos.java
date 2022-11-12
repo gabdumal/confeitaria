@@ -15,7 +15,9 @@ import com.lugar.view.funcionario.EdicaoProduto;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.swing.JTable;
 
 /**
@@ -24,22 +26,30 @@ import javax.swing.JTable;
  */
 public class ExibicaoProdutos extends javax.swing.JFrame {
 
+    // Geral
     private Usuario usuario;
     private ProdutosTableModel modeloTabela;
+    List<Produto> listaProdutos;
+    Conexao conexao;
+    // Cliente
+    private Map<Integer, Integer> listaProdutosCarrinho;
 
-    /**
-     * Creates new form TabelaProdutos
-     */
     public ExibicaoProdutos() {
         initComponents();
     }
 
     public ExibicaoProdutos(Usuario usuario) {
         this.usuario = usuario;
+        conexao = new Conexao();
+
+        if (!usuario.isAdmin()) {
+            this.listaProdutosCarrinho = new HashMap<Integer, Integer>();
+        }
 
         initComponents();
 
         if (usuario.isAdmin()) {
+            // Funcionário
             tabelaProdutos.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent mouseEvent) {
@@ -60,13 +70,13 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
                 }
             });
         } else {
+            // Cliente
             tabelaProdutos.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent mouseEvent) {
                     JTable tabela = (JTable) mouseEvent.getSource();
                     Point ponto = mouseEvent.getPoint();
                     int linha = tabela.rowAtPoint(ponto);
-                    int coluna = tabela.columnAtPoint(ponto);
                     // Clique duplo
                     if (mouseEvent.getClickCount() == 2 && tabela.getSelectedRow() != -1) {
                         chamaTelaAdicaoProdutoCarrinho((int) modeloTabela.getValueAt(linha, 0));
@@ -89,18 +99,30 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
     }
 
     private void chamaTelaAdicaoProdutoCarrinho(int id) {
-        Conexao conexao = new Conexao();
-        Produto produto = conexao.buscaProduto(id);
-        AdicaoProdutoCarrinho adicaoProdutoCarrinho = new AdicaoProdutoCarrinho(this, true, produto);
+        Produto produto = this.conexao.buscaProduto(id);
+
+        int quantidadeCarrinho = this.listaProdutosCarrinho.getOrDefault(id, 1);
+
+        AdicaoProdutoCarrinho adicaoProdutoCarrinho = new AdicaoProdutoCarrinho(this, true, produto, quantidadeCarrinho);
         adicaoProdutoCarrinho.setVisible(true);
         int quantidadeComprada = adicaoProdutoCarrinho.getQuantidade();
-        System.out.println(quantidadeComprada);
+        listaProdutosCarrinho.put(id, quantidadeComprada);
         tabelaProdutos.setModel(criaModeloTabela());
     }
 
     private ProdutosTableModel criaModeloTabela() {
-        Conexao conexao = new Conexao();
-        List<Produto> listaProdutos = conexao.buscaTodosProdutos();
+        this.listaProdutos = this.conexao.buscaTodosProdutos();
+
+        if (!usuario.isAdmin()) {
+            for (Produto produto : this.listaProdutos) {
+                int id = produto.getId();
+                int quantidadeCarrinho = this.listaProdutosCarrinho.getOrDefault(id, -1);
+                if (quantidadeCarrinho != -1) {
+                    produto.setQuantidade(produto.getQuantidade() - quantidadeCarrinho);
+                }
+            }
+        }
+
         this.modeloTabela = new ProdutosTableModel(listaProdutos);
         return modeloTabela;
     }
@@ -113,6 +135,7 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         painelTabela = new javax.swing.JPanel();
         painelRolavelTabela = new javax.swing.JScrollPane();
@@ -127,27 +150,19 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
         setTitle("Vitrine");
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
+        painelTabela.setLayout(new java.awt.BorderLayout());
+
         tabelaProdutos.setModel(this.criaModeloTabela());
         painelRolavelTabela.setViewportView(tabelaProdutos);
 
-        javax.swing.GroupLayout painelTabelaLayout = new javax.swing.GroupLayout(painelTabela);
-        painelTabela.setLayout(painelTabelaLayout);
-        painelTabelaLayout.setHorizontalGroup(
-            painelTabelaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(painelTabelaLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(painelRolavelTabela, javax.swing.GroupLayout.PREFERRED_SIZE, 800, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        painelTabelaLayout.setVerticalGroup(
-            painelTabelaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(painelTabelaLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(painelRolavelTabela, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        painelTabela.add(painelRolavelTabela, java.awt.BorderLayout.CENTER);
 
-        getContentPane().add(painelTabela, new java.awt.GridBagConstraints());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        getContentPane().add(painelTabela, gridBagConstraints);
 
         menuProdutos.setText("Produtos");
 
