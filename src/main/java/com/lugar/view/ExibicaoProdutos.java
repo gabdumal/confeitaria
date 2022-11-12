@@ -8,9 +8,10 @@ import com.lugar.controller.Conexao;
 import com.lugar.model.Usuario;
 import com.lugar.model.ProdutosTableModel;
 import com.lugar.model.Produto;
-import com.view.funcionario.CadastroProduto;
-import com.view.funcionario.EdicaoEstoqueProduto;
-import com.view.funcionario.EdicaoProduto;
+import com.lugar.view.cliente.AdicaoProdutoCarrinho;
+import com.lugar.view.funcionario.CadastroProduto;
+import com.lugar.view.funcionario.EdicaoEstoqueProduto;
+import com.lugar.view.funcionario.EdicaoProduto;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -39,7 +40,6 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
         initComponents();
 
         if (usuario.isAdmin()) {
-
             tabelaProdutos.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent mouseEvent) {
@@ -59,6 +59,20 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
                     }
                 }
             });
+        } else {
+            tabelaProdutos.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent mouseEvent) {
+                    JTable tabela = (JTable) mouseEvent.getSource();
+                    Point ponto = mouseEvent.getPoint();
+                    int linha = tabela.rowAtPoint(ponto);
+                    int coluna = tabela.columnAtPoint(ponto);
+                    // Clique duplo
+                    if (mouseEvent.getClickCount() == 2 && tabela.getSelectedRow() != -1) {
+                        chamaTelaAdicaoProdutoCarrinho((int) modeloTabela.getValueAt(linha, 0));
+                    }
+                }
+            });
         }
     }
 
@@ -71,6 +85,16 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
     private void chamaTelaEdicao(int id) {
         EdicaoProduto edicaoProduto = new EdicaoProduto(this, true, id);
         edicaoProduto.setVisible(true);
+        tabelaProdutos.setModel(criaModeloTabela());
+    }
+
+    private void chamaTelaAdicaoProdutoCarrinho(int id) {
+        Conexao conexao = new Conexao();
+        Produto produto = conexao.buscaProduto(id);
+        AdicaoProdutoCarrinho adicaoProdutoCarrinho = new AdicaoProdutoCarrinho(this, true, produto);
+        adicaoProdutoCarrinho.setVisible(true);
+        int quantidadeComprada = adicaoProdutoCarrinho.getQuantidade();
+        System.out.println(quantidadeComprada);
         tabelaProdutos.setModel(criaModeloTabela());
     }
 
@@ -141,7 +165,7 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
 
         menuPedidos.setText("Pedidos");
 
-        if(usuario.isAdmin()){
+        if(!usuario.isAdmin()){
             itemMenuCarrinho.setText("Carrinho");
             itemMenuCarrinho.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -182,16 +206,24 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ExibicaoProdutos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ExibicaoProdutos.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ExibicaoProdutos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ExibicaoProdutos.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ExibicaoProdutos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ExibicaoProdutos.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ExibicaoProdutos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ExibicaoProdutos.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>
