@@ -5,7 +5,6 @@
 package com.lugar.view.funcionario;
 
 import com.lugar.controller.Conexao;
-import com.lugar.model.Produto;
 import javax.swing.JOptionPane;
 
 /**
@@ -15,10 +14,8 @@ import javax.swing.JOptionPane;
 public class EdicaoEstoqueProduto extends javax.swing.JDialog {
 
     int id;
+    int estoqueAnterior;
 
-    /**
-     * Creates new form CadastroCliente
-     */
     public EdicaoEstoqueProduto(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -27,11 +24,9 @@ public class EdicaoEstoqueProduto extends javax.swing.JDialog {
     public EdicaoEstoqueProduto(java.awt.Frame parent, boolean modal, int id) {
         super(parent, modal);
         this.id = id;
-        initComponents();
-
         Conexao conexao = new Conexao();
-        int estoque = conexao.buscaEstoqueProduto(id);
-        campoEstoque.setText(String.valueOf(estoque));
+        this.estoqueAnterior = conexao.buscaEstoqueProduto(id);
+        initComponents();
     }
 
     /**
@@ -46,45 +41,69 @@ public class EdicaoEstoqueProduto extends javax.swing.JDialog {
 
         painelFormulario = new javax.swing.JPanel();
         titulo = new javax.swing.JLabel();
+        painelInformacoesProduto = new javax.swing.JPanel();
+        textoNomeProduto = new javax.swing.JLabel();
+        textoPrecoProduto = new javax.swing.JLabel();
+        painelCampos = new javax.swing.JPanel();
         textoEstoque = new javax.swing.JLabel();
-        campoEstoque = new javax.swing.JFormattedTextField();
+        campoEstoque = new javax.swing.JSpinner();
         painelBotoes = new javax.swing.JPanel();
         botaoEdicao = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Edição de estoque do Produto");
+        setTitle("Editar estoque do Produto");
+        getContentPane().setLayout(new java.awt.GridBagLayout());
 
         painelFormulario.setLayout(new java.awt.GridBagLayout());
 
         titulo.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         titulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        titulo.setText("Edição de estoque do Produto");
+        titulo.setText("Editar estoque do Produto");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 0);
         painelFormulario.add(titulo, gridBagConstraints);
+
+        painelInformacoesProduto.setLayout(new java.awt.GridLayout(1, 0, 10, 0));
+
+        textoNomeProduto.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        textoNomeProduto.setText("Cupcake");
+        painelInformacoesProduto.add(textoNomeProduto);
+
+        textoPrecoProduto.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        textoPrecoProduto.setText("R$ 5,67");
+        painelInformacoesProduto.add(textoPrecoProduto);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 0);
+        painelFormulario.add(painelInformacoesProduto, gridBagConstraints);
+
+        painelCampos.setLayout(new java.awt.GridBagLayout());
 
         textoEstoque.setText("Estoque:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
-        painelFormulario.add(textoEstoque, gridBagConstraints);
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 30;
+        painelCampos.add(textoEstoque, gridBagConstraints);
 
-        campoEstoque.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                campoEstoqueActionPerformed(evt);
-            }
-        });
+        campoEstoque.setModel(new javax.swing.SpinnerNumberModel(this.estoqueAnterior, 0, null, 1));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
-        painelFormulario.add(campoEstoque, gridBagConstraints);
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 30;
+        painelCampos.add(campoEstoque, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 0);
+        painelFormulario.add(painelCampos, gridBagConstraints);
 
         painelBotoes.setLayout(new java.awt.GridLayout(1, 0, 10, 0));
 
@@ -99,37 +118,25 @@ public class EdicaoEstoqueProduto extends javax.swing.JDialog {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.insets = new java.awt.Insets(20, 0, 0, 0);
         painelFormulario.add(painelBotoes, gridBagConstraints);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(painelFormulario, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(painelFormulario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        getContentPane().add(painelFormulario, gridBagConstraints);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void botaoEdicaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoEdicaoActionPerformed
-        String estoqueForm = campoEstoque.getText().trim();
+        int estoqueForm = (int) campoEstoque.getValue();
 
-        if (!estoqueForm.isBlank()) {
+        if (estoqueForm >= 0) {
             Conexao conexao = new Conexao();
             int resultado = conexao.atualizaEstoqueProduto(this.id,
-                    Integer.parseInt(estoqueForm)
+                    estoqueForm
             );
             if (resultado == 0) {
                 JOptionPane.showMessageDialog(null, "Edição realizada com sucesso!");
@@ -139,10 +146,6 @@ public class EdicaoEstoqueProduto extends javax.swing.JDialog {
             }
         }
     }//GEN-LAST:event_botaoEdicaoActionPerformed
-
-    private void campoEstoqueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoEstoqueActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_campoEstoqueActionPerformed
 
     /**
      * @param args the command line arguments
@@ -195,10 +198,14 @@ public class EdicaoEstoqueProduto extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botaoEdicao;
-    private javax.swing.JFormattedTextField campoEstoque;
+    private javax.swing.JSpinner campoEstoque;
     private javax.swing.JPanel painelBotoes;
+    private javax.swing.JPanel painelCampos;
     private javax.swing.JPanel painelFormulario;
+    private javax.swing.JPanel painelInformacoesProduto;
     private javax.swing.JLabel textoEstoque;
+    private javax.swing.JLabel textoNomeProduto;
+    private javax.swing.JLabel textoPrecoProduto;
     private javax.swing.JLabel titulo;
     // End of variables declaration//GEN-END:variables
 }

@@ -4,10 +4,7 @@
  */
 package com.lugar.view.cliente;
 
-import com.lugar.view.funcionario.*;
-import com.lugar.controller.Conexao;
 import com.lugar.model.Produto;
-import javax.swing.JOptionPane;
 
 /**
  *

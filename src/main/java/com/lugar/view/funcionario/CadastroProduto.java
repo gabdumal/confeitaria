@@ -13,9 +13,6 @@ import javax.swing.JOptionPane;
  */
 public class CadastroProduto extends javax.swing.JDialog {
 
-    /**
-     * Creates new form CadastroCliente
-     */
     public CadastroProduto(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -33,15 +30,17 @@ public class CadastroProduto extends javax.swing.JDialog {
 
         painelFormulario = new javax.swing.JPanel();
         titulo = new javax.swing.JLabel();
+        painelCampos = new javax.swing.JPanel();
         textoNome = new javax.swing.JLabel();
         campoNome = new javax.swing.JFormattedTextField();
         textoValor = new javax.swing.JLabel();
-        campoValor = new javax.swing.JFormattedTextField();
-        painelBotoes = new javax.swing.JPanel();
-        botaoCadastro = new javax.swing.JButton();
+        campoValor = new javax.swing.JSpinner();
+        painelBotoes1 = new javax.swing.JPanel();
+        botaoCadastrar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Cadastro de Produto");
+        getContentPane().setLayout(new java.awt.GridBagLayout());
 
         painelFormulario.setLayout(new java.awt.GridBagLayout());
 
@@ -55,13 +54,19 @@ public class CadastroProduto extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 0);
         painelFormulario.add(titulo, gridBagConstraints);
 
+        painelCampos.setLayout(new java.awt.GridBagLayout());
+
+        textoNome.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         textoNome.setText("Nome:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
-        painelFormulario.add(textoNome, gridBagConstraints);
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 30;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        painelCampos.add(textoNome, gridBagConstraints);
 
+        campoNome.setPreferredSize(new java.awt.Dimension(200, 22));
         campoNome.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 campoNomeActionPerformed(evt);
@@ -69,84 +74,70 @@ public class CadastroProduto extends javax.swing.JDialog {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
-        painelFormulario.add(campoNome, gridBagConstraints);
+        painelCampos.add(campoNome, gridBagConstraints);
 
+        textoValor.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         textoValor.setText("Valor:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
-        painelFormulario.add(textoValor, gridBagConstraints);
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 30;
+        painelCampos.add(textoValor, gridBagConstraints);
 
-        campoValor.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                campoValorActionPerformed(evt);
-            }
-        });
+        campoValor.setModel(new javax.swing.SpinnerNumberModel(0.0d, 0.0d, null, 1.0d));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
-        painelFormulario.add(campoValor, gridBagConstraints);
+        painelCampos.add(campoValor, gridBagConstraints);
 
-        painelBotoes.setLayout(new java.awt.GridLayout(1, 0, 10, 0));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 0);
+        painelFormulario.add(painelCampos, gridBagConstraints);
 
-        botaoCadastro.setText("Cadastrar");
-        botaoCadastro.addActionListener(new java.awt.event.ActionListener() {
+        painelBotoes1.setLayout(new java.awt.GridLayout(1, 0, 10, 0));
+
+        botaoCadastrar.setText("Cadastrar");
+        botaoCadastrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botaoCadastroActionPerformed(evt);
+                botaoCadastrarActionPerformed(evt);
             }
         });
-        painelBotoes.add(botaoCadastro);
+        painelBotoes1.add(botaoCadastrar);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.insets = new java.awt.Insets(20, 0, 0, 0);
-        painelFormulario.add(painelBotoes, gridBagConstraints);
+        painelFormulario.add(painelBotoes1, gridBagConstraints);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(painelFormulario, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(painelFormulario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.ipadx = 104;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        getContentPane().add(painelFormulario, gridBagConstraints);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void campoNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoNomeActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_campoNomeActionPerformed
-
-    private void campoValorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoValorActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_campoValorActionPerformed
-
-    private void botaoCadastroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCadastroActionPerformed
+    private void botaoCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCadastrarActionPerformed
         String nomeForm = campoNome.getText().trim();
-        String valorForm = campoValor.getText().trim();
+        double valorForm = (double) campoValor.getValue();
 
-        if (!nomeForm.isBlank() && !valorForm.isBlank()) {
+        if (!nomeForm.isBlank() && valorForm > 0) {
             Conexao conexao = new Conexao();
-            int resultado = conexao.insereProduto(nomeForm, Double.parseDouble(valorForm));
+            int resultado = conexao.insereProduto(nomeForm, valorForm);
             if (resultado == 0) {
                 JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!");
                 this.dispose();
@@ -156,7 +147,11 @@ public class CadastroProduto extends javax.swing.JDialog {
                 JOptionPane.showMessageDialog(null, "Não foi possível realizar o cadastro! Tente novamente mais tarde.");
             }
         }
-    }//GEN-LAST:event_botaoCadastroActionPerformed
+    }//GEN-LAST:event_botaoCadastrarActionPerformed
+
+    private void campoNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoNomeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_campoNomeActionPerformed
 
     /**
      * @param args the command line arguments
@@ -202,10 +197,11 @@ public class CadastroProduto extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton botaoCadastro;
+    private javax.swing.JButton botaoCadastrar;
     private javax.swing.JFormattedTextField campoNome;
-    private javax.swing.JFormattedTextField campoValor;
-    private javax.swing.JPanel painelBotoes;
+    private javax.swing.JSpinner campoValor;
+    private javax.swing.JPanel painelBotoes1;
+    private javax.swing.JPanel painelCampos;
     private javax.swing.JPanel painelFormulario;
     private javax.swing.JLabel textoNome;
     private javax.swing.JLabel textoValor;
