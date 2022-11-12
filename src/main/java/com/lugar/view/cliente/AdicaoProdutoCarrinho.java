@@ -31,7 +31,7 @@ public class AdicaoProdutoCarrinho extends javax.swing.JDialog {
         this.quantidade = 0;
         initComponents();
         this.textoNomeProduto.setText(produto.getNome());
-        this.textoPrecoProduto.setText(String.valueOf(produto.getValor()));
+        this.textoPrecoProduto.setText("R$ " + produto.getValor());
         this.campoQuantidade.setValue(this.quantidadeMaxima);
     }
 

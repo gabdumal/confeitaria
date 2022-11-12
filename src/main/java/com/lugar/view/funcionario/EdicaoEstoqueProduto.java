@@ -5,6 +5,7 @@
 package com.lugar.view.funcionario;
 
 import com.lugar.controller.Conexao;
+import com.lugar.model.Produto;
 import javax.swing.JOptionPane;
 
 /**
@@ -25,8 +26,11 @@ public class EdicaoEstoqueProduto extends javax.swing.JDialog {
         super(parent, modal);
         this.id = id;
         Conexao conexao = new Conexao();
-        this.estoqueAnterior = conexao.buscaEstoqueProduto(id);
+        Produto produto = conexao.buscaProduto(id);
+        this.estoqueAnterior = produto.getQuantidade();
         initComponents();
+        this.textoNomeProduto.setText(produto.getNome());
+        this.textoPrecoProduto.setText("R$ " + produto.getValor());
     }
 
     /**
