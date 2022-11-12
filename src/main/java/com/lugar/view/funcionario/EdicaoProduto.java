@@ -57,6 +57,7 @@ public class EdicaoProduto extends javax.swing.JDialog {
         botaoDelecao = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Edição do Produto");
 
         painelFormulario.setLayout(new java.awt.GridBagLayout());
 

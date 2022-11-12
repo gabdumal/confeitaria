@@ -124,7 +124,7 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
         itemMenuCarrinho = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("LUGAR");
+        setTitle("Vitrine");
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         tabelaProdutos.setModel(this.criaModeloTabela());

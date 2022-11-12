@@ -49,7 +49,7 @@ public class Login extends javax.swing.JFrame {
         botaoCadastro = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("LUGAR - Login");
+        setTitle("Login");
         setMinimumSize(new java.awt.Dimension(400, 148));
 
         painelFormulario.setLayout(new java.awt.GridBagLayout());

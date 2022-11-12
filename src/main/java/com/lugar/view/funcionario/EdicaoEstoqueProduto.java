@@ -52,6 +52,7 @@ public class EdicaoEstoqueProduto extends javax.swing.JDialog {
         botaoEdicao = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Edição de estoque do Produto");
 
         painelFormulario.setLayout(new java.awt.GridBagLayout());
 

@@ -43,6 +43,7 @@ public class CadastroCliente extends javax.swing.JDialog {
         botaoCadastro = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Cadastro de Cliente");
 
         painelFormulario.setLayout(new java.awt.GridBagLayout());
 
