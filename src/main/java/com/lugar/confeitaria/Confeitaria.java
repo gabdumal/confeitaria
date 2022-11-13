@@ -13,7 +13,6 @@ import java.util.List;
  *
  * @author lugar
  */
-// teste teste teste
 public class Confeitaria {
 
     public static void main(String[] args) {
