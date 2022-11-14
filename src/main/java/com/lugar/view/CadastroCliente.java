@@ -278,6 +278,37 @@ public class CadastroCliente extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private int validaCadastro(String nomeForm,
+            String nomeUsuarioForm,
+            String senhaForm,
+            String emailForm,
+            String telefoneForm,
+            String enderecoForm,
+            String cartaoForm,
+            String identificadorForm) {
+        if (nomeForm.isBlank() || nomeUsuarioForm.isBlank()
+                || senhaForm.isBlank() || emailForm.isBlank()
+                || telefoneForm.isBlank() || enderecoForm.isBlank()
+                || cartaoForm.isBlank() || identificadorForm.isBlank()) {
+            JOptionPane.showMessageDialog(null, "Preencha os campos obrigatórios");
+            return 1;
+        } else if (nomeUsuarioForm.contains(" ")
+                || senhaForm.contains(" ")
+                || emailForm.contains(" ")
+                || cartaoForm.contains(" ")) {
+            JOptionPane.showMessageDialog(null, "Os campos nome de usuário, senha, email e cartão não devem conter espaço");
+            return 2;
+        } else if (cartaoForm.length() != 16) {
+            JOptionPane.showMessageDialog(null, "Numero de cartao invalido");
+            return 3;
+        } /*
+        TODO tratar CNPJ e CPF
+        else if (identificadorForm.length() != 11) {
+            JOptionPane.showMessageDialog(null, "Numero de cartao invalido");
+            return 3;}*/ else {
+            return 0;
+        }
+    }
     private void botaoCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCadastrarActionPerformed
         String nomeForm = campoNome.getText().trim();
         String nomeUsuarioForm = campoNomeUsuario.getText().trim();
@@ -288,10 +319,7 @@ public class CadastroCliente extends javax.swing.JDialog {
         String cartaoForm = campoCartao.getText().trim();
         String identificadorForm = campoIdentificador.getText().trim();
 
-        if (!nomeForm.isBlank() && !nomeUsuarioForm.isBlank()
-                && !senhaForm.isBlank() && !emailForm.isBlank()
-                && !telefoneForm.isBlank() && !enderecoForm.isBlank()
-                && !cartaoForm.isBlank() && !identificadorForm.isBlank()) {
+        if (validaCadastro(nomeForm, nomeUsuarioForm, senhaForm, emailForm, telefoneForm, enderecoForm, cartaoForm, identificadorForm) == 0) {
             Conexao conexao = new Conexao();
 
             int resultado = conexao.insereCliente(
@@ -306,6 +334,7 @@ public class CadastroCliente extends javax.swing.JDialog {
                 JOptionPane.showMessageDialog(null, "Não foi possível realizar o cadastro! Tente novamente mais tarde.");
             }
         }
+
     }//GEN-LAST:event_botaoCadastrarActionPerformed
 
     private void campoNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoNomeActionPerformed
