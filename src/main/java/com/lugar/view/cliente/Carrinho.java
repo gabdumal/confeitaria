@@ -1,39 +1,45 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
 package com.lugar.view.cliente;
 
 import com.lugar.controller.Conexao;
-import com.lugar.model.ProdutosTableModel;
 import com.lugar.model.Produto;
-import com.lugar.view.cliente.AdicaoProdutoCarrinho;
-import com.lugar.view.funcionario.EdicaoEstoqueProduto;
-import com.lugar.view.funcionario.EdicaoProduto;
+import com.lugar.model.ProdutosTableModel;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.swing.JTable;
 
 /**
  *
  * @author lugar
  */
-public class Carrinho extends javax.swing.JFrame {
+public class Carrinho extends javax.swing.JDialog {
 
+    private Conexao conexao;
     private int idUsuario;
     private List<Produto> listaProdutos;
     private ProdutosTableModel modeloTabela;
+    private Map<Integer, Integer> listaProdutosCarrinho;
+    private java.awt.Frame pai;
 
-    public Carrinho() {
+    public Carrinho(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
+        this.pai = parent;
         initComponents();
     }
 
-    public Carrinho(int idUsuario) {
-        this.idUsuario = idUsuario;
-        listaProdutos = new ArrayList<Produto>();
+    public Carrinho(java.awt.Frame parent, boolean modal, Map<Integer, Integer> listaProdutosCarrinho) {
+        super(parent, modal);
+
+        this.conexao = new Conexao();
+        this.listaProdutosCarrinho = listaProdutosCarrinho;
+        this.montaListaProdutos();
 
         initComponents();
 
@@ -45,18 +51,52 @@ public class Carrinho extends javax.swing.JFrame {
                 int linha = tabela.rowAtPoint(ponto);
                 // Clique duplo
                 if (mouseEvent.getClickCount() == 2 && tabela.getSelectedRow() != -1) {
-
+                    chamaTelaEdicaoProdutoCarrinho((int) modeloTabela.getValueAt(linha, 0));
                 }
             }
         });
-
     }
 
-    private ProdutosTableModel criaModeloTabela() {
-        Conexao conexao = new Conexao();
-        List<Produto> listaProdutos = conexao.buscaTodosProdutos();
-        this.modeloTabela = new ProdutosTableModel(listaProdutos);
-        return modeloTabela;
+    public Map<Integer, Integer> getListaProdutosCarrinho() {
+        return this.listaProdutosCarrinho;
+    }
+
+    private ProdutosTableModel getModeloTabela() {
+        this.atualizaModeloTabela();
+        return this.modeloTabela;
+    }
+
+    private void montaListaProdutos() {
+        this.listaProdutos = new ArrayList<Produto>();
+        for (int id : listaProdutosCarrinho.keySet()) {
+            Produto produto = conexao.buscaProduto(id);
+            produto.setQuantidade(listaProdutosCarrinho.get(id));
+            this.listaProdutos.add(produto);
+        }
+    }
+
+    private void atualizaModeloTabela() {
+        for (Produto produto : listaProdutos) {
+            produto.setQuantidade(
+                    listaProdutosCarrinho.get(produto.getId()));
+        }
+        this.modeloTabela = new ProdutosTableModel(this.listaProdutos);
+    }
+
+    private void atualizaTabela() {
+        this.atualizaModeloTabela();
+        tabelaProdutos.setModel(this.modeloTabela);
+    }
+
+    // Fluxo de telas
+    private void chamaTelaEdicaoProdutoCarrinho(int id) {
+        Produto produto = this.conexao.buscaProduto(id);
+        int quantidadeCarrinho = this.listaProdutosCarrinho.get(id);
+        AdicaoProdutoCarrinho adicaoProdutoCarrinho = new AdicaoProdutoCarrinho(this.pai, true, produto, quantidadeCarrinho);
+        adicaoProdutoCarrinho.setVisible(true);
+        int quantidadeComprada = adicaoProdutoCarrinho.getQuantidade();
+        this.listaProdutosCarrinho.put(id, quantidadeComprada);
+        this.atualizaTabela();
     }
 
     /**
@@ -73,13 +113,14 @@ public class Carrinho extends javax.swing.JFrame {
         painelRolavelTabela = new javax.swing.JScrollPane();
         tabelaProdutos = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Vitrine");
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Carrinho");
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         painelTabela.setLayout(new java.awt.BorderLayout());
 
-        tabelaProdutos.setModel(this.criaModeloTabela());
+        tabelaProdutos.setModel(this.getModeloTabela());
+        tabelaProdutos.getTableHeader().setReorderingAllowed(false);
         painelRolavelTabela.setViewportView(tabelaProdutos);
 
         painelTabela.add(painelRolavelTabela, java.awt.BorderLayout.CENTER);
@@ -108,49 +149,32 @@ public class Carrinho extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
-
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Carrinho.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
+            java.util.logging.Logger.getLogger(Carrinho.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Carrinho.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
+            java.util.logging.Logger.getLogger(Carrinho.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Carrinho.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
+            java.util.logging.Logger.getLogger(Carrinho.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Carrinho.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Carrinho.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
 
-        /* Create and display the form */
+        /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Carrinho().setVisible(true);
+                Carrinho dialog = new Carrinho(new javax.swing.JFrame(), true);
+                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                        System.exit(0);
+                    }
+                });
+                dialog.setVisible(true);
             }
         });
-
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

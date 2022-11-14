@@ -9,6 +9,7 @@ import com.lugar.model.Usuario;
 import com.lugar.model.ProdutosTableModel;
 import com.lugar.model.Produto;
 import com.lugar.view.cliente.AdicaoProdutoCarrinho;
+import com.lugar.view.cliente.Carrinho;
 import com.lugar.view.funcionario.CadastroProduto;
 import com.lugar.view.funcionario.EdicaoEstoqueProduto;
 import com.lugar.view.funcionario.EdicaoProduto;
@@ -27,10 +28,11 @@ import javax.swing.JTable;
 public class ExibicaoProdutos extends javax.swing.JFrame {
 
     // Geral
-    private Usuario usuario;
-    private ProdutosTableModel modeloTabela;
-    List<Produto> listaProdutos;
     Conexao conexao;
+    private Usuario usuario;
+    List<Produto> listaProdutos;
+    private ProdutosTableModel modeloTabela;
+
     // Cliente
     private Map<Integer, Integer> listaProdutosCarrinho;
 
@@ -86,33 +88,13 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
         }
     }
 
-    private void chamaTelaEdicaoEstoque(int id) {
-        EdicaoEstoqueProduto edicaoEstoqueProduto = new EdicaoEstoqueProduto(this, true, id);
-        edicaoEstoqueProduto.setVisible(true);
-        tabelaProdutos.setModel(criaModeloTabela());
+    private ProdutosTableModel getModeloTabela() {
+        this.atualizaModeloTabela();
+        return this.modeloTabela;
     }
 
-    private void chamaTelaEdicao(int id) {
-        EdicaoProduto edicaoProduto = new EdicaoProduto(this, true, id);
-        edicaoProduto.setVisible(true);
-        tabelaProdutos.setModel(criaModeloTabela());
-    }
-
-    private void chamaTelaAdicaoProdutoCarrinho(int id) {
-        Produto produto = this.conexao.buscaProduto(id);
-
-        int quantidadeCarrinho = this.listaProdutosCarrinho.getOrDefault(id, 1);
-
-        AdicaoProdutoCarrinho adicaoProdutoCarrinho = new AdicaoProdutoCarrinho(this, true, produto, quantidadeCarrinho);
-        adicaoProdutoCarrinho.setVisible(true);
-        int quantidadeComprada = adicaoProdutoCarrinho.getQuantidade();
-        listaProdutosCarrinho.put(id, quantidadeComprada);
-        tabelaProdutos.setModel(criaModeloTabela());
-    }
-
-    private ProdutosTableModel criaModeloTabela() {
+    private void atualizaModeloTabela() {
         this.listaProdutos = this.conexao.buscaTodosProdutos();
-
         if (!usuario.isAdmin()) {
             for (Produto produto : this.listaProdutos) {
                 int id = produto.getId();
@@ -122,9 +104,52 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
                 }
             }
         }
+        this.modeloTabela = new ProdutosTableModel(this.listaProdutos);
+    }
 
-        this.modeloTabela = new ProdutosTableModel(listaProdutos);
-        return modeloTabela;
+    private void atualizaTabela() {
+        this.atualizaModeloTabela();
+        tabelaProdutos.setModel(this.modeloTabela);
+    }
+
+    // Fluxo de telas
+    private void chamaTelaEdicaoEstoque(int id) {
+        EdicaoEstoqueProduto edicaoEstoqueProduto = new EdicaoEstoqueProduto(this, true, id);
+        edicaoEstoqueProduto.setVisible(true);
+        this.atualizaTabela();
+    }
+
+    private void chamaTelaEdicao(int id) {
+        EdicaoProduto edicaoProduto = new EdicaoProduto(this, true, id);
+        edicaoProduto.setVisible(true);
+        this.atualizaTabela();
+    }
+
+    private void chamaTelaAdicaoProdutoCarrinho(int id) {
+        Produto produto = this.conexao.buscaProduto(id);
+        int quantidadeCarrinho = this.listaProdutosCarrinho.getOrDefault(id, 1);
+        AdicaoProdutoCarrinho adicaoProdutoCarrinho = new AdicaoProdutoCarrinho(this, true, produto, quantidadeCarrinho);
+        adicaoProdutoCarrinho.setVisible(true);
+        int quantidadeComprada = adicaoProdutoCarrinho.getQuantidade();
+        this.listaProdutosCarrinho.put(id, quantidadeComprada);
+        this.atualizaTabela();
+    }
+
+    private void chamaTelaCadastroProduto() {
+        CadastroProduto cadastroProduto = new CadastroProduto(this, true);
+        cadastroProduto.setVisible(true);
+        this.atualizaTabela();
+    }
+
+    private void chamaTelaCarrinho() {
+        Carrinho carrinho = new Carrinho(this, true, listaProdutosCarrinho);
+        carrinho.setVisible(true);
+
+        Map<Integer, Integer> novaListaProdutosCarrinho
+                = carrinho.getListaProdutosCarrinho();
+        novaListaProdutosCarrinho.entrySet().removeIf(produto -> produto.getValue() == 0);
+        this.listaProdutosCarrinho = novaListaProdutosCarrinho;
+        this.atualizaTabela();
     }
 
     /**
@@ -152,7 +177,8 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
 
         painelTabela.setLayout(new java.awt.BorderLayout());
 
-        tabelaProdutos.setModel(this.criaModeloTabela());
+        tabelaProdutos.setModel(this.getModeloTabela());
+        tabelaProdutos.getTableHeader().setReorderingAllowed(false);
         painelRolavelTabela.setViewportView(tabelaProdutos);
 
         painelTabela.add(painelRolavelTabela, java.awt.BorderLayout.CENTER);
@@ -198,13 +224,11 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void itemMenuAdicionarProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMenuAdicionarProdutoActionPerformed
-        CadastroProduto cadastroProduto = new CadastroProduto(this, true);
-        cadastroProduto.setVisible(true);
-        tabelaProdutos.setModel(this.criaModeloTabela());
+        this.chamaTelaCadastroProduto();
     }//GEN-LAST:event_itemMenuAdicionarProdutoActionPerformed
 
     private void itemMenuCarrinhoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMenuCarrinhoActionPerformed
-        // TODO add your handling code here:
+        this.chamaTelaCarrinho();
     }//GEN-LAST:event_itemMenuCarrinhoActionPerformed
 
     /**
