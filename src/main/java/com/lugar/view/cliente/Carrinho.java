@@ -5,6 +5,8 @@
 package com.lugar.view.cliente;
 
 import com.lugar.controller.Conexao;
+import com.lugar.model.Item;
+import com.lugar.model.Pedido;
 import com.lugar.model.Produto;
 import com.lugar.model.ProdutosTableModel;
 import java.awt.Point;
@@ -13,6 +15,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 
 /**
@@ -66,6 +69,7 @@ public class Carrinho extends javax.swing.JDialog {
         return this.modeloTabela;
     }
 
+    // Atualiza dados
     private void montaListaProdutos() {
         this.listaProdutos = new ArrayList<Produto>();
         for (int id : listaProdutosCarrinho.keySet()) {
@@ -76,6 +80,7 @@ public class Carrinho extends javax.swing.JDialog {
     }
 
     private void atualizaModeloTabela() {
+        // Atualiza lista de produtos
         for (Produto produto : listaProdutos) {
             produto.setQuantidade(
                     listaProdutosCarrinho.get(produto.getId()));
@@ -86,6 +91,38 @@ public class Carrinho extends javax.swing.JDialog {
     private void atualizaTabela() {
         this.atualizaModeloTabela();
         tabelaProdutos.setModel(this.modeloTabela);
+    }
+
+    // Ações
+    private void limparCarrinho() {
+        for (int id : listaProdutosCarrinho.keySet()) {
+            listaProdutosCarrinho.put(id, 0);
+        }
+        this.atualizaTabela();
+    }
+
+    private void fecharPedido() {
+        boolean confirmacao = JOptionPane.showConfirmDialog(null,
+                "Deseja fechar o pedido?",
+                "Fechar pedido", JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE) == 0;
+
+        if (confirmacao) {
+            List<Item> listaItens = new ArrayList<Item>();
+
+            for (Produto produto : listaProdutos) {
+                if (produto.getQuantidade() > 0) {
+                    Item item = new Item(0, produto);
+                    listaItens.add(item);
+                }
+            }
+
+            Pedido pedido = new Pedido(0, 'S', false, listaItens);
+
+            System.out.println(pedido);
+
+            this.dispose();
+        }
     }
 
     // Fluxo de telas
@@ -109,6 +146,10 @@ public class Carrinho extends javax.swing.JDialog {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
+        painelAcoes = new javax.swing.JPanel();
+        botaoVoltar = new javax.swing.JButton();
+        botaoLimparCarrinho = new javax.swing.JButton();
+        botaoFecharPedido = new javax.swing.JButton();
         painelTabela = new javax.swing.JPanel();
         painelRolavelTabela = new javax.swing.JScrollPane();
         tabelaProdutos = new javax.swing.JTable();
@@ -116,6 +157,39 @@ public class Carrinho extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Carrinho");
         getContentPane().setLayout(new java.awt.GridBagLayout());
+
+        painelAcoes.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
+
+        botaoVoltar.setText("Voltar");
+        botaoVoltar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoVoltarActionPerformed(evt);
+            }
+        });
+        painelAcoes.add(botaoVoltar);
+
+        botaoLimparCarrinho.setText("Limpar carrinho");
+        botaoLimparCarrinho.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoLimparCarrinhoActionPerformed(evt);
+            }
+        });
+        painelAcoes.add(botaoLimparCarrinho);
+
+        botaoFecharPedido.setText("Fechar pedido");
+        botaoFecharPedido.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoFecharPedidoActionPerformed(evt);
+            }
+        });
+        painelAcoes.add(botaoFecharPedido);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        getContentPane().add(painelAcoes, gridBagConstraints);
 
         painelTabela.setLayout(new java.awt.BorderLayout());
 
@@ -126,14 +200,28 @@ public class Carrinho extends javax.swing.JDialog {
         painelTabela.add(painelRolavelTabela, java.awt.BorderLayout.CENTER);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        gridBagConstraints.insets = new java.awt.Insets(0, 10, 10, 10);
         getContentPane().add(painelTabela, gridBagConstraints);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void botaoLimparCarrinhoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoLimparCarrinhoActionPerformed
+        this.limparCarrinho();
+    }//GEN-LAST:event_botaoLimparCarrinhoActionPerformed
+
+    private void botaoVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoVoltarActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_botaoVoltarActionPerformed
+
+    private void botaoFecharPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoFecharPedidoActionPerformed
+        this.fecharPedido();
+    }//GEN-LAST:event_botaoFecharPedidoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -178,6 +266,10 @@ public class Carrinho extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton botaoFecharPedido;
+    private javax.swing.JButton botaoLimparCarrinho;
+    private javax.swing.JButton botaoVoltar;
+    private javax.swing.JPanel painelAcoes;
     private javax.swing.JScrollPane painelRolavelTabela;
     private javax.swing.JPanel painelTabela;
     private javax.swing.JTable tabelaProdutos;
