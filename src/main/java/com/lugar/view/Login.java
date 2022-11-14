@@ -4,6 +4,7 @@
  */
 package com.lugar.view;
 
+import com.lugar.controller.Conexao;
 import com.lugar.model.Usuario;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -14,18 +15,11 @@ import javax.swing.JOptionPane;
  */
 public class Login extends javax.swing.JFrame {
 
-    private List<Usuario> listaUsuarios;
-
     /**
      * Creates new form Login
      */
     public Login() {
         initComponents();
-    }
-
-    public Login(List<Usuario> listaUsuarios) {
-        initComponents();
-        this.listaUsuarios = listaUsuarios;
     }
 
     /**
@@ -150,6 +144,9 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botaoLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoLoginActionPerformed
+        Conexao conexao = new Conexao();
+        List<Usuario> listaUsuarios = conexao.buscaTodosUsuarios();
+
         String usuarioForm = campoUsuario.getText();
         char[] senhaForm = campoSenha.getPassword();
         for (Usuario usuario : listaUsuarios) {

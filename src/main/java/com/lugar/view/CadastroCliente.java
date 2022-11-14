@@ -6,6 +6,7 @@ package com.lugar.view;
 
 import com.lugar.view.funcionario.*;
 import com.lugar.controller.Conexao;
+import com.lugar.model.Usuario;
 import javax.swing.JOptionPane;
 
 /**
@@ -44,10 +45,10 @@ public class CadastroCliente extends javax.swing.JDialog {
         campoTelefone = new javax.swing.JFormattedTextField();
         campoEndereco = new javax.swing.JFormattedTextField();
         textoEndereco = new javax.swing.JLabel();
-        textoCPF = new javax.swing.JLabel();
+        textoIdentificador = new javax.swing.JLabel();
         textoCartaoCredito = new javax.swing.JLabel();
         campoCartao = new javax.swing.JFormattedTextField();
-        campoCpf = new javax.swing.JFormattedTextField();
+        campoIdentificador = new javax.swing.JFormattedTextField();
         painelBotoes1 = new javax.swing.JPanel();
         botaoCadastrar = new javax.swing.JButton();
 
@@ -205,14 +206,14 @@ public class CadastroCliente extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCampos.add(textoEndereco, gridBagConstraints);
 
-        textoCPF.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        textoCPF.setText("CPF");
+        textoIdentificador.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        textoIdentificador.setText("CPF / CNPJ:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 7;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.ipadx = 30;
-        painelCampos.add(textoCPF, gridBagConstraints);
+        painelCampos.add(textoIdentificador, gridBagConstraints);
 
         textoCartaoCredito.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         textoCartaoCredito.setText("Cartão de Crédito:");
@@ -237,17 +238,17 @@ public class CadastroCliente extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCampos.add(campoCartao, gridBagConstraints);
 
-        campoCpf.setPreferredSize(new java.awt.Dimension(200, 22));
-        campoCpf.addActionListener(new java.awt.event.ActionListener() {
+        campoIdentificador.setPreferredSize(new java.awt.Dimension(200, 22));
+        campoIdentificador.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                campoCpfActionPerformed(evt);
+                campoIdentificadorActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 7;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        painelCampos.add(campoCpf, gridBagConstraints);
+        painelCampos.add(campoIdentificador, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -284,8 +285,27 @@ public class CadastroCliente extends javax.swing.JDialog {
         String emailForm = campoEmail.getText().trim();
         String telefoneForm = campoTelefone.getText().trim();
         String enderecoForm = campoEndereco.getText().trim();
-        String cartaoForm = campoCpf.getText().trim();
-        String cpfForm = campoCpf.getText().trim();
+        String cartaoForm = campoCartao.getText().trim();
+        String identificadorForm = campoIdentificador.getText().trim();
+
+        if (!nomeForm.isBlank() && !nomeUsuarioForm.isBlank()
+                && !senhaForm.isBlank() && !emailForm.isBlank()
+                && !telefoneForm.isBlank() && !enderecoForm.isBlank()
+                && !cartaoForm.isBlank() && !identificadorForm.isBlank()) {
+            Conexao conexao = new Conexao();
+
+            int resultado = conexao.insereCliente(
+                    new Usuario(0, nomeForm, nomeUsuarioForm, senhaForm, false,
+                            emailForm, telefoneForm, enderecoForm, cartaoForm, identificadorForm));
+            if (resultado == 0) {
+                JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!");
+                this.dispose();
+            } else if (resultado == 1) {
+                JOptionPane.showMessageDialog(null, "Não foi possível realizar o cadastro! O usuário preenchido já existe no sistema.");
+            } else {
+                JOptionPane.showMessageDialog(null, "Não foi possível realizar o cadastro! Tente novamente mais tarde.");
+            }
+        }
     }//GEN-LAST:event_botaoCadastrarActionPerformed
 
     private void campoNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoNomeActionPerformed
@@ -308,9 +328,9 @@ public class CadastroCliente extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_campoEmailActionPerformed
 
-    private void campoCpfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoCpfActionPerformed
+    private void campoIdentificadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoIdentificadorActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_campoCpfActionPerformed
+    }//GEN-LAST:event_campoIdentificadorActionPerformed
 
     private void campoTelefoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoTelefoneActionPerformed
         // TODO add your handling code here:
@@ -368,9 +388,9 @@ public class CadastroCliente extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botaoCadastrar;
     private javax.swing.JFormattedTextField campoCartao;
-    private javax.swing.JFormattedTextField campoCpf;
     private javax.swing.JFormattedTextField campoEmail;
     private javax.swing.JFormattedTextField campoEndereco;
+    private javax.swing.JFormattedTextField campoIdentificador;
     private javax.swing.JFormattedTextField campoNome;
     private javax.swing.JFormattedTextField campoNomeUsuario;
     private javax.swing.JPasswordField campoSenha;
@@ -378,10 +398,10 @@ public class CadastroCliente extends javax.swing.JDialog {
     private javax.swing.JPanel painelBotoes1;
     private javax.swing.JPanel painelCampos;
     private javax.swing.JPanel painelFormulario;
-    private javax.swing.JLabel textoCPF;
     private javax.swing.JLabel textoCartaoCredito;
     private javax.swing.JLabel textoEmail;
     private javax.swing.JLabel textoEndereco;
+    private javax.swing.JLabel textoIdentificador;
     private javax.swing.JLabel textoNome;
     private javax.swing.JLabel textoNomeUsuario;
     private javax.swing.JLabel textoSenha;

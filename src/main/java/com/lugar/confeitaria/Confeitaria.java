@@ -17,10 +17,8 @@ import java.util.List;
 public class Confeitaria {
 
     public static void main(String[] args) {
-        Conexao conexao = new Conexao();
-        List<Usuario> listaUsuarios = conexao.buscaTodosUsuarios();
 
-        Login login = new Login(listaUsuarios);
+        Login login = new Login();
         login.setVisible(true);
     }
 }

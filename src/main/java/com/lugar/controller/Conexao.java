@@ -58,13 +58,12 @@ public class Conexao {
 
     public List<Usuario> buscaTodosUsuarios() {
         String sql = constroiSelectQuery(
-                new String[]{"id", "nome", "nomeUsuario", "senhaHash", "admin"}, "Usuario");
+                new String[]{"id", "nomeUsuario", "senhaHash", "admin"}, "Usuario");
         try ( Connection conexao = this.criaConexao();  Statement stmt = conexao.createStatement();  ResultSet rs = stmt.executeQuery(sql)) {
             List<Usuario> listaUsuarios = new ArrayList<Usuario>();
             while (rs.next()) {
                 Usuario usuario = new Usuario(
                         rs.getInt("id"),
-                        rs.getString("nome"),
                         rs.getString("nomeUsuario"),
                         rs.getString("senhaHash"),
                         rs.getInt("admin") == 1
@@ -85,6 +84,32 @@ public class Conexao {
             pstmt.setString(2, nomeUsuario);
             pstmt.setString(3, senhaHash);
             pstmt.setInt(4, 0);
+            pstmt.executeUpdate();
+            return 0;
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexao.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            if (ex.getMessage().substring(0, 26)
+                    .compareTo("[SQLITE_CONSTRAINT_UNIQUE]") == 0) {
+                return 1;
+            } else {
+                return 2;
+            }
+        }
+    }
+
+    public int insereCliente(Usuario usuario) {
+        String sql = "INSERT INTO Usuario(nome, nomeUsuario, senhaHash, admin, email, telefone, endereco, cartao, identificador) VALUES(?, ?, ?, 0, ?, ?, ?, ?, ?);";
+        try ( Connection conexao = this.criaConexao();  PreparedStatement pstmt = conexao.prepareStatement(sql)) {
+            pstmt.setString(1, usuario.getNome());
+            pstmt.setString(2, usuario.getNomeUsuario());
+            pstmt.setString(3, usuario.getSenhaHash());
+            pstmt.setString(4, usuario.getEmail());
+            pstmt.setString(5, usuario.getTelefone());
+            pstmt.setString(6, usuario.getEndereco());
+            pstmt.setString(7, usuario.getCartao());
+            pstmt.setString(8, usuario.getIdentificador());
+
             pstmt.executeUpdate();
             return 0;
         } catch (SQLException ex) {
