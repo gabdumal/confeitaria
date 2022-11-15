@@ -170,6 +170,8 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
         itemMenuAdicionarProduto = new javax.swing.JMenuItem();
         menuPedidos = new javax.swing.JMenu();
         itemMenuCarrinho = new javax.swing.JMenuItem();
+        menuTransacoes = new javax.swing.JMenu();
+        itemMenuLista = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Vitrine");
@@ -218,6 +220,23 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
 
         barraMenu.add(menuPedidos);
 
+        menuTransacoes.setText("Transações");
+
+        if(usuario.isAdmin()){
+            itemMenuLista.setText("Lista");
+            itemMenuLista.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    itemMenuListaActionPerformed(evt);
+                }
+            });
+            menuTransacoes.add(itemMenuLista);
+        }
+
+        if(usuario.isAdmin()){
+
+            barraMenu.add(menuTransacoes);
+        }
+
         setJMenuBar(barraMenu);
 
         pack();
@@ -230,6 +249,10 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
     private void itemMenuCarrinhoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMenuCarrinhoActionPerformed
         this.chamaTelaCarrinho();
     }//GEN-LAST:event_itemMenuCarrinhoActionPerformed
+
+    private void itemMenuListaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMenuListaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_itemMenuListaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -286,8 +309,10 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
     private javax.swing.JMenuBar barraMenu;
     private javax.swing.JMenuItem itemMenuAdicionarProduto;
     private javax.swing.JMenuItem itemMenuCarrinho;
+    private javax.swing.JMenuItem itemMenuLista;
     private javax.swing.JMenu menuPedidos;
     private javax.swing.JMenu menuProdutos;
+    private javax.swing.JMenu menuTransacoes;
     private javax.swing.JScrollPane painelRolavelTabela;
     private javax.swing.JPanel painelTabela;
     private javax.swing.JTable tabelaProdutos;

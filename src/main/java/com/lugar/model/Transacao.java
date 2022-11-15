@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  */
 public class Transacao {
 
-    private String id;
+    private int id;
     private double valor;
     private LocalDateTime diaHora;
     private String descricao;
@@ -24,7 +24,7 @@ public class Transacao {
         this.descricao = descricao;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
@@ -38,5 +38,29 @@ public class Transacao {
 
     public String getDescricao() {
         return descricao;
+    }
+
+    public void setId(int id) {
+        if (id >= 0) {
+            this.id = id;
+        }
+    }
+
+    public void setValor(double valor) {
+        if (valor >= 0) {
+            this.valor = valor;
+        }
+    }
+
+    public void setDiaHora(LocalDateTime diaHora) {
+        if (diaHora != null) {
+            this.diaHora = diaHora;
+        }
+    }
+
+    public void setDescricao(String descricao) {
+        if (!descricao.isBlank()) {
+            this.descricao = descricao;
+        }
     }
 }
