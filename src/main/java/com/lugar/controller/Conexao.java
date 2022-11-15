@@ -6,6 +6,7 @@ package com.lugar.controller;
 
 import com.lugar.model.Usuario;
 import com.lugar.model.Produto;
+import com.lugar.model.Transacao;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.time.LocalDateTime;
 
 /**
  *
@@ -238,6 +240,27 @@ public class Conexao {
             Logger.getLogger(Conexao.class.getName())
                     .log(Level.SEVERE, null, ex);
             return 1;
+        }
+    }
+
+    public List<Transacao> buscaTodasAsTransacoes() {
+        String sql = constroiSelectQuery(new String[]{"id", "valor", "diaHora", "descricao"}, "Transacao");
+        try ( Connection conexao = this.criaConexao();  Statement stmt = conexao.createStatement();  ResultSet rs = stmt.executeQuery(sql)) {
+            List<Transacao> listaTransacoes = new ArrayList<Transacao>();
+            while (rs.next()) {
+                LocalDateTime dataHora = LocalDateTime.parse(rs.getString("diaHora"));
+                Transacao transacao = new Transacao(
+                        rs.getInt("id"),
+                        rs.getDouble("valor"),
+                        dataHora,
+                        rs.getString("descricao")
+                );
+                listaTransacoes.add(transacao);
+            }
+            return listaTransacoes;
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
     }
 }

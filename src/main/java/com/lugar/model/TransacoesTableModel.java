@@ -55,9 +55,9 @@ public class TransacoesTableModel extends AbstractTableModel {
             case COLUNA_DESCRICAO:
                 return String.class;
             case COLUNA_DIAHORA:
-                return Double.class;
+                return LocalDateTime.class;
             case COLUNA_VALOR:
-                return Integer.class;
+                return Double.class;
             default:
                 return String.class;
         }
@@ -78,24 +78,4 @@ public class TransacoesTableModel extends AbstractTableModel {
         }
         return null;
     }
-
-    @Override
-    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        Transacao transacao = this.listaTransacoes.get(rowIndex);
-        switch (columnIndex) {
-            case COLUNA_ID:
-                transacao.setId((int) (aValue));
-                break;
-            case COLUNA_DESCRICAO:
-                transacao.setDescricao((String) (aValue));
-                break;
-            case COLUNA_DIAHORA:
-                transacao.setDiaHora((LocalDateTime) (aValue));
-                break;
-            case COLUNA_VALOR:
-                transacao.setValor((double) aValue);
-        }
-        fireTableDataChanged();
-    }
-
 }

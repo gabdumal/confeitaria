@@ -17,7 +17,7 @@ public class Transacao {
     private LocalDateTime diaHora;
     private String descricao;
 
-    public Transacao(String transacao, double valor, LocalDateTime diaHora, String descricao) {
+    public Transacao(int id, double valor, LocalDateTime diaHora, String descricao) {
         this.id = id;
         this.valor = valor;
         this.diaHora = diaHora;
@@ -53,9 +53,7 @@ public class Transacao {
     }
 
     public void setDiaHora(LocalDateTime diaHora) {
-        if (diaHora != null) {
-            this.diaHora = diaHora;
-        }
+        this.diaHora = diaHora;
     }
 
     public void setDescricao(String descricao) {

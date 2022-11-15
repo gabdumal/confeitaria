@@ -8,11 +8,13 @@ import com.lugar.controller.Conexao;
 import com.lugar.model.Usuario;
 import com.lugar.model.ProdutosTableModel;
 import com.lugar.model.Produto;
+import com.lugar.model.Transacao;
 import com.lugar.view.cliente.AdicaoProdutoCarrinho;
 import com.lugar.view.cliente.Carrinho;
 import com.lugar.view.funcionario.CadastroProduto;
 import com.lugar.view.funcionario.EdicaoEstoqueProduto;
 import com.lugar.view.funcionario.EdicaoProduto;
+import com.lugar.view.funcionario.TelaTransacao;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -31,6 +33,7 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
     Conexao conexao;
     private Usuario usuario;
     List<Produto> listaProdutos;
+    List<Transacao> listaTransacoes;
     private ProdutosTableModel modeloTabela;
 
     // Cliente
@@ -152,6 +155,12 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
         this.atualizaTabela();
     }
 
+    private void chamaTelaTransacao() {
+        TelaTransacao tela = new TelaTransacao(this, true);
+        tela.setVisible(true);
+
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -251,7 +260,8 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
     }//GEN-LAST:event_itemMenuCarrinhoActionPerformed
 
     private void itemMenuListaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMenuListaActionPerformed
-        // TODO add your handling code here:
+        this.chamaTelaTransacao();
+
     }//GEN-LAST:event_itemMenuListaActionPerformed
 
     /**
