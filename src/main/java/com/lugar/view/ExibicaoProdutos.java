@@ -103,17 +103,14 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
     }
 
     private void atualizaModeloTabela() {
-        this.listaProdutos = this.conexao.buscaTodosProdutos();
+        this.listaProdutos = this.conexao.buscaTodosProdutos(usuario.isAdmin());
         if (!usuario.isAdmin()) {
             for (Produto produto : this.listaProdutos) {
-                if (produto.getQuantidade() > 0) {
-                    int id = produto.getId();
-                    int quantidadeCarrinho = this.listaProdutosCarrinho.getOrDefault(id, -1);
-                    if (quantidadeCarrinho != -1) {
-                        produto.setQuantidade(produto.getQuantidade() - quantidadeCarrinho);
-                    }
-                } else {
-                    this.listaProdutos.remove(produto);
+                int id = produto.getId();
+                int quantidadeCarrinho = this.listaProdutosCarrinho.getOrDefault(id, -1);
+                if (quantidadeCarrinho != -1) {
+                    int quantidade = produto.getQuantidade();
+                    produto.setQuantidade(quantidade - quantidadeCarrinho);
                 }
             }
         }

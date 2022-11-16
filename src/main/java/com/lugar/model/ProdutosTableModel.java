@@ -20,13 +20,13 @@ import javax.swing.table.AbstractTableModel;
  */
 public class ProdutosTableModel extends AbstractTableModel {
 
-    private String colunas[] = {"#", "Produto", "Valor", "Estoque"};
+    private String colunas[] = {"#", "Produto", "Valor", "Quantidade"};
     private List<Produto> listaProdutos;
 
     private final int COLUNA_ID = 0;
     private final int COLUNA_PRODUTO = 1;
     private final int COLUNA_VALOR = 2;
-    private final int COLUNA_ESTOQUE = 3;
+    private final int COLUNA_QUANTIDADE = 3;
 
     public ProdutosTableModel(List<Produto> listaProdutos) {
         this.listaProdutos = listaProdutos;
@@ -61,7 +61,7 @@ public class ProdutosTableModel extends AbstractTableModel {
                 return String.class;
             case COLUNA_VALOR:
                 return Double.class;
-            case COLUNA_ESTOQUE:
+            case COLUNA_QUANTIDADE:
                 return Integer.class;
             default:
                 return String.class;
@@ -79,7 +79,7 @@ public class ProdutosTableModel extends AbstractTableModel {
                 return produto.getNome();
             case COLUNA_VALOR:
                 return produto.getValor();
-            case COLUNA_ESTOQUE:
+            case COLUNA_QUANTIDADE:
                 return produto.getQuantidade();
         }
         return null;
@@ -98,7 +98,7 @@ public class ProdutosTableModel extends AbstractTableModel {
             case COLUNA_VALOR:
                 produto.setValor((double) aValue);
                 break;
-            case COLUNA_ESTOQUE:
+            case COLUNA_QUANTIDADE:
                 produto.setQuantidade((int) aValue);
         }
         fireTableDataChanged();
