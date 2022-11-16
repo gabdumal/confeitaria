@@ -143,8 +143,9 @@ public class Conexao {
         }
     }
 
-    public List<Produto> buscaTodosProdutos() {
-        String sql = "SELECT id, nome, valor, quantidade FROM Produto;";
+    public List<Produto> buscaTodosProdutos(boolean ehAdmin) {
+        String sql = "SELECT id, nome, valor, quantidade FROM Produto";
+        sql += ehAdmin ? ";" : " WHERE quantidade > 0;";
         try ( Connection conexao = this.criaConexao();  Statement stmt = conexao.createStatement();  ResultSet rs = stmt.executeQuery(sql)) {
             List<Produto> listaProdutos = new ArrayList<Produto>();
             while (rs.next()) {
