@@ -13,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Properties;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -39,6 +40,72 @@ public class Conexao {
             Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
         }
         return conexao;
+    }
+
+    private boolean executaOperacao(String sql) {
+        try ( Connection conexao = this.criaConexao();  Statement stmt = conexao.createStatement();) {
+            stmt.execute(sql);
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
+
+    public void criaBancoDeDados() {
+        String sql = "CREATE TABLE IF NOT EXISTS \"Usuario\" (\n"
+                + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
+                + "	\"nome\"	TEXT NOT NULL,\n"
+                + "	\"nomeUsuario\"	TEXT NOT NULL UNIQUE,\n"
+                + "	\"senhaHash\"	TEXT NOT NULL,\n"
+                + "	\"admin\"	INTEGER NOT NULL DEFAULT 0 CHECK(\"admin\" IN (0, 1)),\n"
+                + "	\"email\"	TEXT NOT NULL UNIQUE,\n"
+                + "	\"telefone\"	TEXT NOT NULL,\n"
+                + "	\"endereco\"	TEXT NOT NULL,\n"
+                + "	\"cartao\"	TEXT NOT NULL,\n"
+                + "	\"identificador\"	TEXT NOT NULL UNIQUE,\n"
+                + "	PRIMARY KEY(\"id\" AUTOINCREMENT)\n"
+                + ");";
+        this.executaOperacao(sql);
+
+        sql = "CREATE TABLE IF NOT EXISTS \"Produto\" (\n"
+                + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
+                + "	\"nome\"	TEXT NOT NULL UNIQUE,\n"
+                + "	\"valor\"	REAL NOT NULL,\n"
+                + "	\"quantidade\"	INTEGER NOT NULL DEFAULT 0,\n"
+                + "	PRIMARY KEY(\"id\" AUTOINCREMENT)\n"
+                + ");";
+        this.executaOperacao(sql);
+
+        sql = "CREATE TABLE IF NOT EXISTS \"Transacao\" (\n"
+                + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
+                + "	\"valor\"	REAL NOT NULL,\n"
+                + "	\"diaHora\"	TEXT NOT NULL,\n"
+                + "	\"descricao\"	TEXT NOT NULL,\n"
+                + "	PRIMARY KEY(\"id\")\n"
+                + ");";
+        this.executaOperacao(sql);
+
+        sql = "INSERT INTO \"Usuario\" VALUES (5,'Cliente Exemplo','cliente','senha',0,'cliente@email.com','32980675454','Rua dos usuários, 34 - Bairro Residencial, Populópolis - PV','9287873465762356','347.726.872-78');";
+        this.executaOperacao(sql);
+
+        sql = "INSERT INTO \"Usuario\" VALUES (6,'Funcionário Exemplo','admin','senha',1,'admin@email.com','32956435476','Avenida dos funcionários, 1976 - Vale das empresas, Populópolis - PV','1983467167309864','123.987.758-62');";
+        this.executaOperacao(sql);
+
+        sql = "INSERT INTO \"Produto\" VALUES (0,'Brownie',99.63,14);";
+        this.executaOperacao(sql);
+
+        sql = "INSERT INTO \"Produto\" VALUES (1,'Sorvete de Manga',2.35,0);";
+        this.executaOperacao(sql);
+
+        sql = "INSERT INTO \"Produto\" VALUES (2,'Torta de banana',2.0,2);";
+        this.executaOperacao(sql);
+
+        sql = "INSERT INTO \"Produto\" VALUES (3,'Cupcake de morango',5.89,1);";
+        this.executaOperacao(sql);
+
+        sql = "INSERT INTO \"Transacao\" VALUES (0,12.0,'2020-08-17T10:11:16.908732','teste teste');";
+        this.executaOperacao(sql);
     }
 
     public List<Usuario> buscaTodosUsuariosLogin() {
