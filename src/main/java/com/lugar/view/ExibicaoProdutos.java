@@ -100,10 +100,14 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
         this.listaProdutos = this.conexao.buscaTodosProdutos();
         if (!usuario.isAdmin()) {
             for (Produto produto : this.listaProdutos) {
-                int id = produto.getId();
-                int quantidadeCarrinho = this.listaProdutosCarrinho.getOrDefault(id, -1);
-                if (quantidadeCarrinho != -1) {
-                    produto.setQuantidade(produto.getQuantidade() - quantidadeCarrinho);
+                if (produto.getQuantidade() > 0) {
+                    int id = produto.getId();
+                    int quantidadeCarrinho = this.listaProdutosCarrinho.getOrDefault(id, -1);
+                    if (quantidadeCarrinho != -1) {
+                        produto.setQuantidade(produto.getQuantidade() - quantidadeCarrinho);
+                    }
+                } else {
+                    this.listaProdutos.remove(produto);
                 }
             }
         }
