@@ -41,26 +41,8 @@ public class Conexao {
         return conexao;
     }
 
-    /**
-     * Seleciona todas as linhas em uma tabela
-     */
-    private String constroiSelectQuery(String[] campos, String tabela) {
-        String sql = "SELECT ";
-        for (int i = 0; i < campos.length; i++) {
-            sql += campos[i];
-            if (i == campos.length - 1) {
-                sql += " ";
-            } else {
-                sql += ", ";
-            }
-        }
-        sql += "FROM " + tabela + ";";
-        return sql;
-    }
-
-    public List<Usuario> buscaTodosUsuarios() {
-        String sql = constroiSelectQuery(
-                new String[]{"id", "nomeUsuario", "senhaHash", "admin"}, "Usuario");
+    public List<Usuario> buscaTodosUsuariosLogin() {
+        String sql = "SELECT id, nomeUsuario, senhaHash, admin FROM Usuario;";
         try ( Connection conexao = this.criaConexao();  Statement stmt = conexao.createStatement();  ResultSet rs = stmt.executeQuery(sql)) {
             List<Usuario> listaUsuarios = new ArrayList<Usuario>();
             while (rs.next()) {
@@ -162,8 +144,7 @@ public class Conexao {
     }
 
     public List<Produto> buscaTodosProdutos() {
-        String sql = constroiSelectQuery(
-                new String[]{"id", "nome", "valor", "quantidade"}, "Produto");
+        String sql = "SELECT id, nome, valor, quantidade FROM Produto;";
         try ( Connection conexao = this.criaConexao();  Statement stmt = conexao.createStatement();  ResultSet rs = stmt.executeQuery(sql)) {
             List<Produto> listaProdutos = new ArrayList<Produto>();
             while (rs.next()) {
@@ -244,7 +225,7 @@ public class Conexao {
     }
 
     public List<Transacao> buscaTodasAsTransacoes() {
-        String sql = constroiSelectQuery(new String[]{"id", "valor", "diaHora", "descricao"}, "Transacao");
+        String sql = "SELECT id, valor, diaHora, descricao FROM Transacao;";
         try ( Connection conexao = this.criaConexao();  Statement stmt = conexao.createStatement();  ResultSet rs = stmt.executeQuery(sql)) {
             List<Transacao> listaTransacoes = new ArrayList<Transacao>();
             while (rs.next()) {

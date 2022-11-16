@@ -145,7 +145,7 @@ public class Login extends javax.swing.JFrame {
 
     private void botaoLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoLoginActionPerformed
         Conexao conexao = new Conexao();
-        List<Usuario> listaUsuarios = conexao.buscaTodosUsuarios();
+        List<Usuario> listaUsuarios = conexao.buscaTodosUsuariosLogin();
 
         String usuarioForm = campoUsuario.getText();
         char[] senhaForm = campoSenha.getPassword();
