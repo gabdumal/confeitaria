@@ -65,7 +65,7 @@ public class Login extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
         painelFormulario.add(textoUsuario, gridBagConstraints);
 
-        campoUsuario.setText("RodRod");
+        campoUsuario.setText("cliente");
         campoUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 campoUsuarioActionPerformed(evt);

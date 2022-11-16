@@ -73,7 +73,7 @@ public class CadastroCliente extends javax.swing.JDialog {
         textoNome.setText("Nome:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.ipadx = 30;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
@@ -87,7 +87,7 @@ public class CadastroCliente extends javax.swing.JDialog {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCampos.add(campoNome, gridBagConstraints);
@@ -96,7 +96,7 @@ public class CadastroCliente extends javax.swing.JDialog {
         textoSenha.setText("Senha:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.ipadx = 30;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
@@ -109,7 +109,7 @@ public class CadastroCliente extends javax.swing.JDialog {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCampos.add(campoSenha, gridBagConstraints);
@@ -118,7 +118,7 @@ public class CadastroCliente extends javax.swing.JDialog {
         textoNomeUsuario.setText("Nome de Usuário:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.ipadx = 30;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
@@ -132,7 +132,7 @@ public class CadastroCliente extends javax.swing.JDialog {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCampos.add(campoNomeUsuario, gridBagConstraints);
