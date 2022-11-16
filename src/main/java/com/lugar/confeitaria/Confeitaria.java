@@ -22,6 +22,8 @@ import java.util.List;
 public class Confeitaria {
 
     public static void main(String[] args) {
+        Conexao conexao = new Conexao();
+        conexao.criaBancoDeDados();
 
         Login login = new Login();
         login.setVisible(true);
