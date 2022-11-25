@@ -5,20 +5,16 @@
 package com.lugar.confeitaria;
 
 import com.lugar.controller.Conexao;
-import com.lugar.model.Usuario;
 import com.lugar.view.Login;
-import java.util.List;
 
 /**
  *
  * @author lugar
  */
-// teste teste teste
 public class Confeitaria {
 
     public static void main(String[] args) {
-        Conexao conexao = new Conexao();
-        conexao.criaBancoDeDados();
+        Conexao.criaBancoDeDados();
 
         Login login = new Login();
         login.setVisible(true);

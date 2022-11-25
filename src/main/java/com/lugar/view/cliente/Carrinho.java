@@ -24,7 +24,6 @@ import javax.swing.JTable;
  */
 public class Carrinho extends javax.swing.JDialog {
 
-    private Conexao conexao;
     private int idUsuario;
     private List<Produto> listaProdutos;
     private ProdutosTableModel modeloTabela;
@@ -40,7 +39,6 @@ public class Carrinho extends javax.swing.JDialog {
     public Carrinho(java.awt.Frame parent, boolean modal, Map<Integer, Integer> listaProdutosCarrinho) {
         super(parent, modal);
 
-        this.conexao = new Conexao();
         this.listaProdutosCarrinho = listaProdutosCarrinho;
         this.montaListaProdutos();
 
@@ -73,7 +71,7 @@ public class Carrinho extends javax.swing.JDialog {
     private void montaListaProdutos() {
         this.listaProdutos = new ArrayList<Produto>();
         for (int id : listaProdutosCarrinho.keySet()) {
-            Produto produto = conexao.buscaProduto(id);
+            Produto produto = Conexao.buscaProduto(id);
             produto.setQuantidade(listaProdutosCarrinho.get(id));
             this.listaProdutos.add(produto);
         }
@@ -127,7 +125,7 @@ public class Carrinho extends javax.swing.JDialog {
 
     // Fluxo de telas
     private void chamaTelaEdicaoProdutoCarrinho(int id) {
-        Produto produto = this.conexao.buscaProduto(id);
+        Produto produto = Conexao.buscaProduto(id);
         int quantidadeCarrinho = this.listaProdutosCarrinho.get(id);
         AdicaoProdutoCarrinho adicaoProdutoCarrinho = new AdicaoProdutoCarrinho(this.pai, true, produto, quantidadeCarrinho);
         adicaoProdutoCarrinho.setVisible(true);

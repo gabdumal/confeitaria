@@ -4,22 +4,10 @@
  */
 package com.lugar.view.funcionario;
 
-import com.lugar.view.cliente.*;
 import com.lugar.controller.Conexao;
-import com.lugar.model.Item;
-import com.lugar.model.Pedido;
-import com.lugar.model.Produto;
-import com.lugar.model.ProdutosTableModel;
 import com.lugar.model.Transacao;
 import com.lugar.model.TransacoesTableModel;
-import java.awt.Point;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import javax.swing.JOptionPane;
-import javax.swing.JTable;
 
 /**
  *
@@ -35,8 +23,7 @@ public class TelaTransacao extends javax.swing.JDialog {
         super(parent, modal);
         this.pai = parent;
 
-        Conexao conexao = new Conexao();
-        this.listaTransacoes = conexao.buscaTodasAsTransacoes();
+        this.listaTransacoes = Conexao.buscaTodasAsTransacoes();
         this.modeloTabela = new TransacoesTableModel(this.listaTransacoes);
         initComponents();
     }

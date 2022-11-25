@@ -30,7 +30,6 @@ import javax.swing.JTable;
 public class ExibicaoProdutos extends javax.swing.JFrame {
 
     // Geral
-    Conexao conexao;
     private Usuario usuario;
     List<Produto> listaProdutos;
     List<Transacao> listaTransacoes;
@@ -45,7 +44,6 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
 
     public ExibicaoProdutos(Usuario usuario) {
         this.usuario = usuario;
-        conexao = new Conexao();
 
         if (!usuario.isAdmin()) {
             this.listaProdutosCarrinho = new HashMap<Integer, Integer>();
@@ -97,7 +95,7 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
     }
 
     private void atualizaModeloTabela() {
-        this.listaProdutos = this.conexao.buscaTodosProdutos(usuario.isAdmin());
+        this.listaProdutos = Conexao.buscaTodosProdutos(usuario.isAdmin());
         if (!usuario.isAdmin()) {
             for (Produto produto : this.listaProdutos) {
                 int id = produto.getId();
@@ -130,7 +128,7 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
     }
 
     private void chamaTelaAdicaoProdutoCarrinho(int id) {
-        Produto produto = this.conexao.buscaProduto(id);
+        Produto produto = Conexao.buscaProduto(id);
         int quantidadeCarrinho = this.listaProdutosCarrinho.getOrDefault(id, 1);
         AdicaoProdutoCarrinho adicaoProdutoCarrinho = new AdicaoProdutoCarrinho(this, true, produto, quantidadeCarrinho);
         adicaoProdutoCarrinho.setVisible(true);

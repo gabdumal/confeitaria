@@ -4,7 +4,6 @@
  */
 package com.lugar.view;
 
-import com.lugar.view.funcionario.*;
 import com.lugar.controller.Conexao;
 import com.lugar.model.Usuario;
 import javax.swing.JOptionPane;
@@ -320,9 +319,8 @@ public class CadastroCliente extends javax.swing.JDialog {
         String identificadorForm = campoIdentificador.getText().trim();
 
         if (validaCadastro(nomeForm, nomeUsuarioForm, senhaForm, emailForm, telefoneForm, enderecoForm, cartaoForm, identificadorForm) == 0) {
-            Conexao conexao = new Conexao();
 
-            int resultado = conexao.insereCliente(
+            int resultado = Conexao.insereCliente(
                     new Usuario(0, nomeForm, nomeUsuarioForm, senhaForm, false,
                             emailForm, telefoneForm, enderecoForm, cartaoForm, identificadorForm));
             if (resultado == 0) {

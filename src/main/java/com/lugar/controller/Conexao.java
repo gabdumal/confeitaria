@@ -13,7 +13,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Properties;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -31,7 +30,7 @@ public class Conexao {
      *
      * @return o objeto Connection
      */
-    private Connection criaConexao() {
+    private static Connection criaConexao() {
         String url = "jdbc:sqlite:confeitaria.db";
         Connection conexao = null;
         try {
@@ -42,8 +41,8 @@ public class Conexao {
         return conexao;
     }
 
-    private boolean executaOperacao(String sql) {
-        try ( Connection conexao = this.criaConexao();  Statement stmt = conexao.createStatement();) {
+    private static boolean executaOperacao(String sql) {
+        try ( Connection conexao = Conexao.criaConexao();  Statement stmt = conexao.createStatement();) {
             stmt.execute(sql);
             return true;
         } catch (SQLException ex) {
@@ -52,7 +51,7 @@ public class Conexao {
         }
     }
 
-    public void criaBancoDeDados() {
+    public static void criaBancoDeDados() {
         String sql = "CREATE TABLE IF NOT EXISTS \"Usuario\" (\n"
                 + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
                 + "	\"nome\"	TEXT NOT NULL,\n"
@@ -66,7 +65,7 @@ public class Conexao {
                 + "	\"identificador\"	TEXT NOT NULL UNIQUE,\n"
                 + "	PRIMARY KEY(\"id\" AUTOINCREMENT)\n"
                 + ");";
-        this.executaOperacao(sql);
+        Conexao.executaOperacao(sql);
 
         sql = "CREATE TABLE IF NOT EXISTS \"Produto\" (\n"
                 + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
@@ -75,7 +74,7 @@ public class Conexao {
                 + "	\"quantidade\"	INTEGER NOT NULL DEFAULT 0,\n"
                 + "	PRIMARY KEY(\"id\" AUTOINCREMENT)\n"
                 + ");";
-        this.executaOperacao(sql);
+        Conexao.executaOperacao(sql);
 
         sql = "CREATE TABLE IF NOT EXISTS \"Transacao\" (\n"
                 + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
@@ -84,33 +83,33 @@ public class Conexao {
                 + "	\"descricao\"	TEXT NOT NULL,\n"
                 + "	PRIMARY KEY(\"id\")\n"
                 + ");";
-        this.executaOperacao(sql);
+        Conexao.executaOperacao(sql);
 
         sql = "INSERT INTO \"Usuario\" VALUES (5,'Cliente Exemplo','cliente','senha',0,'cliente@email.com','32980675454','Rua dos usuários, 34 - Bairro Residencial, Populópolis - PV','9287873465762356','347.726.872-78');";
-        this.executaOperacao(sql);
+        Conexao.executaOperacao(sql);
 
         sql = "INSERT INTO \"Usuario\" VALUES (6,'Funcionário Exemplo','admin','senha',1,'admin@email.com','32956435476','Avenida dos funcionários, 1976 - Vale das empresas, Populópolis - PV','1983467167309864','123.987.758-62');";
-        this.executaOperacao(sql);
+        Conexao.executaOperacao(sql);
 
         sql = "INSERT INTO \"Produto\" VALUES (0,'Brownie',99.63,14);";
-        this.executaOperacao(sql);
+        Conexao.executaOperacao(sql);
 
         sql = "INSERT INTO \"Produto\" VALUES (1,'Sorvete de Manga',2.35,0);";
-        this.executaOperacao(sql);
+        Conexao.executaOperacao(sql);
 
         sql = "INSERT INTO \"Produto\" VALUES (2,'Torta de banana',2.0,2);";
-        this.executaOperacao(sql);
+        Conexao.executaOperacao(sql);
 
         sql = "INSERT INTO \"Produto\" VALUES (3,'Cupcake de morango',5.89,1);";
-        this.executaOperacao(sql);
+        Conexao.executaOperacao(sql);
 
         sql = "INSERT INTO \"Transacao\" VALUES (0,12.0,'2020-08-17T10:11:16.908732','teste teste');";
-        this.executaOperacao(sql);
+        Conexao.executaOperacao(sql);
     }
 
-    public List<Usuario> buscaTodosUsuariosLogin() {
+    public static List<Usuario> buscaTodosUsuariosLogin() {
         String sql = "SELECT id, nomeUsuario, senhaHash, admin FROM Usuario;";
-        try ( Connection conexao = this.criaConexao();  Statement stmt = conexao.createStatement();  ResultSet rs = stmt.executeQuery(sql)) {
+        try ( Connection conexao = Conexao.criaConexao();  Statement stmt = conexao.createStatement();  ResultSet rs = stmt.executeQuery(sql)) {
             List<Usuario> listaUsuarios = new ArrayList<Usuario>();
             while (rs.next()) {
                 Usuario usuario = new Usuario(
@@ -128,9 +127,9 @@ public class Conexao {
         }
     }
 
-    public int insereUsuario(String nome, String nomeUsuario, String senhaHash) {
+    public static int insereUsuario(String nome, String nomeUsuario, String senhaHash) {
         String sql = "INSERT INTO Usuario(nome, nomeUsuario, senhaHash, admin) VALUES(?, ?, ?, ?);";
-        try ( Connection conexao = this.criaConexao();  PreparedStatement pstmt = conexao.prepareStatement(sql)) {
+        try ( Connection conexao = Conexao.criaConexao();  PreparedStatement pstmt = conexao.prepareStatement(sql)) {
             pstmt.setString(1, nome);
             pstmt.setString(2, nomeUsuario);
             pstmt.setString(3, senhaHash);
@@ -141,7 +140,7 @@ public class Conexao {
             Logger.getLogger(Conexao.class.getName())
                     .log(Level.SEVERE, null, ex);
             if (ex.getMessage().substring(0, 26)
-                    .compareTo("[SQLITE_CONSTRAINT_UNIQUE]") == 0) {
+                    .equals("[SQLITE_CONSTRAINT_UNIQUE]")) {
                 return 1;
             } else {
                 return 2;
@@ -149,9 +148,9 @@ public class Conexao {
         }
     }
 
-    public int insereCliente(Usuario usuario) {
+    public static int insereCliente(Usuario usuario) {
         String sql = "INSERT INTO Usuario(nome, nomeUsuario, senhaHash, admin, email, telefone, endereco, cartao, identificador) VALUES(?, ?, ?, 0, ?, ?, ?, ?, ?);";
-        try ( Connection conexao = this.criaConexao();  PreparedStatement pstmt = conexao.prepareStatement(sql)) {
+        try ( Connection conexao = Conexao.criaConexao();  PreparedStatement pstmt = conexao.prepareStatement(sql)) {
             pstmt.setString(1, usuario.getNome());
             pstmt.setString(2, usuario.getNomeUsuario());
             pstmt.setString(3, usuario.getSenhaHash());
@@ -167,7 +166,7 @@ public class Conexao {
             Logger.getLogger(Conexao.class.getName())
                     .log(Level.SEVERE, null, ex);
             if (ex.getMessage().substring(0, 26)
-                    .compareTo("[SQLITE_CONSTRAINT_UNIQUE]") == 0) {
+                    .equals("[SQLITE_CONSTRAINT_UNIQUE]")) {
                 return 1;
             } else {
                 return 2;
@@ -175,9 +174,9 @@ public class Conexao {
         }
     }
 
-    public Produto buscaProduto(int id) {
+    public static Produto buscaProduto(int id) {
         String sql = "SELECT nome, valor, quantidade FROM Produto WHERE id=" + id + ";";
-        try ( Connection conexao = this.criaConexao();  Statement stmt = conexao.createStatement();  ResultSet rs = stmt.executeQuery(sql)) {
+        try ( Connection conexao = Conexao.criaConexao();  Statement stmt = conexao.createStatement();  ResultSet rs = stmt.executeQuery(sql)) {
             Produto produto;
             if (rs.next()) {
                 produto = new Produto(
@@ -196,9 +195,9 @@ public class Conexao {
         }
     }
 
-    public int buscaEstoqueProduto(int id) {
+    public static int buscaEstoqueProduto(int id) {
         String sql = "SELECT quantidade FROM Produto WHERE id=" + id + ";";
-        try ( Connection conexao = this.criaConexao();  Statement stmt = conexao.createStatement();  ResultSet rs = stmt.executeQuery(sql)) {
+        try ( Connection conexao = Conexao.criaConexao();  Statement stmt = conexao.createStatement();  ResultSet rs = stmt.executeQuery(sql)) {
             if (rs.next()) {
                 return rs.getInt("quantidade");
             } else {
@@ -210,10 +209,10 @@ public class Conexao {
         }
     }
 
-    public List<Produto> buscaTodosProdutos(boolean ehAdmin) {
+    public static List<Produto> buscaTodosProdutos(boolean ehAdmin) {
         String sql = "SELECT id, nome, valor, quantidade FROM Produto";
         sql += ehAdmin ? ";" : " WHERE quantidade > 0;";
-        try ( Connection conexao = this.criaConexao();  Statement stmt = conexao.createStatement();  ResultSet rs = stmt.executeQuery(sql)) {
+        try ( Connection conexao = Conexao.criaConexao();  Statement stmt = conexao.createStatement();  ResultSet rs = stmt.executeQuery(sql)) {
             List<Produto> listaProdutos = new ArrayList<Produto>();
             while (rs.next()) {
                 Produto produto = new Produto(
@@ -231,9 +230,9 @@ public class Conexao {
         }
     }
 
-    public int insereProduto(String nome, double valor) {
+    public static int insereProduto(String nome, double valor) {
         String sql = "INSERT INTO Produto(nome, valor, quantidade) VALUES(?, ?, 0);";
-        try ( Connection conexao = this.criaConexao();  PreparedStatement pstmt = conexao.prepareStatement(sql)) {
+        try ( Connection conexao = Conexao.criaConexao();  PreparedStatement pstmt = conexao.prepareStatement(sql)) {
             pstmt.setString(1, nome);
             pstmt.setDouble(2, valor);
             pstmt.executeUpdate();
@@ -242,7 +241,7 @@ public class Conexao {
             Logger.getLogger(Conexao.class.getName())
                     .log(Level.SEVERE, null, ex);
             if (ex.getMessage().substring(0, 26)
-                    .compareTo("[SQLITE_CONSTRAINT_UNIQUE]") == 0) {
+                    .equals("[SQLITE_CONSTRAINT_UNIQUE]")) {
                 return 1;
             } else {
                 return 2;
@@ -250,9 +249,9 @@ public class Conexao {
         }
     }
 
-    public int atualizaProduto(Produto produto) {
+    public static int atualizaProduto(Produto produto) {
         String sql = "UPDATE Produto SET nome = ?, valor = ? WHERE id = ?;";
-        try ( Connection conexao = this.criaConexao();  PreparedStatement pstmt = conexao.prepareStatement(sql)) {
+        try ( Connection conexao = Conexao.criaConexao();  PreparedStatement pstmt = conexao.prepareStatement(sql)) {
             pstmt.setString(1, produto.getNome());
             pstmt.setDouble(2, produto.getValor());
             pstmt.setInt(3, produto.getId());
@@ -265,9 +264,9 @@ public class Conexao {
         }
     }
 
-    public int atualizaEstoqueProduto(int id, int estoque) {
+    public static int atualizaEstoqueProduto(int id, int estoque) {
         String sql = "UPDATE Produto SET quantidade = ? WHERE id = ?;";
-        try ( Connection conexao = this.criaConexao();  PreparedStatement pstmt = conexao.prepareStatement(sql)) {
+        try ( Connection conexao = Conexao.criaConexao();  PreparedStatement pstmt = conexao.prepareStatement(sql)) {
             pstmt.setInt(1, estoque);
             pstmt.setInt(2, id);
             pstmt.executeUpdate();
@@ -279,9 +278,9 @@ public class Conexao {
         }
     }
 
-    public int deletaProduto(int idProduto) {
+    public static int deletaProduto(int idProduto) {
         String sql = "DELETE FROM Produto WHERE id = ?;";
-        try ( Connection conexao = this.criaConexao();  PreparedStatement pstmt = conexao.prepareStatement(sql)) {
+        try ( Connection conexao = Conexao.criaConexao();  PreparedStatement pstmt = conexao.prepareStatement(sql)) {
             pstmt.setInt(1, idProduto);
             pstmt.executeUpdate();
             return 0;
@@ -292,9 +291,9 @@ public class Conexao {
         }
     }
 
-    public List<Transacao> buscaTodasAsTransacoes() {
+    public static List<Transacao> buscaTodasAsTransacoes() {
         String sql = "SELECT id, valor, diaHora, descricao FROM Transacao;";
-        try ( Connection conexao = this.criaConexao();  Statement stmt = conexao.createStatement();  ResultSet rs = stmt.executeQuery(sql)) {
+        try ( Connection conexao = Conexao.criaConexao();  Statement stmt = conexao.createStatement();  ResultSet rs = stmt.executeQuery(sql)) {
             List<Transacao> listaTransacoes = new ArrayList<Transacao>();
             while (rs.next()) {
                 LocalDateTime dataHora = LocalDateTime.parse(rs.getString("diaHora"));

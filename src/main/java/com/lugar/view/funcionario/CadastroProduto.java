@@ -136,8 +136,7 @@ public class CadastroProduto extends javax.swing.JDialog {
         double valorForm = (double) campoValor.getValue();
 
         if (!nomeForm.isBlank() && valorForm > 0) {
-            Conexao conexao = new Conexao();
-            int resultado = conexao.insereProduto(nomeForm, valorForm);
+            int resultado = Conexao.insereProduto(nomeForm, valorForm);
             if (resultado == 0) {
                 JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!");
                 this.dispose();

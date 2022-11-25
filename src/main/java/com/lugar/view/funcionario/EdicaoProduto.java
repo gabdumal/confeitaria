@@ -26,8 +26,7 @@ public class EdicaoProduto extends javax.swing.JDialog {
         this.id = id;
         initComponents();
 
-        Conexao conexao = new Conexao();
-        Produto produto = conexao.buscaProduto(id);
+        Produto produto = Conexao.buscaProduto(id);
         campoNome.setText(produto.getNome());
         campoValor.setValue(produto.getValor());
     }
@@ -164,9 +163,8 @@ public class EdicaoProduto extends javax.swing.JDialog {
                     JOptionPane.WARNING_MESSAGE) == 0;
 
             if (confirmacao) {
-                Conexao conexao = new Conexao();
                 Produto produtoEditado = new Produto(id, nomeForm, valorForm, 0);
-                int resultado = conexao.atualizaProduto(produtoEditado);
+                int resultado = Conexao.atualizaProduto(produtoEditado);
                 if (resultado == 0) {
                     JOptionPane.showMessageDialog(null, "Edição realizada com sucesso!");
                     this.dispose();
@@ -184,8 +182,7 @@ public class EdicaoProduto extends javax.swing.JDialog {
                 JOptionPane.WARNING_MESSAGE) == 0;
 
         if (confirmacao) {
-            Conexao conexao = new Conexao();
-            int resultado = conexao.deletaProduto(this.id);
+            int resultado = Conexao.deletaProduto(this.id);
             if (resultado == 0) {
                 JOptionPane.showMessageDialog(null, "Deleção realizada com sucesso!");
                 this.dispose();

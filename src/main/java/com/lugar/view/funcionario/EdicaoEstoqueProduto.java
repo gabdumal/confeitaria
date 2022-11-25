@@ -25,8 +25,7 @@ public class EdicaoEstoqueProduto extends javax.swing.JDialog {
     public EdicaoEstoqueProduto(java.awt.Frame parent, boolean modal, int id) {
         super(parent, modal);
         this.id = id;
-        Conexao conexao = new Conexao();
-        Produto produto = conexao.buscaProduto(id);
+        Produto produto = Conexao.buscaProduto(id);
         this.estoqueAnterior = produto.getQuantidade();
         initComponents();
         this.textoNomeProduto.setText(produto.getNome());
@@ -153,8 +152,7 @@ public class EdicaoEstoqueProduto extends javax.swing.JDialog {
         int estoqueForm = (int) campoEstoque.getValue();
 
         if (estoqueForm >= 0) {
-            Conexao conexao = new Conexao();
-            int resultado = conexao.atualizaEstoqueProduto(this.id,
+            int resultado = Conexao.atualizaEstoqueProduto(this.id,
                     estoqueForm
             );
             if (resultado == 0) {
