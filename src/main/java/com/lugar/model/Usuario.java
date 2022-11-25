@@ -15,11 +15,6 @@ public class Usuario {
     private String nomeUsuario;
     private String senhaHash;
     private boolean admin;
-    private String email;
-    private String telefone;
-    private String endereco;
-    private String cartao;
-    private String identificador;
 
     public Usuario(
             int id,
@@ -38,24 +33,15 @@ public class Usuario {
             String nome,
             String nomeUsuario,
             String senhaHash,
-            boolean admin,
-            String email,
-            String telefone,
-            String endereco,
-            String cartao,
-            String identificador
+            boolean admin
     ) {
         this.id = id;
         this.nome = nome;
         this.nomeUsuario = nomeUsuario;
         this.senhaHash = senhaHash;
         this.admin = admin;
-        this.email = email;
-        this.telefone = telefone;
-        this.endereco = endereco;
-        this.cartao = cartao;
-        this.identificador = identificador;
     }
+
 
     public String getNome() {
         return nome;
@@ -71,26 +57,6 @@ public class Usuario {
 
     public boolean isAdmin() {
         return admin;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getTelefone() {
-        return telefone;
-    }
-
-    public String getEndereco() {
-        return endereco;
-    }
-
-    public String getCartao() {
-        return cartao;
-    }
-
-    public String getIdentificador() {
-        return identificador;
     }
 
 }

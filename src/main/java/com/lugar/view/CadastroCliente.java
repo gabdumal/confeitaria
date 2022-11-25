@@ -5,6 +5,7 @@
 package com.lugar.view;
 
 import com.lugar.controller.Conexao;
+import com.lugar.model.Cliente;
 import com.lugar.model.Usuario;
 import javax.swing.JOptionPane;
 
@@ -321,7 +322,7 @@ public class CadastroCliente extends javax.swing.JDialog {
         if (validaCadastro(nomeForm, nomeUsuarioForm, senhaForm, emailForm, telefoneForm, enderecoForm, cartaoForm, identificadorForm) == 0) {
 
             int resultado = Conexao.insereCliente(
-                    new Usuario(0, nomeForm, nomeUsuarioForm, senhaForm, false,
+                    new Cliente(0, nomeForm, nomeUsuarioForm, senhaForm, false, 0,
                             emailForm, telefoneForm, enderecoForm, cartaoForm, identificadorForm));
             if (resultado == 0) {
                 JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!");

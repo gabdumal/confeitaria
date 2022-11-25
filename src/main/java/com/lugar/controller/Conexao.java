@@ -4,6 +4,7 @@
  */
 package com.lugar.controller;
 
+import com.lugar.model.Cliente;
 import com.lugar.model.Usuario;
 import com.lugar.model.Produto;
 import com.lugar.model.Transacao;
@@ -148,17 +149,17 @@ public class Conexao {
         }
     }
 
-    public static int insereCliente(Usuario usuario) {
+    public static int insereCliente(Cliente cliente) {
         String sql = "INSERT INTO Usuario(nome, nomeUsuario, senhaHash, admin, email, telefone, endereco, cartao, identificador) VALUES(?, ?, ?, 0, ?, ?, ?, ?, ?);";
         try ( Connection conexao = Conexao.criaConexao();  PreparedStatement pstmt = conexao.prepareStatement(sql)) {
-            pstmt.setString(1, usuario.getNome());
-            pstmt.setString(2, usuario.getNomeUsuario());
-            pstmt.setString(3, usuario.getSenhaHash());
-            pstmt.setString(4, usuario.getEmail());
-            pstmt.setString(5, usuario.getTelefone());
-            pstmt.setString(6, usuario.getEndereco());
-            pstmt.setString(7, usuario.getCartao());
-            pstmt.setString(8, usuario.getIdentificador());
+            pstmt.setString(1, cliente.getNome());
+            pstmt.setString(2, cliente.getNomeUsuario());
+            pstmt.setString(3, cliente.getSenhaHash());
+            pstmt.setString(4, cliente.getEmail());
+            pstmt.setString(5, cliente.getTelefone());
+            pstmt.setString(6, cliente.getEndereco());
+            pstmt.setString(7, cliente.getCartao());
+            pstmt.setString(8, cliente.getIdentificador());
 
             pstmt.executeUpdate();
             return 0;
