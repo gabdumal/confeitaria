@@ -4,6 +4,8 @@
  */
 package com.lugar.model;
 
+import com.lugar.confeitaria.Util;
+
 /**
  *
  * @author lugar
@@ -36,6 +38,10 @@ public class Produto {
 
     public int getQuantidade() {
         return quantidade;
+    }
+
+    public String getValorFormatado() {
+        return Util.formataDinheiro(this.valor);
     }
 
     public void setId(int id) {

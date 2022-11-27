@@ -4,11 +4,12 @@
  */
 package com.lugar.model;
 
+import com.lugar.confeitaria.Util;
 import java.time.LocalDateTime;
 
 /**
  *
- * @author rodrigosoares
+ * @author lugar
  */
 public class Transacao {
 
@@ -32,8 +33,16 @@ public class Transacao {
         return valor;
     }
 
+    public String getValorFormatado() {
+        return Util.formataDinheiro(this.valor);
+    }
+
     public LocalDateTime getDiaHora() {
         return diaHora;
+    }
+
+    public String getDiaHoraFormatado() {
+        return Util.formataDiaHora(this.diaHora);
     }
 
     public String getDescricao() {

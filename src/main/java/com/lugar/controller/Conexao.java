@@ -410,7 +410,7 @@ public class Conexao {
         }
     }
 
-    public static List<Transacao> buscaTodasAsTransacoes() {
+    public static List<Transacao> buscaTodasTransacoes() {
         String sql = "SELECT id, valor, diaHora, descricao FROM Transacao;";
         Connection conn = null;
         List<Transacao> listaTransacoes = new ArrayList<Transacao>();

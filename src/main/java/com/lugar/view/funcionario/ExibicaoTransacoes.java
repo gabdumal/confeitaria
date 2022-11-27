@@ -13,17 +13,17 @@ import java.util.List;
  *
  * @author lugar
  */
-public class TelaTransacao extends javax.swing.JDialog {
+public class ExibicaoTransacoes extends javax.swing.JDialog {
 
     private java.awt.Frame pai;
     private List<Transacao> listaTransacoes;
     private TransacoesTableModel modeloTabela;
 
-    public TelaTransacao(java.awt.Frame parent, boolean modal) {
+    public ExibicaoTransacoes(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         this.pai = parent;
 
-        this.listaTransacoes = Conexao.buscaTodasAsTransacoes();
+        this.listaTransacoes = Conexao.buscaTodasTransacoes();
         this.modeloTabela = new TransacoesTableModel(this.listaTransacoes);
         initComponents();
     }
@@ -68,6 +68,8 @@ public class TelaTransacao extends javax.swing.JDialog {
         painelTabela.setLayout(new java.awt.BorderLayout());
 
         tabelaTransacoes.setModel(this.getModeloTabela());
+        tabelaTransacoes.removeColumn(tabelaTransacoes.getColumnModel().getColumn(0));
+        tabelaTransacoes.getTableHeader().setReorderingAllowed(false);
         telaRolavel.setViewportView(tabelaTransacoes);
 
         painelTabela.add(telaRolavel, java.awt.BorderLayout.CENTER);
@@ -105,21 +107,23 @@ public class TelaTransacao extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(TelaTransacao.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ExibicaoTransacoes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(TelaTransacao.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ExibicaoTransacoes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(TelaTransacao.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ExibicaoTransacoes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(TelaTransacao.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ExibicaoTransacoes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                TelaTransacao dialog = new TelaTransacao(new javax.swing.JFrame(), true);
+                ExibicaoTransacoes dialog = new ExibicaoTransacoes(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

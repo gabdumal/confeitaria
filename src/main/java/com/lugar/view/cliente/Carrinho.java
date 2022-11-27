@@ -89,6 +89,7 @@ public class Carrinho extends javax.swing.JDialog {
     private void atualizaTabela() {
         this.atualizaModeloTabela();
         tabelaProdutos.setModel(this.modeloTabela);
+        tabelaProdutos.removeColumn(tabelaProdutos.getColumnModel().getColumn(0));
     }
 
     // Ações
@@ -192,6 +193,7 @@ public class Carrinho extends javax.swing.JDialog {
         painelTabela.setLayout(new java.awt.BorderLayout());
 
         tabelaProdutos.setModel(this.getModeloTabela());
+        tabelaProdutos.removeColumn(tabelaProdutos.getColumnModel().getColumn(0));
         tabelaProdutos.getTableHeader().setReorderingAllowed(false);
         painelRolavelTabela.setViewportView(tabelaProdutos);
 

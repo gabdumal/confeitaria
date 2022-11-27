@@ -14,7 +14,7 @@ import com.lugar.view.cliente.Carrinho;
 import com.lugar.view.funcionario.CadastroProduto;
 import com.lugar.view.funcionario.EdicaoEstoqueProduto;
 import com.lugar.view.funcionario.EdicaoProduto;
-import com.lugar.view.funcionario.TelaTransacao;
+import com.lugar.view.funcionario.ExibicaoTransacoes;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -112,6 +112,7 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
     private void atualizaTabela() {
         this.atualizaModeloTabela();
         tabelaProdutos.setModel(this.modeloTabela);
+        tabelaProdutos.removeColumn(tabelaProdutos.getColumnModel().getColumn(0));
     }
 
     // Fluxo de telas
@@ -155,7 +156,7 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
     }
 
     private void chamaTelaTransacao() {
-        TelaTransacao tela = new TelaTransacao(this, true);
+        ExibicaoTransacoes tela = new ExibicaoTransacoes(this, true);
         tela.setVisible(true);
 
     }
@@ -188,6 +189,7 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
         painelTabela.setLayout(new java.awt.BorderLayout());
 
         tabelaProdutos.setModel(this.getModeloTabela());
+        tabelaProdutos.removeColumn(tabelaProdutos.getColumnModel().getColumn(0));
         tabelaProdutos.getTableHeader().setReorderingAllowed(false);
         painelRolavelTabela.setViewportView(tabelaProdutos);
 

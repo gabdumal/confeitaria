@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  */
 public class TransacoesTableModel extends AbstractTableModel {
 
-    private String colunas[] = {"#", "descrição", "diaHora", "valor"};
+    private String colunas[] = {"#", "Descrição", "Data", "Valor"};
     private List<Transacao> listaTransacoes;
 
     private final int COLUNA_ID = 0;
@@ -49,18 +49,7 @@ public class TransacoesTableModel extends AbstractTableModel {
 
     @Override
     public Class<?> getColumnClass(int columnIndex) {
-        switch (columnIndex) {
-            case COLUNA_ID:
-                return Integer.class;
-            case COLUNA_DESCRICAO:
-                return String.class;
-            case COLUNA_DIAHORA:
-                return LocalDateTime.class;
-            case COLUNA_VALOR:
-                return Double.class;
-            default:
-                return String.class;
-        }
+        return String.class;
     }
 
     @Override
@@ -72,9 +61,9 @@ public class TransacoesTableModel extends AbstractTableModel {
             case COLUNA_DESCRICAO:
                 return transacao.getDescricao();
             case COLUNA_DIAHORA:
-                return transacao.getDiaHora();
+                return transacao.getDiaHoraFormatado();
             case COLUNA_VALOR:
-                return transacao.getValor();
+                return transacao.getValorFormatado();
         }
         return null;
     }

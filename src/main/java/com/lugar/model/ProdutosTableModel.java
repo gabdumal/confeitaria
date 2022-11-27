@@ -48,18 +48,7 @@ public class ProdutosTableModel extends AbstractTableModel {
 
     @Override
     public Class<?> getColumnClass(int columnIndex) {
-        switch (columnIndex) {
-            case COLUNA_ID:
-                return Integer.class;
-            case COLUNA_PRODUTO:
-                return String.class;
-            case COLUNA_VALOR:
-                return Double.class;
-            case COLUNA_QUANTIDADE:
-                return Integer.class;
-            default:
-                return String.class;
-        }
+        return String.class;
     }
 
     @Override
@@ -72,30 +61,11 @@ public class ProdutosTableModel extends AbstractTableModel {
             case COLUNA_PRODUTO:
                 return produto.getNome();
             case COLUNA_VALOR:
-                return produto.getValor();
+                return produto.getValorFormatado();
             case COLUNA_QUANTIDADE:
                 return produto.getQuantidade();
         }
         return null;
-    }
-
-    @Override
-    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        Produto produto = this.listaProdutos.get(rowIndex);
-        switch (columnIndex) {
-            case COLUNA_ID:
-                produto.setId((int) (aValue));
-                break;
-            case COLUNA_PRODUTO:
-                produto.setNome(String.valueOf(aValue));
-                break;
-            case COLUNA_VALOR:
-                produto.setValor((double) aValue);
-                break;
-            case COLUNA_QUANTIDADE:
-                produto.setQuantidade((int) aValue);
-        }
-        fireTableDataChanged();
     }
 
 }
