@@ -291,16 +291,16 @@ public class CadastroCliente extends javax.swing.JDialog {
                 || telefoneForm.isBlank() || enderecoForm.isBlank()
                 || cartaoForm.isBlank() || identificadorForm.isBlank()) {
             JOptionPane.showMessageDialog(null, "Preencha os campos obrigatórios");
-            return 1;
+            return -1;
         } else if (nomeUsuarioForm.contains(" ")
                 || senhaForm.contains(" ")
                 || emailForm.contains(" ")
                 || cartaoForm.contains(" ")) {
             JOptionPane.showMessageDialog(null, "Os campos nome de usuário, senha, email e cartão não devem conter espaço");
-            return 2;
+            return -2;
         } else if (cartaoForm.length() != 16) {
             JOptionPane.showMessageDialog(null, "Numero de cartao invalido");
-            return 3;
+            return -3;
         } /*
         TODO tratar CNPJ e CPF
         else if (identificadorForm.length() != 11) {
@@ -327,7 +327,7 @@ public class CadastroCliente extends javax.swing.JDialog {
             if (resultado == 0) {
                 JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!");
                 this.dispose();
-            } else if (resultado == 1) {
+            } else if (resultado == -1) {
                 JOptionPane.showMessageDialog(null, "Não foi possível realizar o cadastro! O usuário preenchido já existe no sistema.");
             } else {
                 JOptionPane.showMessageDialog(null, "Não foi possível realizar o cadastro! Tente novamente mais tarde.");

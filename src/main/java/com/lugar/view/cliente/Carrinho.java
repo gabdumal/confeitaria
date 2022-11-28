@@ -118,8 +118,6 @@ public class Carrinho extends javax.swing.JDialog {
 
             Pedido pedido = new Pedido(0, 'S', false, listaItens);
 
-            System.out.println(pedido);
-
             this.dispose();
         }
     }

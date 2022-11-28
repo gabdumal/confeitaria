@@ -94,7 +94,7 @@ public class AdicaoProdutoCarrinho extends javax.swing.JDialog {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 10, 20, 10);
         painelFormulario.add(painelInformacoesProduto, gridBagConstraints);
 
         painelCampos.setLayout(new java.awt.GridBagLayout());

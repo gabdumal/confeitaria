@@ -11,6 +11,7 @@ import com.lugar.model.Produto;
 import com.lugar.model.Transacao;
 import com.lugar.view.cliente.AdicaoProdutoCarrinho;
 import com.lugar.view.cliente.Carrinho;
+import com.lugar.view.cliente.CriacaoProdutoPersonalizado;
 import com.lugar.view.funcionario.CadastroProduto;
 import com.lugar.view.funcionario.EdicaoEstoqueProduto;
 import com.lugar.view.funcionario.EdicaoProduto;
@@ -36,7 +37,7 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
     private ProdutosTableModel modeloTabela;
 
     // Cliente
-    private Map<Integer, Integer> listaProdutosCarrinho;
+    private Map<Integer, Integer> listaProdutosCarrinho; // idProduto - Quantidade no carrinho
 
     public ExibicaoProdutos() {
         initComponents();
@@ -150,15 +151,25 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
 
         Map<Integer, Integer> novaListaProdutosCarrinho
                 = carrinho.getListaProdutosCarrinho();
-        novaListaProdutosCarrinho.entrySet().removeIf(produto -> produto.getValue() == 0);
-        this.listaProdutosCarrinho = novaListaProdutosCarrinho;
+//        novaListaProdutosCarrinho.entrySet().removeIf(produto -> produto.getValue() == 0);
+//        this.listaProdutosCarrinho = novaListaProdutosCarrinho;
         this.atualizaTabela();
     }
 
     private void chamaTelaTransacao() {
         ExibicaoTransacoes tela = new ExibicaoTransacoes(this, true);
         tela.setVisible(true);
+    }
 
+    private void chamaTelaCriacaoProdutoPersonalizado() {
+        CriacaoProdutoPersonalizado criacaoProdutoPersonalizado = new CriacaoProdutoPersonalizado(this, true);
+        criacaoProdutoPersonalizado.setVisible(true);
+        int idProduto = criacaoProdutoPersonalizado.getIdProduto();
+        int quantidade = criacaoProdutoPersonalizado.getQuantidade();
+
+        if (idProduto > -1) {
+            this.listaProdutosCarrinho.put(idProduto, quantidade);
+        }
     }
 
     /**
@@ -177,6 +188,7 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
         barraMenu = new javax.swing.JMenuBar();
         menuProdutos = new javax.swing.JMenu();
         itemMenuAdicionarProduto = new javax.swing.JMenuItem();
+        itemMenuCriarProdutoPersonalizado = new javax.swing.JMenuItem();
         menuPedidos = new javax.swing.JMenu();
         itemMenuCarrinho = new javax.swing.JMenuItem();
         menuTransacoes = new javax.swing.JMenu();
@@ -212,6 +224,16 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
                 }
             });
             menuProdutos.add(itemMenuAdicionarProduto);
+        }
+
+        if(!usuario.isAdmin()){
+            itemMenuCriarProdutoPersonalizado.setText("Encomendar personalizado");
+            itemMenuCriarProdutoPersonalizado.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    itemMenuCriarProdutoPersonalizadoActionPerformed(evt);
+                }
+            });
+            menuProdutos.add(itemMenuCriarProdutoPersonalizado);
         }
 
         barraMenu.add(menuProdutos);
@@ -262,8 +284,11 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
 
     private void itemMenuListaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMenuListaActionPerformed
         this.chamaTelaTransacao();
-
     }//GEN-LAST:event_itemMenuListaActionPerformed
+
+    private void itemMenuCriarProdutoPersonalizadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMenuCriarProdutoPersonalizadoActionPerformed
+        this.chamaTelaCriacaoProdutoPersonalizado();
+    }//GEN-LAST:event_itemMenuCriarProdutoPersonalizadoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -320,6 +345,7 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
     private javax.swing.JMenuBar barraMenu;
     private javax.swing.JMenuItem itemMenuAdicionarProduto;
     private javax.swing.JMenuItem itemMenuCarrinho;
+    private javax.swing.JMenuItem itemMenuCriarProdutoPersonalizado;
     private javax.swing.JMenuItem itemMenuLista;
     private javax.swing.JMenu menuPedidos;
     private javax.swing.JMenu menuProdutos;

@@ -16,12 +16,22 @@ public class Produto {
     private String nome;
     private double valor;
     private int quantidade;
+    private boolean personalizado;
 
     public Produto(int id, String nome, double valor, int quantidade) {
         this.id = id;
         this.nome = nome;
         this.valor = valor;
         this.quantidade = quantidade;
+        this.personalizado = false;
+    }
+
+    public Produto(int id, String nome, double valor, int quantidade, boolean personalizado) {
+        this.id = id;
+        this.nome = nome;
+        this.valor = valor;
+        this.quantidade = quantidade;
+        this.personalizado = personalizado;
     }
 
     public int getId() {
@@ -42,6 +52,10 @@ public class Produto {
 
     public String getValorFormatado() {
         return Util.formataDinheiro(this.valor);
+    }
+
+    public boolean isPersonalizado() {
+        return personalizado;
     }
 
     public void setId(int id) {
@@ -68,4 +82,7 @@ public class Produto {
         }
     }
 
+    public void setPersonalizado(boolean personalizado) {
+        this.personalizado = personalizado;
+    }
 }

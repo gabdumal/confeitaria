@@ -4,7 +4,9 @@
  */
 package com.lugar.view.cliente;
 
-import com.lugar.model.Produto;
+import com.lugar.controller.Conexao;
+import com.lugar.model.ProdutoPersonalizado;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -12,8 +14,13 @@ import com.lugar.model.Produto;
  */
 public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
 
+    private int idProduto;
     private int quantidade;
-    private int quantidadeMaxima;
+    private String tipo;
+
+    public int getIdProduto() {
+        return this.idProduto;
+    }
 
     public int getQuantidade() {
         return this.quantidade;
@@ -21,21 +28,41 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
 
     public CriacaoProdutoPersonalizado(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
-        this.quantidade = 0;
+        this.idProduto = -1;
+        this.tipo = "Bolo";
         initComponents();
+        this.trocaPainel();
     }
 
-    public CriacaoProdutoPersonalizado(java.awt.Frame parent, boolean modal, Produto produto, int quantidadeCarrinho) {
-        super(parent, modal);
-        this.quantidadeMaxima = produto.getQuantidade();
-        if (quantidadeCarrinho > 0) {
-            this.quantidade = quantidadeCarrinho;
+    private void trocaPainel() {
+        if (this.tipo.equals("Bolo")) {
+            this.painelCamposBolo.setVisible(true);
+            this.painelCamposTrufa.setVisible(false);
         } else {
-            this.quantidade = 1;
+            this.painelCamposBolo.setVisible(false);
+            this.painelCamposTrufa.setVisible(true);
         }
-        initComponents();
-//        this.textoNomeProduto.setText(produto.getNome());
-        this.textoPrecoProduto.setText("R$ " + produto.getValor());
+    }
+
+    private void criaProdutoPersonalizado() {
+        if (this.tipo.equals("Bolo")) {
+            String recheioForm = this.comboBoxRecheioBolo1.getSelectedItem().toString();
+            String coberturaForm = this.comboBoxCoberturaBolo.getSelectedItem().toString();
+            String detalheForm = this.areaTextoDetalheBolo.getText().trim();
+
+            ProdutoPersonalizado produtoPersonalizado
+                    = new ProdutoPersonalizado(this.idProduto, this.tipo + " - " + recheioForm, 100,
+                            99999, recheioForm, coberturaForm, detalheForm);
+
+            this.idProduto = Conexao.insereProdutoPersonalizado(produtoPersonalizado);
+        }
+
+        if (this.idProduto > -1) {
+            JOptionPane.showMessageDialog(null, "Produto adicionado ao carrinho!");
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(null, "Não foi possível adicionar o produto! Tente novamente mais tarde.");
+        }
     }
 
     /**
@@ -52,9 +79,11 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
         titulo = new javax.swing.JLabel();
         painelInformacoesProduto = new javax.swing.JPanel();
         textoPrecoProduto = new javax.swing.JLabel();
-        painelTipo = new javax.swing.JPanel();
+        painelTipoQuantidade = new javax.swing.JPanel();
         textoTipo = new javax.swing.JLabel();
         comboBoxTipo = new javax.swing.JComboBox<>();
+        textoQuantidade = new javax.swing.JLabel();
+        campoQuantidade = new javax.swing.JSpinner();
         painelCamposTrufa = new javax.swing.JPanel();
         textoRecheioTrufa = new javax.swing.JLabel();
         comboBoxRecheioTrufa = new javax.swing.JComboBox<>();
@@ -98,7 +127,7 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
         painelInformacoesProduto.setLayout(new java.awt.GridBagLayout());
 
         textoPrecoProduto.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        textoPrecoProduto.setText("R$ 5,67");
+        textoPrecoProduto.setText("R$ 0,00");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
         painelInformacoesProduto.add(textoPrecoProduto, gridBagConstraints);
@@ -110,201 +139,225 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
         painelFormulario.add(painelInformacoesProduto, gridBagConstraints);
 
-        painelTipo.setLayout(new java.awt.GridBagLayout());
+        painelTipoQuantidade.setLayout(new java.awt.GridBagLayout());
 
-        textoTipo.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        textoTipo.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         textoTipo.setText("Tipo:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.ipadx = 30;
-        painelTipo.add(textoTipo, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        painelTipoQuantidade.add(textoTipo, gridBagConstraints);
 
-        comboBoxTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Trufa", "Bolo" }));
-        painelTipo.add(comboBoxTipo, new java.awt.GridBagConstraints());
+        comboBoxTipo.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        comboBoxTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Bolo", "Trufa" }));
+        comboBoxTipo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboBoxTipoActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        painelTipoQuantidade.add(comboBoxTipo, gridBagConstraints);
+
+        textoQuantidade.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        textoQuantidade.setText("Quantidade:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 30;
+        painelTipoQuantidade.add(textoQuantidade, gridBagConstraints);
+
+        campoQuantidade.setModel(new javax.swing.SpinnerNumberModel(1, 1, 99999, 1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 30;
+        painelTipoQuantidade.add(campoQuantidade, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
-        painelFormulario.add(painelTipo, gridBagConstraints);
+        painelFormulario.add(painelTipoQuantidade, gridBagConstraints);
 
-        if(false){
-            painelCamposTrufa.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-            painelCamposTrufa.setLayout(new java.awt.GridBagLayout());
+        painelCamposTrufa.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        painelCamposTrufa.setLayout(new java.awt.GridBagLayout());
 
-            textoRecheioTrufa.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-            textoRecheioTrufa.setText("Recheio:");
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.gridx = 0;
-            gridBagConstraints.gridy = 0;
-            gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-            gridBagConstraints.ipadx = 30;
-            gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 0);
-            painelCamposTrufa.add(textoRecheioTrufa, gridBagConstraints);
+        textoRecheioTrufa.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        textoRecheioTrufa.setText("Recheio:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 30;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 0);
+        painelCamposTrufa.add(textoRecheioTrufa, gridBagConstraints);
 
-            comboBoxRecheioTrufa.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Morango", "Chocolate", "Beijinho" }));
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.gridx = 1;
-            gridBagConstraints.gridy = 0;
-            gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-            gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 5);
-            painelCamposTrufa.add(comboBoxRecheioTrufa, gridBagConstraints);
+        comboBoxRecheioTrufa.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Morango", "Chocolate", "Beijinho" }));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 5);
+        painelCamposTrufa.add(comboBoxRecheioTrufa, gridBagConstraints);
 
-            textoCoberturaTrufa.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-            textoCoberturaTrufa.setText("Cobertura:");
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.gridx = 0;
-            gridBagConstraints.gridy = 1;
-            gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-            gridBagConstraints.ipadx = 30;
-            gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
-            painelCamposTrufa.add(textoCoberturaTrufa, gridBagConstraints);
+        textoCoberturaTrufa.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        textoCoberturaTrufa.setText("Cobertura:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 30;
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
+        painelCamposTrufa.add(textoCoberturaTrufa, gridBagConstraints);
 
-            comboBoxCoberturaTrufa.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Chocolate meio amargo", "Chocolate branco" }));
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.gridx = 1;
-            gridBagConstraints.gridy = 1;
-            gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-            gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
-            painelCamposTrufa.add(comboBoxCoberturaTrufa, gridBagConstraints);
+        comboBoxCoberturaTrufa.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Chocolate meio amargo", "Chocolate branco" }));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
+        painelCamposTrufa.add(comboBoxCoberturaTrufa, gridBagConstraints);
 
-            textoDetalheTrufa.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-            textoDetalheTrufa.setText("Detalhe:");
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.gridx = 0;
-            gridBagConstraints.gridy = 2;
-            gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-            gridBagConstraints.ipadx = 30;
-            gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
-            painelCamposTrufa.add(textoDetalheTrufa, gridBagConstraints);
+        textoDetalheTrufa.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        textoDetalheTrufa.setText("Detalhe:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 30;
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
+        painelCamposTrufa.add(textoDetalheTrufa, gridBagConstraints);
 
-            areaTextoDetalheTrufa.setText("\n\n");
-            painelAreaTextoDetalheTrufa.setViewportView(areaTextoDetalheTrufa);
+        areaTextoDetalheTrufa.setText("\n\n");
+        painelAreaTextoDetalheTrufa.setViewportView(areaTextoDetalheTrufa);
 
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.gridx = 1;
-            gridBagConstraints.gridy = 2;
-            gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-            gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
-            painelCamposTrufa.add(painelAreaTextoDetalheTrufa, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
+        painelCamposTrufa.add(painelAreaTextoDetalheTrufa, gridBagConstraints);
 
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.gridx = 0;
-            gridBagConstraints.gridy = 3;
-            gridBagConstraints.gridwidth = 2;
-            gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 0);
-            painelFormulario.add(painelCamposTrufa, gridBagConstraints);
-        }
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 0);
+        painelFormulario.add(painelCamposTrufa, gridBagConstraints);
 
-        if(true){
-            painelCamposBolo.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-            painelCamposBolo.setLayout(new java.awt.GridBagLayout());
+        painelCamposBolo.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        painelCamposBolo.setLayout(new java.awt.GridBagLayout());
 
-            textoFormaBolo.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-            textoFormaBolo.setText("Forma:");
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.gridx = 0;
-            gridBagConstraints.gridy = 0;
-            gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-            gridBagConstraints.ipadx = 30;
-            gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 0);
-            painelCamposBolo.add(textoFormaBolo, gridBagConstraints);
+        textoFormaBolo.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        textoFormaBolo.setText("Forma:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 30;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 0);
+        painelCamposBolo.add(textoFormaBolo, gridBagConstraints);
 
-            comboBoxFormaBolo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Redonda com furo - M 18x8", "Redonda com furo - G 21.5x9.5", "Retangular - M 28x19x4.5" }));
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.gridx = 1;
-            gridBagConstraints.gridy = 0;
-            gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-            gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 5);
-            painelCamposBolo.add(comboBoxFormaBolo, gridBagConstraints);
+        comboBoxFormaBolo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Redonda com furo - M 18x8", "Redonda com furo - G 21.5x9.5", "Retangular - M 28x19x4.5" }));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 5);
+        painelCamposBolo.add(comboBoxFormaBolo, gridBagConstraints);
 
-            painelCamposRecheiosBolo.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Recheios"));
-            painelCamposRecheiosBolo.setLayout(new java.awt.GridBagLayout());
+        painelCamposRecheiosBolo.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Recheios"));
+        painelCamposRecheiosBolo.setLayout(new java.awt.GridBagLayout());
 
-            comboBoxRecheioBolo1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Chocolate meio amargo", "Chocolate branco" }));
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.gridx = 0;
-            gridBagConstraints.gridy = 0;
-            gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-            gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-            gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
-            painelCamposRecheiosBolo.add(comboBoxRecheioBolo1, gridBagConstraints);
+        comboBoxRecheioBolo1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Chocolate meio amargo", "Chocolate branco" }));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        painelCamposRecheiosBolo.add(comboBoxRecheioBolo1, gridBagConstraints);
 
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.gridx = 0;
-            gridBagConstraints.gridy = 1;
-            gridBagConstraints.gridwidth = 2;
-            gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-            gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-            gridBagConstraints.insets = new java.awt.Insets(0, 10, 5, 10);
-            painelCamposBolo.add(painelCamposRecheiosBolo, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(0, 10, 5, 10);
+        painelCamposBolo.add(painelCamposRecheiosBolo, gridBagConstraints);
 
-            textoCoberturaBolo.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-            textoCoberturaBolo.setText("Cobertura:");
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.gridx = 0;
-            gridBagConstraints.gridy = 3;
-            gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-            gridBagConstraints.ipadx = 30;
-            gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
-            painelCamposBolo.add(textoCoberturaBolo, gridBagConstraints);
+        textoCoberturaBolo.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        textoCoberturaBolo.setText("Cobertura:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 30;
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
+        painelCamposBolo.add(textoCoberturaBolo, gridBagConstraints);
 
-            comboBoxCoberturaBolo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Glacê de limão", "Chantilly" }));
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.gridx = 1;
-            gridBagConstraints.gridy = 3;
-            gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-            gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
-            painelCamposBolo.add(comboBoxCoberturaBolo, gridBagConstraints);
+        comboBoxCoberturaBolo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Glacê de limão", "Chantilly" }));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
+        painelCamposBolo.add(comboBoxCoberturaBolo, gridBagConstraints);
 
-            textoCorBolo.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-            textoCorBolo.setText("Cor:");
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.gridx = 0;
-            gridBagConstraints.gridy = 2;
-            gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-            gridBagConstraints.ipadx = 30;
-            gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
-            painelCamposBolo.add(textoCorBolo, gridBagConstraints);
+        textoCorBolo.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        textoCorBolo.setText("Cor:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 30;
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
+        painelCamposBolo.add(textoCorBolo, gridBagConstraints);
 
-            comboBoxCorBolo1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Branco", "Amarelo", "Rosa" }));
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.gridx = 1;
-            gridBagConstraints.gridy = 2;
-            gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-            gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
-            painelCamposBolo.add(comboBoxCorBolo1, gridBagConstraints);
+        comboBoxCorBolo1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Branco", "Amarelo", "Rosa" }));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
+        painelCamposBolo.add(comboBoxCorBolo1, gridBagConstraints);
 
-            textoDetalheBolo.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-            textoDetalheBolo.setText("Detalhe:");
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.gridx = 0;
-            gridBagConstraints.gridy = 4;
-            gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-            gridBagConstraints.ipadx = 30;
-            gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
-            painelCamposBolo.add(textoDetalheBolo, gridBagConstraints);
+        textoDetalheBolo.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        textoDetalheBolo.setText("Detalhe:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 30;
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
+        painelCamposBolo.add(textoDetalheBolo, gridBagConstraints);
 
-            areaTextoDetalheBolo.setText("\n\n");
-            painelAreaTextoDetalheBolo.setViewportView(areaTextoDetalheBolo);
+        areaTextoDetalheBolo.setText("\n\n");
+        painelAreaTextoDetalheBolo.setViewportView(areaTextoDetalheBolo);
 
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.gridx = 1;
-            gridBagConstraints.gridy = 4;
-            gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-            gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
-            painelCamposBolo.add(painelAreaTextoDetalheBolo, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
+        painelCamposBolo.add(painelAreaTextoDetalheBolo, gridBagConstraints);
 
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.gridx = 0;
-            gridBagConstraints.gridy = 3;
-            gridBagConstraints.gridwidth = 2;
-            gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 0);
-            painelFormulario.add(painelCamposBolo, gridBagConstraints);
-        }
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 0);
+        painelFormulario.add(painelCamposBolo, gridBagConstraints);
 
         painelBotoes.setLayout(new java.awt.GridLayout(1, 0, 10, 0));
 
@@ -342,14 +395,18 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botaoEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoEnviarActionPerformed
-//        this.quantidade = (int) campoQuantidade.getValue();
+        this.criaProdutoPersonalizado();
 //        this.dispose();
     }//GEN-LAST:event_botaoEnviarActionPerformed
 
     private void botaoCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCancelarActionPerformed
-        // TODO add your handling code here:
         this.dispose();
     }//GEN-LAST:event_botaoCancelarActionPerformed
+
+    private void comboBoxTipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxTipoActionPerformed
+        this.tipo = comboBoxTipo.getSelectedItem().toString();
+        this.trocaPainel();
+    }//GEN-LAST:event_comboBoxTipoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -461,6 +518,7 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
     private javax.swing.JTextPane areaTextoDetalheTrufa;
     private javax.swing.JButton botaoCancelar;
     private javax.swing.JButton botaoEnviar;
+    private javax.swing.JSpinner campoQuantidade;
     private javax.swing.JComboBox<String> comboBoxCoberturaBolo;
     private javax.swing.JComboBox<String> comboBoxCoberturaTrufa;
     private javax.swing.JComboBox<String> comboBoxCorBolo1;
@@ -476,7 +534,7 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
     private javax.swing.JPanel painelCamposTrufa;
     private javax.swing.JPanel painelFormulario;
     private javax.swing.JPanel painelInformacoesProduto;
-    private javax.swing.JPanel painelTipo;
+    private javax.swing.JPanel painelTipoQuantidade;
     private javax.swing.JLabel textoCoberturaBolo;
     private javax.swing.JLabel textoCoberturaTrufa;
     private javax.swing.JLabel textoCorBolo;
@@ -484,6 +542,7 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
     private javax.swing.JLabel textoDetalheTrufa;
     private javax.swing.JLabel textoFormaBolo;
     private javax.swing.JLabel textoPrecoProduto;
+    private javax.swing.JLabel textoQuantidade;
     private javax.swing.JLabel textoRecheioTrufa;
     private javax.swing.JLabel textoTipo;
     private javax.swing.JLabel titulo;
