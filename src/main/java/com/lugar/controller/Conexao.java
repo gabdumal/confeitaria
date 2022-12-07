@@ -271,6 +271,28 @@ public class Conexao {
         }
     }
 
+    public static int insereTransacao(Transacao transacao) {
+        String sql = "INSERT INTO Transacao(valor, diaHora,descricao) VALUES(?,?,?);";
+        Connection conn = null;
+        int valorRetorno = RETORNO_SUCESSO;
+        try {
+            conn = Conexao.abreConexao();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setDouble(1, transacao.getValor());
+            pstmt.setString(2, transacao.getDiaHoraString());
+            pstmt.setString(3, transacao.getDescricao());
+
+            pstmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexao.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            valorRetorno = determinaValorErro(ex.getMessage());
+        } finally {
+            Conexao.fechaConexao(conn);
+            return valorRetorno;
+        }
+    }
+
     public static Produto buscaProduto(int id) {
         String sql = "SELECT Produto.nome, Produto.valor, Produto.quantidade, "
                 + "Produto.personalizado, ProdutoPersonalizado.recheio, "

@@ -41,6 +41,10 @@ public class Transacao {
         return diaHora;
     }
 
+    public String getDiaHoraString() {
+        return diaHora.toString();
+    }
+
     public String getDiaHoraFormatado() {
         return Util.formataDiaHora(this.diaHora);
     }
