@@ -31,6 +31,19 @@ public class ExibicaoTransacoes extends javax.swing.JDialog {
     private void chamarTelaCadastroTransacao() {
         CadastroTransacao tela = new CadastroTransacao(pai, true);
         tela.setVisible(true);
+        this.atualizaTabela();
+    }
+
+    private void atualizaTabela() {
+        this.atualizaModeloTabela();
+        tabelaTransacoes.setModel(this.modeloTabela);
+        tabelaTransacoes.removeColumn(tabelaTransacoes.getColumnModel().getColumn(0));
+        //PERGUNTAR O PQ DESSA LINHA
+    }
+
+    private void atualizaModeloTabela() {
+        this.listaTransacoes = Conexao.buscaTodasTransacoes();
+        this.modeloTabela = new TransacoesTableModel(listaTransacoes);
     }
 
     /**

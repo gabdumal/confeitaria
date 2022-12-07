@@ -215,6 +215,11 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
         getContentPane().add(painelTabela, gridBagConstraints);
 
         menuProdutos.setText("Produtos");
+        menuProdutos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuProdutosActionPerformed(evt);
+            }
+        });
 
         if(usuario.isAdmin()){
             itemMenuAdicionarProduto.setText("Adicionar produto");
@@ -289,6 +294,10 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
     private void itemMenuCriarProdutoPersonalizadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMenuCriarProdutoPersonalizadoActionPerformed
         this.chamaTelaCriacaoProdutoPersonalizado();
     }//GEN-LAST:event_itemMenuCriarProdutoPersonalizadoActionPerformed
+
+    private void menuProdutosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuProdutosActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menuProdutosActionPerformed
 
     /**
      * @param args the command line arguments

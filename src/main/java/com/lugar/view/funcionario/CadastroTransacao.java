@@ -153,6 +153,7 @@ public class CadastroTransacao extends javax.swing.JDialog {
         } else {
             JOptionPane.showMessageDialog(null, "Não foi possível realizar o cadastro! Tente novamente mais tarde.");
         }
+
     }//GEN-LAST:event_botaoCadastrarActionPerformed
 
     private void campoDescricaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoDescricaoActionPerformed
