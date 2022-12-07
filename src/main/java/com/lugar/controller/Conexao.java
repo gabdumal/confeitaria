@@ -448,6 +448,19 @@ public class Conexao {
         }
     }
 
+    public static int deletaTransacao(int idTransacao) {
+        String sql = "DELETE FROM Transacao WHERE id = ?;";
+        Connection conn = null;
+        int valorRetorno = RETORNO_SUCESSO;
+//        try{
+//            conn = Conexao.abreConexao();
+//            PreparedStatement pstmt = conn.prepareStatement(sql);
+//            pstmt.setInt(1, idTransacao);
+//            pstmt.executeUpdate();
+//        }
+        return 0;
+    }
+
     public static int insereProdutoPersonalizado(ProdutoPersonalizado produtoPersonalizado) {
         String sqlProduto = "INSERT INTO Produto(nome, valor, quantidade, personalizado) VALUES(?, ?, ?, 1);";
         String sqlProdutoPersonalizado = "INSERT INTO ProdutoPersonalizado(id, recheio, cobertura, detalhe) VALUES(?, ?, ?, ?);";

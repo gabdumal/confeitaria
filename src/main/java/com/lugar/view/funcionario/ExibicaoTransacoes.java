@@ -7,43 +7,66 @@ package com.lugar.view.funcionario;
 import com.lugar.controller.Conexao;
 import com.lugar.model.Transacao;
 import com.lugar.model.TransacoesTableModel;
+import java.awt.Point;
 import java.util.List;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JTable;
 
 /**
  *
  * @author lugar
  */
 public class ExibicaoTransacoes extends javax.swing.JDialog {
-
+    
     private java.awt.Frame pai;
     private List<Transacao> listaTransacoes;
     private TransacoesTableModel modeloTabela;
-
+    
     public ExibicaoTransacoes(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         this.pai = parent;
-
+        
         this.listaTransacoes = Conexao.buscaTodasTransacoes();
         this.modeloTabela = new TransacoesTableModel(this.listaTransacoes);
         initComponents();
+        
+        tabelaTransacoes.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent mouseEvent) {
+                JTable tabela = (JTable) mouseEvent.getSource();
+                Point ponto = mouseEvent.getPoint();
+                int linha = tabela.rowAtPoint(ponto);
+                int coluna = tabela.columnAtPoint(ponto);
+                // Clique duplo
+                if (mouseEvent.getClickCount() == 2 && tabela.getSelectedRow() != -1) {
+                    chamaTelaEdicao((int) modeloTabela.getValueAt(linha, 0));
+                }
+            }
+        });
     }
-
+    
     private void chamarTelaCadastroTransacao() {
         CadastroTransacao tela = new CadastroTransacao(pai, true);
         tela.setVisible(true);
         this.atualizaTabela();
     }
-
+    
     private void atualizaTabela() {
         this.atualizaModeloTabela();
         tabelaTransacoes.setModel(this.modeloTabela);
         tabelaTransacoes.removeColumn(tabelaTransacoes.getColumnModel().getColumn(0));
         //PERGUNTAR O PQ DESSA LINHA
     }
-
+    
     private void atualizaModeloTabela() {
         this.listaTransacoes = Conexao.buscaTodasTransacoes();
         this.modeloTabela = new TransacoesTableModel(listaTransacoes);
+    }
+    
+    private void chamaTelaEdicao(int id) {
+        EdicaoTransacao tela = new EdicaoTransacao(pai, true);
+        tela.setVisible(true);
     }
 
     /**
@@ -117,7 +140,7 @@ public class ExibicaoTransacoes extends javax.swing.JDialog {
     private void botaoVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoVoltarActionPerformed
         this.dispose();
     }//GEN-LAST:event_botaoVoltarActionPerformed
-
+    
     private void botaoCadastrarTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCadastrarTActionPerformed
         this.chamarTelaCadastroTransacao();
     }//GEN-LAST:event_botaoCadastrarTActionPerformed
@@ -166,7 +189,7 @@ public class ExibicaoTransacoes extends javax.swing.JDialog {
             }
         });
     }
-
+    
     public TransacoesTableModel getModeloTabela() {
         return modeloTabela;
     }
