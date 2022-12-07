@@ -255,9 +255,17 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
             menuPedidos.add(itemMenuCarrinho);
         }
 
-        barraMenu.add(menuPedidos);
+        if(!usuario.isAdmin()){
+
+            barraMenu.add(menuPedidos);
+        }
 
         menuTransacoes.setText("Transações");
+        menuTransacoes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuTransacoesActionPerformed(evt);
+            }
+        });
 
         if(usuario.isAdmin()){
             itemMenuLista.setText("Lista");
@@ -298,6 +306,10 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
     private void menuProdutosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuProdutosActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_menuProdutosActionPerformed
+
+    private void menuTransacoesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuTransacoesActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menuTransacoesActionPerformed
 
     /**
      * @param args the command line arguments

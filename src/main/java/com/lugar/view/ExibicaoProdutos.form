@@ -48,6 +48,10 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Pedidos"/>
           </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="}"/>
+            <AuxValue name="JavaCodeGenerator_LayoutCodePost" type="java.lang.String" value="if(!usuario.isAdmin()){"/>
+          </AuxValues>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="itemMenuCarrinho">
               <Properties>
@@ -68,6 +72,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Transa&#xe7;&#xf5;es"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuTransacoesActionPerformed"/>
+          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="}"/>
             <AuxValue name="JavaCodeGenerator_LayoutCodePost" type="java.lang.String" value="if(usuario.isAdmin()){"/>
