@@ -296,21 +296,48 @@ public class Conexao {
         }
     }
 
-    public static Produto buscaProduto(int id) {
-        String sql = "SELECT Produto.nome, Produto.valor, Produto.quantidade, "
-                + "Produto.personalizado, ProdutoPersonalizado.recheio, "
-                + "ProdutoPersonalizado.cobertura, ProdutoPersonalizado.detalhe "
-                + "FROM Produto LEFT JOIN ProdutoPersonalizado "
-                + "ON Produto.id = ProdutoPersonalizado.id "
-                + "WHERE Produto.id=" + id + ";";
+//    public static Produto buscaProduto(int id) {
+//        String sql = "SELECT Produto.nome, Produto.valor, Produto.quantidade, "
+//                + "Produto.personalizado, ProdutoPersonalizado.recheio, "
+//                + "ProdutoPersonalizado.cobertura, ProdutoPersonalizado.detalhe "
+//                + "FROM Produto LEFT JOIN ProdutoPersonalizado "
+//                + "ON Produto.id = ProdutoPersonalizado.id "
+//                + "WHERE Produto.id=" + id + ";";
+//        Connection conn = null;
+//        Produto produto = null;
+//        try {
+//            conn = Conexao.abreConexao();
+//            Statement stmt = conn.createStatement();
+//            ResultSet rs = stmt.executeQuery(sql);
+//            if (rs.next()) {
+//                produto = new Produto(
+//                        id,
+//                        rs.getString("nome"),
+//                        rs.getDouble("valor"),
+//                        rs.getInt("quantidade")
+//                );
+//            }
+//        } catch (SQLException ex) {
+//            Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
+//        } finally {
+//            Conexao.fechaConexao(conn);
+//            return produto;
+//        }
+//    }
+    public static ProdutoPronto buscaProdutoPronto(int id) {
+        String sql = "SELECT ProdutoPronto.nome, Produto.valor, ProdutoPronto.quantidade"
+                + " FROM Produto INNER JOIN ProdutoPronto"
+                + " ON Produto.id = ProdutoPronto.id"
+                + " WHERE Produto.id=" + id + ";";
+        System.out.println(sql);
         Connection conn = null;
-        Produto produto = null;
+        ProdutoPronto produto = null;
         try {
             conn = Conexao.abreConexao();
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
-                produto = new Produto(
+                produto = new ProdutoPronto(
                         id,
                         rs.getString("nome"),
                         rs.getDouble("valor"),
@@ -499,7 +526,7 @@ public class Conexao {
     }
 
     public static int atualizaEstoqueProduto(int id, int estoque) {
-        String sql = "UPDATE Produto SET quantidade = ? WHERE id = ?;";
+        String sql = "UPDATE ProdutoPronto SET quantidade = ? WHERE id = ?;";
         Connection conn = null;
         int valorRetorno = RETORNO_SUCESSO;
         try {

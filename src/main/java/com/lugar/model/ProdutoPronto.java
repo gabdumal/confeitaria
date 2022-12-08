@@ -10,7 +10,6 @@ package com.lugar.model;
  */
 public class ProdutoPronto extends Produto {
 
-    private int id;
     private String nome;
     private int quantidade;
 
@@ -20,22 +19,12 @@ public class ProdutoPronto extends Produto {
         this.quantidade = quantidade;
     }
 
-    public int getId() {
-        return id;
-    }
-
     public String getNome() {
         return nome;
     }
 
     public int getQuantidade() {
         return quantidade;
-    }
-
-    public void setId(int id) {
-        if (id >= 0) {
-            this.id = id;
-        }
     }
 
     public void setNome(String nome) {

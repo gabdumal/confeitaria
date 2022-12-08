@@ -65,6 +65,7 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
                     // Clique duplo
                     if (mouseEvent.getClickCount() == 2 && tabela.getSelectedRow() != -1) {
                         if (coluna == 2) {
+                            System.out.println(linha);
                             // Tela de estoque
                             chamaTelaEdicaoEstoque((int) modeloTabela.getValueAt(linha, 0));
                         } else {
@@ -131,7 +132,7 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
     }
 
     private void chamaTelaAdicaoProdutoCarrinho(int id) {
-        Produto produto = Conexao.buscaProduto(id);
+        ProdutoPronto produto = Conexao.buscaProdutoPronto(id);
         int quantidadeCarrinho = this.listaProdutosCarrinho.getOrDefault(id, 1);
         AdicaoProdutoCarrinho adicaoProdutoCarrinho = new AdicaoProdutoCarrinho(this, true, produto, quantidadeCarrinho);
         adicaoProdutoCarrinho.setVisible(true);

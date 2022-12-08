@@ -5,7 +5,7 @@
 package com.lugar.view.funcionario;
 
 import com.lugar.controller.Conexao;
-import com.lugar.model.Produto;
+import com.lugar.model.ProdutoPronto;
 import javax.swing.JOptionPane;
 
 /**
@@ -25,11 +25,27 @@ public class EdicaoEstoqueProduto extends javax.swing.JDialog {
     public EdicaoEstoqueProduto(java.awt.Frame parent, boolean modal, int id) {
         super(parent, modal);
         this.id = id;
-        Produto produto = Conexao.buscaProduto(id);
+        ProdutoPronto produto = Conexao.buscaProdutoPronto(id);
         this.estoqueAnterior = produto.getQuantidade();
         initComponents();
         this.textoNomeProduto.setText(produto.getNome());
         this.textoPrecoProduto.setText("R$ " + produto.getValor());
+    }
+
+    private void atualizaEstoqueProduto() {
+        int estoqueForm = (int) campoEstoque.getValue();
+
+        if (estoqueForm >= 0) {
+            int resultado = Conexao.atualizaEstoqueProduto(this.id,
+                    estoqueForm
+            );
+            if (resultado == 0) {
+                JOptionPane.showMessageDialog(null, "Edição realizada com sucesso!");
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(null, "Não foi possível realizar a edição! Tente novamente mais tarde.");
+            }
+        }
     }
 
     /**
@@ -149,19 +165,7 @@ public class EdicaoEstoqueProduto extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botaoEdicaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoEdicaoActionPerformed
-        int estoqueForm = (int) campoEstoque.getValue();
-
-        if (estoqueForm >= 0) {
-            int resultado = Conexao.atualizaEstoqueProduto(this.id,
-                    estoqueForm
-            );
-            if (resultado == 0) {
-                JOptionPane.showMessageDialog(null, "Edição realizada com sucesso!");
-                this.dispose();
-            } else {
-                JOptionPane.showMessageDialog(null, "Não foi possível realizar a edição! Tente novamente mais tarde.");
-            }
-        }
+        this.atualizaEstoqueProduto();
     }//GEN-LAST:event_botaoEdicaoActionPerformed
 
     /**

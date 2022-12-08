@@ -5,7 +5,7 @@
 package com.lugar.view.funcionario;
 
 import com.lugar.controller.Conexao;
-import com.lugar.model.Produto;
+import com.lugar.model.ProdutoPronto;
 import javax.swing.JOptionPane;
 
 /**
@@ -26,9 +26,49 @@ public class EdicaoProduto extends javax.swing.JDialog {
         this.id = id;
         initComponents();
 
-        Produto produto = Conexao.buscaProduto(id);
+        ProdutoPronto produto = Conexao.buscaProdutoPronto(id);
         campoNome.setText(produto.getNome());
         campoValor.setValue(produto.getValor());
+    }
+
+    private void editaProduto() {
+        String nomeForm = campoNome.getText().trim();
+        double valorForm = (double) campoValor.getValue();
+
+        if (!nomeForm.isBlank() && valorForm > 0) {
+            boolean confirmacao = JOptionPane.showConfirmDialog(null,
+                    "Deseja editar este produto?",
+                    "Edição de Produto", JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE) == 0;
+
+            if (confirmacao) {
+                ProdutoPronto produtoEditado = new ProdutoPronto(id, nomeForm, valorForm, 0);
+                int resultado = Conexao.atualizaProduto(produtoEditado);
+                if (resultado == 0) {
+                    JOptionPane.showMessageDialog(null, "Edição realizada com sucesso!");
+                    this.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Não foi possível realizar a edição! Tente novamente mais tarde.");
+                }
+            }
+        }
+    }
+
+    private void deletaProduto() {
+        boolean confirmacao = JOptionPane.showConfirmDialog(null,
+                "Deseja deletar este produto permanentemente?",
+                "Deleção de Produto", JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE) == 0;
+
+        if (confirmacao) {
+            int resultado = Conexao.deletaProduto(this.id);
+            if (resultado == 0) {
+                JOptionPane.showMessageDialog(null, "Deleção realizada com sucesso!");
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(null, "Não foi possível realizar a deleção! Tente novamente mais tarde.");
+            }
+        }
     }
 
     /**
@@ -153,43 +193,11 @@ public class EdicaoProduto extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botaoEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoEditarActionPerformed
-        String nomeForm = campoNome.getText().trim();
-        double valorForm = (double) campoValor.getValue();
-
-        if (!nomeForm.isBlank() && valorForm > 0) {
-            boolean confirmacao = JOptionPane.showConfirmDialog(null,
-                    "Deseja editar este produto?",
-                    "Edição de Produto", JOptionPane.YES_NO_OPTION,
-                    JOptionPane.WARNING_MESSAGE) == 0;
-
-            if (confirmacao) {
-                Produto produtoEditado = new Produto(id, nomeForm, valorForm, 0);
-                int resultado = Conexao.atualizaProduto(produtoEditado);
-                if (resultado == 0) {
-                    JOptionPane.showMessageDialog(null, "Edição realizada com sucesso!");
-                    this.dispose();
-                } else {
-                    JOptionPane.showMessageDialog(null, "Não foi possível realizar a edição! Tente novamente mais tarde.");
-                }
-            }
-        }
+        this.editaProduto();
     }//GEN-LAST:event_botaoEditarActionPerformed
 
     private void botaoDeletarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoDeletarActionPerformed
-        boolean confirmacao = JOptionPane.showConfirmDialog(null,
-                "Deseja deletar este produto permanentemente?",
-                "Deleção de Produto", JOptionPane.YES_NO_OPTION,
-                JOptionPane.WARNING_MESSAGE) == 0;
-
-        if (confirmacao) {
-            int resultado = Conexao.deletaProduto(this.id);
-            if (resultado == 0) {
-                JOptionPane.showMessageDialog(null, "Deleção realizada com sucesso!");
-                this.dispose();
-            } else {
-                JOptionPane.showMessageDialog(null, "Não foi possível realizar a deleção! Tente novamente mais tarde.");
-            }
-        }
+        this.deletaProduto();
     }//GEN-LAST:event_botaoDeletarActionPerformed
 
     private void campoNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoNomeActionPerformed
