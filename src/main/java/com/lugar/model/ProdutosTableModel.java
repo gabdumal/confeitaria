@@ -4,7 +4,7 @@
  */
 package com.lugar.model;
 
-import com.lugar.model.Produto;
+import com.lugar.model.ProdutoPronto;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
@@ -15,14 +15,14 @@ import javax.swing.table.AbstractTableModel;
 public class ProdutosTableModel extends AbstractTableModel {
 
     private String colunas[] = {"#", "Produto", "Valor", "Quantidade"};
-    private List<Produto> listaProdutos;
+    private List<ProdutoPronto> listaProdutos;
 
     private final int COLUNA_ID = 0;
     private final int COLUNA_PRODUTO = 1;
     private final int COLUNA_VALOR = 2;
     private final int COLUNA_QUANTIDADE = 3;
 
-    public ProdutosTableModel(List<Produto> listaProdutos) {
+    public ProdutosTableModel(List<ProdutoPronto> listaProdutos) {
         this.listaProdutos = listaProdutos;
     }
 
@@ -53,7 +53,7 @@ public class ProdutosTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Produto produto = this.listaProdutos.get(rowIndex);
+        ProdutoPronto produto = this.listaProdutos.get(rowIndex);
 
         switch (columnIndex) {
             case COLUNA_ID:

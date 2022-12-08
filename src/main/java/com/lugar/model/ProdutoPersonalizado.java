@@ -14,9 +14,9 @@ public class ProdutoPersonalizado extends Produto {
     private String cobertura;
     private String detalhe;
 
-    public ProdutoPersonalizado(int id, String nome, double valor, int quantidade,
-            String recheio, String cobertura, String detalhe) {
-        super(id, nome, valor, quantidade);
+    public ProdutoPersonalizado(int id, double valor, String recheio,
+            String cobertura, String detalhe) {
+        super(id, valor);
         this.recheio = recheio;
         this.cobertura = cobertura;
         this.detalhe = detalhe;

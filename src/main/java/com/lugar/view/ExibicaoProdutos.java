@@ -8,6 +8,7 @@ import com.lugar.controller.Conexao;
 import com.lugar.model.Usuario;
 import com.lugar.model.ProdutosTableModel;
 import com.lugar.model.Produto;
+import com.lugar.model.ProdutoPronto;
 import com.lugar.model.Transacao;
 import com.lugar.view.cliente.AdicaoProdutoCarrinho;
 import com.lugar.view.cliente.Carrinho;
@@ -32,7 +33,7 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
 
     // Geral
     private Usuario usuario;
-    List<Produto> listaProdutos;
+    List<ProdutoPronto> listaProdutos;
     List<Transacao> listaTransacoes;
     private ProdutosTableModel modeloTabela;
 
@@ -63,7 +64,7 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
                     int coluna = tabela.columnAtPoint(ponto);
                     // Clique duplo
                     if (mouseEvent.getClickCount() == 2 && tabela.getSelectedRow() != -1) {
-                        if (coluna == 3) {
+                        if (coluna == 2) {
                             // Tela de estoque
                             chamaTelaEdicaoEstoque((int) modeloTabela.getValueAt(linha, 0));
                         } else {
@@ -96,9 +97,9 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
     }
 
     private void atualizaModeloTabela() {
-        this.listaProdutos = Conexao.buscaTodosProdutos(usuario.isAdmin());
+        this.listaProdutos = Conexao.buscaTodosProdutosProntos(usuario.isAdmin());
         if (!usuario.isAdmin()) {
-            for (Produto produto : this.listaProdutos) {
+            for (ProdutoPronto produto : this.listaProdutos) {
                 int id = produto.getId();
                 int quantidadeCarrinho = this.listaProdutosCarrinho.getOrDefault(id, -1);
                 if (quantidadeCarrinho != -1) {

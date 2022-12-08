@@ -144,12 +144,12 @@ public class CadastroTransacao extends javax.swing.JDialog {
 
         Transacao transacao = new Transacao(0, valor, agora, descricao);
 
-        int result = Conexao.insereTransacao(transacao);
-        if (result == 0) {
+        int resultado = Conexao.insereTransacao(transacao);
+        if (resultado == 0) {
             JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!");
             this.dispose();
-        } else if (result == -1) {
-            JOptionPane.showMessageDialog(null, "Não foi possível realizar o cadastro! O usuário preenchido já existe no sistema.");
+        } else if (resultado == -2) {
+            JOptionPane.showMessageDialog(null, "Não foi possível realizar o cadastro! Esta transação já existe no sistema.");
         } else {
             JOptionPane.showMessageDialog(null, "Não foi possível realizar o cadastro! Tente novamente mais tarde.");
         }

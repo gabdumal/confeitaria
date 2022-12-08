@@ -18,6 +18,23 @@ public class CadastroProduto extends javax.swing.JDialog {
         initComponents();
     }
 
+    private void cadastraProduto() {
+        String nomeForm = campoNome.getText().trim();
+        double valorForm = (double) campoValor.getValue();
+
+        if (!nomeForm.isBlank() && valorForm > 0) {
+            int idProduto = Conexao.insereProdutoPronto(nomeForm, valorForm);
+            if (idProduto > -1) {
+                JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!");
+                this.dispose();
+            } else if (idProduto == -2) {
+                JOptionPane.showMessageDialog(null, "Não foi possível realizar o cadastro! O produto preenchido já existe no sistema.");
+            } else {
+                JOptionPane.showMessageDialog(null, "Não foi possível realizar o cadastro! Tente novamente mais tarde.");
+            }
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -132,20 +149,7 @@ public class CadastroProduto extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botaoCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCadastrarActionPerformed
-        String nomeForm = campoNome.getText().trim();
-        double valorForm = (double) campoValor.getValue();
-
-        if (!nomeForm.isBlank() && valorForm > 0) {
-            int resultado = Conexao.insereProduto(nomeForm, valorForm);
-            if (resultado == 0) {
-                JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!");
-                this.dispose();
-            } else if (resultado == 1) {
-                JOptionPane.showMessageDialog(null, "Não foi possível realizar o cadastro! O produto preenchido já existe no sistema.");
-            } else {
-                JOptionPane.showMessageDialog(null, "Não foi possível realizar o cadastro! Tente novamente mais tarde.");
-            }
-        }
+        this.cadastraProduto();
     }//GEN-LAST:event_botaoCadastrarActionPerformed
 
     private void campoNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoNomeActionPerformed

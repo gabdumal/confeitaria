@@ -327,7 +327,7 @@ public class CadastroCliente extends javax.swing.JDialog {
             if (resultado == 0) {
                 JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!");
                 this.dispose();
-            } else if (resultado == -1) {
+            } else if (resultado == -2) {
                 JOptionPane.showMessageDialog(null, "Não foi possível realizar o cadastro! O usuário preenchido já existe no sistema.");
             } else {
                 JOptionPane.showMessageDialog(null, "Não foi possível realizar o cadastro! Tente novamente mais tarde.");
