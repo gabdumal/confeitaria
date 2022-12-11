@@ -11,20 +11,20 @@ package com.lugar.model;
 public class ProdutoPronto extends Produto {
 
     private String nome;
-    private int quantidade;
+    private int estoque;
 
-    public ProdutoPronto(int id, String nome, double valor, int quantidade) {
+    public ProdutoPronto(int id, String nome, double valor, int estoque) {
         super(id, valor);
         this.nome = nome;
-        this.quantidade = quantidade;
+        this.estoque = estoque;
     }
 
     public String getNome() {
         return nome;
     }
 
-    public int getQuantidade() {
-        return quantidade;
+    public int getEstoque() {
+        return estoque;
     }
 
     public void setNome(String nome) {
@@ -33,9 +33,9 @@ public class ProdutoPronto extends Produto {
         }
     }
 
-    public void setQuantidade(int quantidade) {
-        if (quantidade >= 0) {
-            this.quantidade = quantidade;
+    public void setEstoque(int estoque) {
+        if (estoque >= 0) {
+            this.estoque = estoque;
         }
     }
 

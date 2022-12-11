@@ -5,6 +5,8 @@
 package com.lugar.view.cliente;
 
 import com.lugar.model.Produto;
+import com.lugar.model.ProdutoPersonalizado;
+import com.lugar.model.ProdutoPronto;
 
 /**
  *
@@ -27,14 +29,21 @@ public class AdicaoProdutoCarrinho extends javax.swing.JDialog {
 
     public AdicaoProdutoCarrinho(java.awt.Frame parent, boolean modal, Produto produto, int quantidadeCarrinho) {
         super(parent, modal);
-        this.quantidadeMaxima = produto.getQuantidade();
+        String textoProduto = "";
+        if (produto instanceof ProdutoPronto) {
+            this.quantidadeMaxima = ((ProdutoPronto) produto).getEstoque();
+            textoProduto = ((ProdutoPronto) produto).getNome();
+        } else {
+            this.quantidadeMaxima = Integer.MAX_VALUE;
+            textoProduto = ((ProdutoPersonalizado) produto).getRecheio();
+        }
         if (quantidadeCarrinho > 0) {
             this.quantidade = quantidadeCarrinho;
         } else {
             this.quantidade = 1;
         }
         initComponents();
-        this.textoNomeProduto.setText(produto.getNome());
+        this.textoNomeProduto.setText(textoProduto);
         this.textoPrecoProduto.setText(produto.getValorFormatado());
     }
 
@@ -164,7 +173,6 @@ public class AdicaoProdutoCarrinho extends javax.swing.JDialog {
     }//GEN-LAST:event_botaoEnviarActionPerformed
 
     private void botaoCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCancelarActionPerformed
-        // TODO add your handling code here:
         this.dispose();
     }//GEN-LAST:event_botaoCancelarActionPerformed
 
@@ -193,37 +201,6 @@ public class AdicaoProdutoCarrinho extends javax.swing.JDialog {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(AdicaoProdutoCarrinho.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the dialog */

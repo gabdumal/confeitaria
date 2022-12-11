@@ -32,6 +32,8 @@ public class Conexao {
     private final static int RETORNO_SUCESSO = 0;
     private final static int RETORNO_ERRO_INDETERMINADO = -1;
     private final static int RETORNO_ERRO_NAO_UNICO = -2;
+    private final static int TIPO_PRONTO = 0;
+    private final static int TIPO_PERSONALIZADO = 1;
 
     /**
      * Conecta ao banco de dados confeitaria.db
@@ -88,7 +90,7 @@ public class Conexao {
             sql = "CREATE TABLE IF NOT EXISTS \"ProdutoPronto\" (\n"
                     + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
                     + "	\"nome\"	TEXT NOT NULL UNIQUE,\n"
-                    + "	\"quantidade\"	INTEGER NOT NULL DEFAULT 0,\n"
+                    + "	\"estoque\"	INTEGER NOT NULL DEFAULT 0,\n"
                     + "	FOREIGN KEY(\"id\") REFERENCES \"Produto\"(\"id\"),\n"
                     + "	PRIMARY KEY(\"id\")\n"
                     + ");";
@@ -107,6 +109,7 @@ public class Conexao {
             sql = "CREATE TABLE IF NOT EXISTS \"Produto\" (\n"
                     + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
                     + "	\"valor\"	REAL NOT NULL DEFAULT 0,\n"
+                    + "	\"tipo\"	INTEGER NOT NULL DEFAULT 0 CHECK(\"tipo\" IN (0, 1)),"
                     + "	PRIMARY KEY(\"id\" AUTOINCREMENT)\n"
                     + ");";
             stmt.addBatch(sql);
@@ -173,7 +176,15 @@ public class Conexao {
             if (!rs.next()) {
                 sql = "INSERT INTO \"Transacao\" VALUES (0,12.0,'2020-08-17T10:11:16.908732','teste teste');\n"
                         + "INSERT INTO \"Usuario\" VALUES (5,'Cliente Exemplo','cliente','senha',0,'cliente@email.com','32980675454');\n"
-                        + "INSERT INTO \"Usuario\" VALUES (6,'Funcionário Exemplo','admin','senha',1,'admin@email.com','32956435476');";
+                        + "INSERT INTO \"Usuario\" VALUES (6,'Funcionário Exemplo','admin','senha',1,'admin@email.com','32956435476');\n"
+                        + "INSERT INTO \"ProdutoPersonalizado\" (\"id\",\"recheio\",\"cobertura\",\"detalhe\") VALUES (6,'Chocolate meio amargo','Glacê de limão','');\n"
+                        + "INSERT INTO \"ProdutoPersonalizado\" (\"id\",\"recheio\",\"cobertura\",\"detalhe\") VALUES (9,'Chocolate meio amargo','Chantilly','dsdas');\n"
+                        + "INSERT INTO \"Produto\" (\"id\",\"valor\",\"tipo\") VALUES (6,100.0,1);\n"
+                        + "INSERT INTO \"Produto\" (\"id\",\"valor\",\"tipo\") VALUES (9,100.0,1);\n"
+                        + "INSERT INTO \"Produto\" (\"id\",\"valor\",\"tipo\") VALUES (11,5.56,0);\n"
+                        + "INSERT INTO \"Produto\" (\"id\",\"valor\",\"tipo\") VALUES (12,7.897,0);\n"
+                        + "INSERT INTO \"ProdutoPronto\" (\"id\",\"nome\",\"estoque\") VALUES (11,'Brownie',8);\n"
+                        + "INSERT INTO \"ProdutoPronto\" (\"id\",\"nome\",\"estoque\") VALUES (12,'Sorvete de manga apimentada',0);";
 
                 String[] updates = sql.split("\n");
                 for (String update : updates) {
@@ -296,36 +307,50 @@ public class Conexao {
         }
     }
 
-//    public static Produto buscaProduto(int id) {
-//        String sql = "SELECT Produto.nome, Produto.valor, Produto.quantidade, "
-//                + "Produto.personalizado, ProdutoPersonalizado.recheio, "
-//                + "ProdutoPersonalizado.cobertura, ProdutoPersonalizado.detalhe "
-//                + "FROM Produto LEFT JOIN ProdutoPersonalizado "
-//                + "ON Produto.id = ProdutoPersonalizado.id "
-//                + "WHERE Produto.id=" + id + ";";
-//        Connection conn = null;
-//        Produto produto = null;
-//        try {
-//            conn = Conexao.abreConexao();
-//            Statement stmt = conn.createStatement();
-//            ResultSet rs = stmt.executeQuery(sql);
-//            if (rs.next()) {
-//                produto = new Produto(
-//                        id,
-//                        rs.getString("nome"),
-//                        rs.getDouble("valor"),
-//                        rs.getInt("quantidade")
-//                );
-//            }
-//        } catch (SQLException ex) {
-//            Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
-//        } finally {
-//            Conexao.fechaConexao(conn);
-//            return produto;
-//        }
-//    }
+    public static Produto buscaProduto(int id) {
+        String sql = "SELECT Produto.tipo, Produto.valor, "
+                + "ProdutoPronto.estoque, ProdutoPronto.nome, "
+                + "ProdutoPersonalizado.recheio, "
+                + "ProdutoPersonalizado.cobertura, ProdutoPersonalizado.detalhe "
+                + "FROM Produto "
+                + "LEFT JOIN ProdutoPersonalizado ON Produto.id = ProdutoPersonalizado.id "
+                + "LEFT JOIN ProdutoPronto ON Produto.id = ProdutoPronto.id "
+                + "WHERE Produto.id=" + id + ";";
+        Connection conn = null;
+        Produto produto = null;
+
+        try {
+            conn = Conexao.abreConexao();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            if (rs.next()) {
+                if (rs.getInt("tipo") == TIPO_PRONTO) {
+                    produto = new ProdutoPronto(
+                            id,
+                            rs.getString("nome"),
+                            rs.getDouble("valor"),
+                            rs.getInt("estoque")
+                    );
+                } else {
+                    produto = new ProdutoPersonalizado(
+                            id,
+                            rs.getDouble("valor"),
+                            rs.getString("recheio"),
+                            rs.getString("cobertura"),
+                            rs.getString("detalhe")
+                    );
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            Conexao.fechaConexao(conn);
+            return produto;
+        }
+    }
+
     public static ProdutoPronto buscaProdutoPronto(int id) {
-        String sql = "SELECT ProdutoPronto.nome, Produto.valor, ProdutoPronto.quantidade"
+        String sql = "SELECT ProdutoPronto.nome, Produto.valor, ProdutoPronto.estoque"
                 + " FROM Produto INNER JOIN ProdutoPronto"
                 + " ON Produto.id = ProdutoPronto.id"
                 + " WHERE Produto.id=" + id + ";";
@@ -341,11 +366,13 @@ public class Conexao {
                         id,
                         rs.getString("nome"),
                         rs.getDouble("valor"),
-                        rs.getInt("quantidade")
+                        rs.getInt("estoque")
                 );
+
             }
         } catch (SQLException ex) {
-            Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Conexao.class
+                    .getName()).log(Level.SEVERE, null, ex);
         } finally {
             Conexao.fechaConexao(conn);
             return produto;
@@ -353,29 +380,31 @@ public class Conexao {
     }
 
     public static int buscaEstoqueProduto(int id) {
-        String sql = "SELECT quantidade FROM ProdutoPronto WHERE id=" + id + ";";
+        String sql = "SELECT estoque FROM ProdutoPronto WHERE id=" + id + ";";
         Connection conn = null;
-        int quantidade = 0;
+        int estoque = 0;
         try {
             conn = Conexao.abreConexao();
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
-                quantidade = rs.getInt("quantidade");
+                estoque = rs.getInt("estoque");
+
             }
         } catch (SQLException ex) {
-            Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Conexao.class
+                    .getName()).log(Level.SEVERE, null, ex);
         } finally {
             Conexao.fechaConexao(conn);
-            return quantidade;
+            return estoque;
         }
     }
 
     public static List<ProdutoPronto> buscaTodosProdutosProntos(boolean ehAdmin) {
         String sql = "SELECT Produto.id, ProdutoPronto.nome, Produto.valor,"
-                + " ProdutoPronto.quantidade FROM Produto"
+                + " ProdutoPronto.estoque FROM Produto"
                 + " INNER JOIN ProdutoPronto ON Produto.id = ProdutoPronto.id";
-        sql += ehAdmin ? ";" : " WHERE quantidade > 0;";
+        sql += ehAdmin ? ";" : " WHERE estoque > 0;";
         Connection conn = null;
         List<ProdutoPronto> listaProdutos = new ArrayList<ProdutoPronto>();
         try {
@@ -388,12 +417,14 @@ public class Conexao {
                         rs.getInt("id"),
                         rs.getString("nome"),
                         rs.getDouble("valor"),
-                        rs.getInt("quantidade")
+                        rs.getInt("estoque")
                 );
                 listaProdutos.add(produto);
+
             }
         } catch (SQLException ex) {
-            Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Conexao.class
+                    .getName()).log(Level.SEVERE, null, ex);
         } finally {
             Conexao.fechaConexao(conn);
             return listaProdutos;
@@ -437,12 +468,16 @@ public class Conexao {
                 // Reverter operação em caso de erro
                 if (conn != null) {
                     conn.rollback();
+
                 }
             } catch (SQLException ex2) {
-                Logger.getLogger(Conexao.class.getName())
+                Logger.getLogger(Conexao.class
+                        .getName())
                         .log(Level.SEVERE, null, ex2);
+
             }
-            Logger.getLogger(Conexao.class.getName())
+            Logger.getLogger(Conexao.class
+                    .getName())
                     .log(Level.SEVERE, null, ex);
             idProduto = determinaValorErro(ex.getMessage());
         } finally {
@@ -490,12 +525,16 @@ public class Conexao {
                 // Reverter operação em caso de erro
                 if (conn != null) {
                     conn.rollback();
+
                 }
             } catch (SQLException ex2) {
-                Logger.getLogger(Conexao.class.getName())
+                Logger.getLogger(Conexao.class
+                        .getName())
                         .log(Level.SEVERE, null, ex2);
+
             }
-            Logger.getLogger(Conexao.class.getName())
+            Logger.getLogger(Conexao.class
+                    .getName())
                     .log(Level.SEVERE, null, ex);
             idProduto = determinaValorErro(ex.getMessage());
         } finally {
@@ -515,8 +554,10 @@ public class Conexao {
             pstmt.setDouble(2, produto.getValor());
             pstmt.setInt(3, produto.getId());
             pstmt.executeUpdate();
+
         } catch (SQLException ex) {
-            Logger.getLogger(Conexao.class.getName())
+            Logger.getLogger(Conexao.class
+                    .getName())
                     .log(Level.SEVERE, null, ex);
             valorRetorno = Conexao.determinaValorErro(ex.getMessage());
         } finally {
@@ -526,7 +567,7 @@ public class Conexao {
     }
 
     public static int atualizaEstoqueProduto(int id, int estoque) {
-        String sql = "UPDATE ProdutoPronto SET quantidade = ? WHERE id = ?;";
+        String sql = "UPDATE ProdutoPronto SET estoque = ? WHERE id = ?;";
         Connection conn = null;
         int valorRetorno = RETORNO_SUCESSO;
         try {
@@ -535,8 +576,10 @@ public class Conexao {
             pstmt.setInt(1, estoque);
             pstmt.setInt(2, id);
             pstmt.executeUpdate();
+
         } catch (SQLException ex) {
-            Logger.getLogger(Conexao.class.getName())
+            Logger.getLogger(Conexao.class
+                    .getName())
                     .log(Level.SEVERE, null, ex);
             valorRetorno = Conexao.determinaValorErro(ex.getMessage());
         } finally {
@@ -554,8 +597,10 @@ public class Conexao {
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, idProduto);
             pstmt.executeUpdate();
+
         } catch (SQLException ex) {
-            Logger.getLogger(Conexao.class.getName())
+            Logger.getLogger(Conexao.class
+                    .getName())
                     .log(Level.SEVERE, null, ex);
             valorRetorno = Conexao.determinaValorErro(ex.getMessage());
         } finally {
@@ -594,9 +639,11 @@ public class Conexao {
                         rs.getString("descricao")
                 );
                 listaTransacoes.add(transacao);
+
             }
         } catch (SQLException ex) {
-            Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Conexao.class
+                    .getName()).log(Level.SEVERE, null, ex);
         } finally {
             Conexao.fechaConexao(conn);
             return listaTransacoes;

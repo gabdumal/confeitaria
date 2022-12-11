@@ -6,7 +6,7 @@ package com.lugar.view.funcionario;
 
 import com.lugar.controller.Conexao;
 import com.lugar.model.Transacao;
-import com.lugar.model.TransacoesTableModel;
+import com.lugar.model.tables.TransacoesTableModel;
 import java.awt.Point;
 import java.util.List;
 import java.awt.event.MouseAdapter;

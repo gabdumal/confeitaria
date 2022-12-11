@@ -49,34 +49,29 @@ CREATE TABLE IF NOT EXISTS "ProdutoPersonalizado" (
 	FOREIGN KEY("id") REFERENCES "Produto"("id"),
 	PRIMARY KEY("id")
 );
-CREATE TABLE IF NOT EXISTS "ProdutoPronto" (
-	"id"	INTEGER NOT NULL UNIQUE,
-	"nome"	TEXT NOT NULL UNIQUE,
-	"quantidade"	INTEGER NOT NULL DEFAULT 0,
-	FOREIGN KEY("id") REFERENCES "Produto"("id"),
-	PRIMARY KEY("id")
-);
 CREATE TABLE IF NOT EXISTS "Produto" (
 	"id"	INTEGER NOT NULL UNIQUE,
 	"valor"	REAL NOT NULL DEFAULT 0,
+	"tipo"	INTEGER NOT NULL DEFAULT 0 CHECK("tipo" IN (0, 1)),
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
-INSERT INTO "Transacao" ("id","valor","diaHora","descricao") VALUES (1,150.0,'2022-12-07T15:13:20.726762437','30kg de farinha fermentada'),
- (2,95.0,'2022-12-07T15:14:12.426938979','Venda presencial : Bolo de chocolate');
-INSERT INTO "Usuario" ("id","nome","nomeUsuario","senhaHash","admin","email","telefone") VALUES (5,'Cliente Exemplo','cliente','senha',0,'cliente@email.com','32980675454'),
- (6,'Funcionário Exemplo','admin','senha',1,'admin@email.com','32956435476');
-INSERT INTO "ProdutoPersonalizado" ("id","recheio","cobertura","detalhe") VALUES (6,'Chocolate meio amargo','Glacê de limão',''),
- (7,'Chocolate meio amargo','Glacê de limão',''),
- (8,'Chocolate meio amargo','Glacê de limão',''),
- (9,'Chocolate meio amargo','Chantilly','dsdas');
-INSERT INTO "Produto" ("id","valor") VALUES (0,99.63),
- (1,2.35),
- (2,2.0),
- (3,5.89),
- (4,76.7),
- (6,100.0),
- (7,100.0),
- (8,100.0),
- (9,100.0),
- (10,10.0);
+CREATE TABLE IF NOT EXISTS "ProdutoPronto" (
+	"id"	INTEGER NOT NULL UNIQUE,
+	"nome"	TEXT NOT NULL UNIQUE,
+	"estoque"	INTEGER NOT NULL DEFAULT 0,
+	FOREIGN KEY("id") REFERENCES "Produto"("id"),
+	PRIMARY KEY("id")
+);
+INSERT INTO "Transacao" ("id","valor","diaHora","descricao") VALUES (1,150.0,'2022-12-07T15:13:20.726762437','30kg de farinha fermentada');
+INSERT INTO "Transacao" ("id","valor","diaHora","descricao") VALUES (2,95.0,'2022-12-07T15:14:12.426938979','Venda presencial : Bolo de chocolate');
+INSERT INTO "Usuario" ("id","nome","nomeUsuario","senhaHash","admin","email","telefone") VALUES (5,'Cliente Exemplo','cliente','senha',0,'cliente@email.com','32980675454');
+INSERT INTO "Usuario" ("id","nome","nomeUsuario","senhaHash","admin","email","telefone") VALUES (6,'Funcionário Exemplo','admin','senha',1,'admin@email.com','32956435476');
+INSERT INTO "ProdutoPersonalizado" ("id","recheio","cobertura","detalhe") VALUES (6,'Chocolate meio amargo','Glacê de limão','');
+INSERT INTO "ProdutoPersonalizado" ("id","recheio","cobertura","detalhe") VALUES (9,'Chocolate meio amargo','Chantilly','dsdas');
+INSERT INTO "Produto" ("id","valor","tipo") VALUES (6,100.0,0);
+INSERT INTO "Produto" ("id","valor","tipo") VALUES (9,100.0,0);
+INSERT INTO "Produto" ("id","valor","tipo") VALUES (11,5.56,0);
+INSERT INTO "Produto" ("id","valor","tipo") VALUES (12,7.897,0);
+INSERT INTO "ProdutoPronto" ("id","nome","estoque") VALUES (11,'Brownie',8);
+INSERT INTO "ProdutoPronto" ("id","nome","estoque") VALUES (12,'Sorvete de manga apimentada',0);
 COMMIT;

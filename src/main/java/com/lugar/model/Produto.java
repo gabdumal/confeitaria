@@ -10,14 +10,16 @@ import com.lugar.confeitaria.Util;
  *
  * @author lugar
  */
-public class Produto {
+public abstract class Produto {
 
     private int id;
     private double valor;
+    private int carrinho;
 
     public Produto(int id, double valor) {
         this.id = id;
         this.valor = valor;
+        this.carrinho = 0;
     }
 
     public int getId() {
@@ -32,6 +34,10 @@ public class Produto {
         return Util.formataDinheiro(this.valor);
     }
 
+    public int getCarrinho() {
+        return carrinho;
+    }
+
     public void setId(int id) {
         if (id >= 0) {
             this.id = id;
@@ -42,6 +48,10 @@ public class Produto {
         if (valor >= 0) {
             this.valor = valor;
         }
+    }
+
+    public void setCarrinho(int carrinho) {
+        this.carrinho = carrinho;
     }
 
 }

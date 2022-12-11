@@ -6,10 +6,8 @@ package com.lugar.view;
 
 import com.lugar.controller.Conexao;
 import com.lugar.model.Usuario;
-import com.lugar.model.ProdutosTableModel;
-import com.lugar.model.Produto;
 import com.lugar.model.ProdutoPronto;
-import com.lugar.model.Transacao;
+import com.lugar.model.tables.ProdutosProntosTableModel;
 import com.lugar.view.cliente.AdicaoProdutoCarrinho;
 import com.lugar.view.cliente.Carrinho;
 import com.lugar.view.cliente.CriacaoProdutoPersonalizado;
@@ -34,8 +32,7 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
     // Geral
     private Usuario usuario;
     List<ProdutoPronto> listaProdutos;
-    List<Transacao> listaTransacoes;
-    private ProdutosTableModel modeloTabela;
+    private ProdutosProntosTableModel modeloTabela;
 
     // Cliente
     private Map<Integer, Integer> listaProdutosCarrinho; // idProduto - Quantidade no carrinho
@@ -92,24 +89,23 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
         }
     }
 
-    private ProdutosTableModel getModeloTabela() {
+    private ProdutosProntosTableModel getModeloTabela() {
         this.atualizaModeloTabela();
         return this.modeloTabela;
     }
 
     private void atualizaModeloTabela() {
         this.listaProdutos = Conexao.buscaTodosProdutosProntos(usuario.isAdmin());
+        // Reduz  o estoque pela quantidade no carrinho para o cliente
         if (!usuario.isAdmin()) {
             for (ProdutoPronto produto : this.listaProdutos) {
                 int id = produto.getId();
-                int quantidadeCarrinho = this.listaProdutosCarrinho.getOrDefault(id, -1);
-                if (quantidadeCarrinho != -1) {
-                    int quantidade = produto.getQuantidade();
-                    produto.setQuantidade(quantidade - quantidadeCarrinho);
-                }
+                int quantidadeCarrinho = this.listaProdutosCarrinho.getOrDefault(id, 0);
+                int estoque = produto.getEstoque();
+                produto.setEstoque(estoque - quantidadeCarrinho);
             }
         }
-        this.modeloTabela = new ProdutosTableModel(this.listaProdutos);
+        this.modeloTabela = new ProdutosProntosTableModel(this.listaProdutos);
     }
 
     private void atualizaTabela() {
@@ -150,17 +146,8 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
     private void chamaTelaCarrinho() {
         Carrinho carrinho = new Carrinho(this, true, listaProdutosCarrinho);
         carrinho.setVisible(true);
-
-        Map<Integer, Integer> novaListaProdutosCarrinho
-                = carrinho.getListaProdutosCarrinho();
-//        novaListaProdutosCarrinho.entrySet().removeIf(produto -> produto.getValue() == 0);
-//        this.listaProdutosCarrinho = novaListaProdutosCarrinho;
+        this.listaProdutosCarrinho = carrinho.getListaProdutosCarrinho();
         this.atualizaTabela();
-    }
-
-    private void chamaTelaTransacao() {
-        ExibicaoTransacoes tela = new ExibicaoTransacoes(this, true);
-        tela.setVisible(true);
     }
 
     private void chamaTelaCriacaoProdutoPersonalizado() {
@@ -168,10 +155,14 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
         criacaoProdutoPersonalizado.setVisible(true);
         int idProduto = criacaoProdutoPersonalizado.getIdProduto();
         int quantidade = criacaoProdutoPersonalizado.getQuantidade();
-
         if (idProduto > -1) {
             this.listaProdutosCarrinho.put(idProduto, quantidade);
         }
+    }
+
+    private void chamaTelaTransacao() {
+        ExibicaoTransacoes tela = new ExibicaoTransacoes(this, true);
+        tela.setVisible(true);
     }
 
     /**
@@ -348,12 +339,7 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
         }
         //</editor-fold>
         //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
+
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {

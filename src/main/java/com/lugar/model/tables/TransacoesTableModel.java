@@ -2,8 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.lugar.model;
+package com.lugar.model.tables;
 
+import com.lugar.model.Transacao;
 import com.lugar.model.Transacao;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;

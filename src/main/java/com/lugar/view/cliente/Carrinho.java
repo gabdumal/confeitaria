@@ -5,10 +5,10 @@
 package com.lugar.view.cliente;
 
 import com.lugar.controller.Conexao;
-import com.lugar.model.Item;
-import com.lugar.model.Pedido;
 import com.lugar.model.Produto;
-import com.lugar.model.ProdutosTableModel;
+import com.lugar.model.ProdutoPersonalizado;
+import com.lugar.model.ProdutoPronto;
+import com.lugar.model.tables.ProdutosTableModel;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -72,16 +72,19 @@ public class Carrinho extends javax.swing.JDialog {
         this.listaProdutos = new ArrayList<Produto>();
         for (int id : listaProdutosCarrinho.keySet()) {
             Produto produto = Conexao.buscaProduto(id);
-            produto.setQuantidade(listaProdutosCarrinho.get(id));
-            this.listaProdutos.add(produto);
+            int quantidadeCarrinho = listaProdutosCarrinho.get(id);
+            if (produto instanceof ProdutoPersonalizado
+                    || (produto instanceof ProdutoPronto && quantidadeCarrinho > 0)) {
+                produto.setCarrinho(listaProdutosCarrinho.get(id));
+                this.listaProdutos.add(produto);
+            }
         }
     }
 
     private void atualizaModeloTabela() {
         // Atualiza lista de produtos
         for (Produto produto : listaProdutos) {
-            produto.setQuantidade(
-                    listaProdutosCarrinho.get(produto.getId()));
+            produto.setCarrinho(listaProdutosCarrinho.get(produto.getId()));
         }
         this.modeloTabela = new ProdutosTableModel(this.listaProdutos);
     }
@@ -106,26 +109,27 @@ public class Carrinho extends javax.swing.JDialog {
                 "Fechar pedido", JOptionPane.YES_NO_OPTION,
                 JOptionPane.WARNING_MESSAGE) == 0;
 
-        if (confirmacao) {
-            List<Item> listaItens = new ArrayList<Item>();
-
-            for (Produto produto : listaProdutos) {
-                if (produto.getQuantidade() > 0) {
-                    Item item = new Item(0, produto);
-                    listaItens.add(item);
-                }
-            }
-
-            Pedido pedido = new Pedido(0, 'S', false, listaItens);
-
-            this.dispose();
-        }
+//        if (confirmacao) {
+//            List<Item> listaItens = new ArrayList<Item>();
+//
+//            for (Produto produto : listaProdutos) {
+//                if (produto.getQuantidade() > 0) {
+//                    Item item = new Item(0, produto);
+//                    listaItens.add(item);
+//                }
+//            }
+//
+//            Pedido pedido = new Pedido(0, 'S', false, listaItens);
+//
+//            this.dispose();
+//        }
     }
 
     // Fluxo de telas
     private void chamaTelaEdicaoProdutoCarrinho(int id) {
         Produto produto = Conexao.buscaProduto(id);
         int quantidadeCarrinho = this.listaProdutosCarrinho.get(id);
+
         AdicaoProdutoCarrinho adicaoProdutoCarrinho = new AdicaoProdutoCarrinho(this.pai, true, produto, quantidadeCarrinho);
         adicaoProdutoCarrinho.setVisible(true);
         int quantidadeComprada = adicaoProdutoCarrinho.getQuantidade();
@@ -235,16 +239,24 @@ public class Carrinho extends javax.swing.JDialog {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Carrinho.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Carrinho.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Carrinho.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Carrinho.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Carrinho.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Carrinho.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Carrinho.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Carrinho.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
