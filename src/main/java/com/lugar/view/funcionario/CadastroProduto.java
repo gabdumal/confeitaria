@@ -4,6 +4,7 @@
  */
 package com.lugar.view.funcionario;
 
+import com.lugar.confeitaria.Util;
 import com.lugar.controller.Conexao;
 import javax.swing.JOptionPane;
 
@@ -13,24 +14,32 @@ import javax.swing.JOptionPane;
  */
 public class CadastroProduto extends javax.swing.JDialog {
 
+    java.awt.Frame pai;
+
     public CadastroProduto(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
+        this.pai = parent;
         initComponents();
+    }
+
+    private boolean validaCampos(String nomeForm, double valorForm, int estoqueForm) {
+        return !nomeForm.isBlank() && valorForm > 0 && estoqueForm >= 0;
     }
 
     private void cadastraProduto() {
         String nomeForm = campoNome.getText().trim();
         double valorForm = (double) campoValor.getValue();
+        int estoqueForm = (int) campoEstoque.getValue();
 
-        if (!nomeForm.isBlank() && valorForm > 0) {
-            int idProduto = Conexao.insereProdutoPronto(nomeForm, valorForm);
-            if (idProduto > -1) {
-                JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!");
+        if (validaCampos(nomeForm, valorForm, estoqueForm)) {
+            int idProduto = Conexao.insereProdutoPronto(nomeForm, valorForm, estoqueForm);
+            if (idProduto > Util.RETORNO_ERRO_INDETERMINADO) {
+                JOptionPane.showMessageDialog(this.pai, "Cadastro realizado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();
-            } else if (idProduto == -2) {
-                JOptionPane.showMessageDialog(null, "Não foi possível realizar o cadastro! O produto preenchido já existe no sistema.");
+            } else if (idProduto == Util.RETORNO_ERRO_NAO_UNICO) {
+                JOptionPane.showMessageDialog(this.pai, "Não foi possível realizar o cadastro! O produto preenchido já existe no sistema.", "Erro", JOptionPane.WARNING_MESSAGE);
             } else {
-                JOptionPane.showMessageDialog(null, "Não foi possível realizar o cadastro! Tente novamente mais tarde.");
+                JOptionPane.showMessageDialog(this.pai, "Não foi possível realizar o cadastro! Tente novamente mais tarde.", "Erro", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -52,6 +61,8 @@ public class CadastroProduto extends javax.swing.JDialog {
         campoNome = new javax.swing.JFormattedTextField();
         textoValor = new javax.swing.JLabel();
         campoValor = new javax.swing.JSpinner();
+        textoEstoque = new javax.swing.JLabel();
+        campoEstoque = new javax.swing.JSpinner();
         painelBotoes1 = new javax.swing.JPanel();
         botaoCadastrar = new javax.swing.JButton();
 
@@ -104,6 +115,7 @@ public class CadastroProduto extends javax.swing.JDialog {
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.ipadx = 30;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCampos.add(textoValor, gridBagConstraints);
 
         campoValor.setModel(new javax.swing.SpinnerNumberModel(0.0d, 0.0d, null, 1.0d));
@@ -112,7 +124,24 @@ public class CadastroProduto extends javax.swing.JDialog {
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCampos.add(campoValor, gridBagConstraints);
+
+        textoEstoque.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        textoEstoque.setText("Estoque:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 30;
+        painelCampos.add(textoEstoque, gridBagConstraints);
+
+        campoEstoque.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        painelCampos.add(campoEstoque, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -201,11 +230,13 @@ public class CadastroProduto extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botaoCadastrar;
+    private javax.swing.JSpinner campoEstoque;
     private javax.swing.JFormattedTextField campoNome;
     private javax.swing.JSpinner campoValor;
     private javax.swing.JPanel painelBotoes1;
     private javax.swing.JPanel painelCampos;
     private javax.swing.JPanel painelFormulario;
+    private javax.swing.JLabel textoEstoque;
     private javax.swing.JLabel textoNome;
     private javax.swing.JLabel textoValor;
     private javax.swing.JLabel titulo;

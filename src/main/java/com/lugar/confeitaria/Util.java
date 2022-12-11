@@ -14,6 +14,13 @@ import java.time.format.DateTimeFormatter;
  */
 public class Util {
 
+    // Constantes
+    public final static int RETORNO_SUCESSO = 0;
+    public final static int RETORNO_ERRO_INDETERMINADO = -1;
+    public final static int RETORNO_ERRO_NAO_UNICO = -2;
+    public final static int TIPO_PRONTO = 0;
+    public final static int TIPO_PERSONALIZADO = 1;
+
     public static String formataDinheiro(double valor) {
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
         String valorFormatado = formatter.format(valor);

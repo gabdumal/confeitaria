@@ -4,6 +4,7 @@
  */
 package com.lugar.controller;
 
+import com.lugar.confeitaria.Util;
 import com.lugar.model.Cliente;
 import com.lugar.model.Usuario;
 import com.lugar.model.Produto;
@@ -21,19 +22,13 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.time.LocalDateTime;
+import org.sqlite.SQLiteConfig;
 
 /**
  *
  * @author lugar
  */
 public class Conexao {
-
-    // Constantes
-    private final static int RETORNO_SUCESSO = 0;
-    private final static int RETORNO_ERRO_INDETERMINADO = -1;
-    private final static int RETORNO_ERRO_NAO_UNICO = -2;
-    private final static int TIPO_PRONTO = 0;
-    private final static int TIPO_PERSONALIZADO = 1;
 
     /**
      * Conecta ao banco de dados confeitaria.db
@@ -44,7 +39,9 @@ public class Conexao {
         String url = "jdbc:sqlite:confeitaria.db";
         Connection conexao = null;
         try {
-            conexao = DriverManager.getConnection(url);
+            SQLiteConfig config = new SQLiteConfig();
+            config.enforceForeignKeys(true);
+            conexao = DriverManager.getConnection(url, config.toProperties());
         } catch (SQLException ex) {
             Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -65,9 +62,9 @@ public class Conexao {
     private static int determinaValorErro(String mensagem) {
         if (mensagem.substring(0, 26)
                 .equals("[SQLITE_CONSTRAINT_UNIQUE]")) {
-            return RETORNO_ERRO_NAO_UNICO;
+            return Util.RETORNO_ERRO_NAO_UNICO;
         } else {
-            return RETORNO_ERRO_INDETERMINADO;
+            return Util.RETORNO_ERRO_INDETERMINADO;
         }
     }
 
@@ -87,11 +84,19 @@ public class Conexao {
 
             String sql = "";
 
+            sql = "CREATE TABLE IF NOT EXISTS \"Produto\" (\n"
+                    + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
+                    + "	\"valor\"	REAL NOT NULL DEFAULT 0,\n"
+                    + "	\"tipo\"	INTEGER NOT NULL DEFAULT 0 CHECK(\"tipo\" IN (0, 1)),"
+                    + "	PRIMARY KEY(\"id\" AUTOINCREMENT)\n"
+                    + ");";
+            stmt.addBatch(sql);
+
             sql = "CREATE TABLE IF NOT EXISTS \"ProdutoPronto\" (\n"
                     + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
                     + "	\"nome\"	TEXT NOT NULL UNIQUE,\n"
                     + "	\"estoque\"	INTEGER NOT NULL DEFAULT 0,\n"
-                    + "	FOREIGN KEY(\"id\") REFERENCES \"Produto\"(\"id\"),\n"
+                    + "	FOREIGN KEY(\"id\") REFERENCES \"Produto\"(\"id\") ON DELETE CASCADE,\n"
                     + "	PRIMARY KEY(\"id\")\n"
                     + ");";
             stmt.addBatch(sql);
@@ -102,15 +107,7 @@ public class Conexao {
                     + "	\"cobertura\"	TEXT NOT NULL,\n"
                     + "	\"detalhe\"	TEXT,\n"
                     + "	PRIMARY KEY(\"id\"),\n"
-                    + "	FOREIGN KEY(\"id\") REFERENCES \"Produto\"(\"id\")\n"
-                    + ");";
-            stmt.addBatch(sql);
-
-            sql = "CREATE TABLE IF NOT EXISTS \"Produto\" (\n"
-                    + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
-                    + "	\"valor\"	REAL NOT NULL DEFAULT 0,\n"
-                    + "	\"tipo\"	INTEGER NOT NULL DEFAULT 0 CHECK(\"tipo\" IN (0, 1)),"
-                    + "	PRIMARY KEY(\"id\" AUTOINCREMENT)\n"
+                    + "	FOREIGN KEY(\"id\") REFERENCES \"Produto\"(\"id\") ON DELETE CASCADE\n"
                     + ");";
             stmt.addBatch(sql);
 
@@ -132,16 +129,8 @@ public class Conexao {
                     + "	\"cidade\"	TEXT NOT NULL,\n"
                     + "	\"uf\"	TEXT NOT NULL,\n"
                     + "	\"cep\"	TEXT NOT NULL,\n"
-                    + "	PRIMARY KEY(\"id\" AUTOINCREMENT)\n"
-                    + ");";
-            stmt.addBatch(sql);
-
-            sql = "CREATE TABLE IF NOT EXISTS \"Cliente\" (\n"
-                    + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
-                    + "	\"idEndereco\"	INTEGER NOT NULL,\n"
-                    + "	\"cartao\"	TEXT NOT NULL CHECK(LENGTH(\"cartao\") == 16),\n"
-                    + "	FOREIGN KEY(\"idEndereco\") REFERENCES \"Endereco\"(\"id\"),\n"
-                    + "	PRIMARY KEY(\"id\" AUTOINCREMENT)\n"
+                    + "	PRIMARY KEY(\"id\" AUTOINCREMENT),\n"
+                    + "	FOREIGN KEY(\"id\") REFERENCES \"Endereco\"(\"id\") ON DELETE CASCADE\n"
                     + ");";
             stmt.addBatch(sql);
 
@@ -157,12 +146,21 @@ public class Conexao {
                     + ");";
             stmt.addBatch(sql);
 
+            sql = "CREATE TABLE IF NOT EXISTS \"Cliente\" (\n"
+                    + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
+                    + "	\"idEndereco\"	INTEGER NOT NULL,\n"
+                    + "	\"cartao\"	TEXT NOT NULL CHECK(LENGTH(\"cartao\") == 16),\n"
+                    + "	PRIMARY KEY(\"id\" AUTOINCREMENT),\n"
+                    + "	FOREIGN KEY(\"idEndereco\") REFERENCES \"Endereco\"(\"id\")\n"
+                    + ");";
+            stmt.addBatch(sql);
+
             sql = "CREATE TABLE IF NOT EXISTS \"Funcionario\" (\n"
                     + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
                     + "	\"matricula\"	TEXT NOT NULL UNIQUE,\n"
                     + "	\"funcao\"	TEXT NOT NULL,\n"
-                    + "	FOREIGN KEY(\"id\") REFERENCES \"Usuario\"(\"id\"),\n"
-                    + "	PRIMARY KEY(\"id\" AUTOINCREMENT)\n"
+                    + "	PRIMARY KEY(\"id\" AUTOINCREMENT),\n"
+                    + "	FOREIGN KEY(\"id\") REFERENCES \"Usuario\"(\"id\")\n"
                     + ");";
             stmt.addBatch(sql);
 
@@ -177,14 +175,16 @@ public class Conexao {
                 sql = "INSERT INTO \"Transacao\" VALUES (0,12.0,'2020-08-17T10:11:16.908732','teste teste');\n"
                         + "INSERT INTO \"Usuario\" VALUES (5,'Cliente Exemplo','cliente','senha',0,'cliente@email.com','32980675454');\n"
                         + "INSERT INTO \"Usuario\" VALUES (6,'Funcionário Exemplo','admin','senha',1,'admin@email.com','32956435476');\n"
-                        + "INSERT INTO \"ProdutoPersonalizado\" (\"id\",\"recheio\",\"cobertura\",\"detalhe\") VALUES (6,'Chocolate meio amargo','Glacê de limão','');\n"
-                        + "INSERT INTO \"ProdutoPersonalizado\" (\"id\",\"recheio\",\"cobertura\",\"detalhe\") VALUES (9,'Chocolate meio amargo','Chantilly','dsdas');\n"
-                        + "INSERT INTO \"Produto\" (\"id\",\"valor\",\"tipo\") VALUES (6,100.0,1);\n"
-                        + "INSERT INTO \"Produto\" (\"id\",\"valor\",\"tipo\") VALUES (9,100.0,1);\n"
-                        + "INSERT INTO \"Produto\" (\"id\",\"valor\",\"tipo\") VALUES (11,5.56,0);\n"
-                        + "INSERT INTO \"Produto\" (\"id\",\"valor\",\"tipo\") VALUES (12,7.897,0);\n"
-                        + "INSERT INTO \"ProdutoPronto\" (\"id\",\"nome\",\"estoque\") VALUES (11,'Brownie',8);\n"
-                        + "INSERT INTO \"ProdutoPronto\" (\"id\",\"nome\",\"estoque\") VALUES (12,'Sorvete de manga apimentada',0);";
+                        + "INSERT INTO \"Produto\" (\"id\",\"valor\",\"tipo\") VALUES (1,100.0,1);\n"
+                        + "INSERT INTO \"Produto\" (\"id\",\"valor\",\"tipo\") VALUES (2,100.0,1);\n"
+                        + "INSERT INTO \"Produto\" (\"id\",\"valor\",\"tipo\") VALUES (3,5.56,0);\n"
+                        + "INSERT INTO \"Produto\" (\"id\",\"valor\",\"tipo\") VALUES (4,7.897,0);\n"
+                        + "INSERT INTO \"Produto\" (\"id\",\"valor\",\"tipo\") VALUES (5,3.67,0);\n"
+                        + "INSERT INTO \"ProdutoPersonalizado\" (\"id\",\"recheio\",\"cobertura\",\"detalhe\") VALUES (1,'Chocolate meio amargo','Glacê de limão','');\n"
+                        + "INSERT INTO \"ProdutoPersonalizado\" (\"id\",\"recheio\",\"cobertura\",\"detalhe\") VALUES (2,'Chocolate meio amargo','Chantilly','dsdas');\n"
+                        + "INSERT INTO \"ProdutoPronto\" (\"id\",\"nome\",\"estoque\") VALUES (3,'Brownie',8);\n"
+                        + "INSERT INTO \"ProdutoPronto\" (\"id\",\"nome\",\"estoque\") VALUES (4,'Bolo de milho simples',1);\n"
+                        + "INSERT INTO \"ProdutoPronto\" (\"id\",\"nome\",\"estoque\") VALUES (5,'Sorvete de manga apimentada',0);";
 
                 String[] updates = sql.split("\n");
                 for (String update : updates) {
@@ -237,7 +237,7 @@ public class Conexao {
     public static int insereUsuario(String nome, String nomeUsuario, String senhaHash) {
         String sql = "INSERT INTO Usuario(nome, nomeUsuario, senhaHash, admin) VALUES(?, ?, ?, ?);";
         Connection conn = null;
-        int valorRetorno = RETORNO_SUCESSO;
+        int valorRetorno = Util.RETORNO_SUCESSO;
         try {
             conn = Conexao.abreConexao();
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -259,7 +259,7 @@ public class Conexao {
     public static int insereCliente(Cliente cliente) {
         String sql = "INSERT INTO Usuario(nome, nomeUsuario, senhaHash, admin, email, telefone, endereco, cartao, identificador) VALUES(?, ?, ?, 0, ?, ?, ?, ?, ?);";
         Connection conn = null;
-        int valorRetorno = RETORNO_SUCESSO;
+        int valorRetorno = Util.RETORNO_SUCESSO;
         try {
             conn = Conexao.abreConexao();
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -288,7 +288,7 @@ public class Conexao {
     public static int insereTransacao(Transacao transacao) {
         String sql = "INSERT INTO Transacao(valor, diaHora,descricao) VALUES(?,?,?);";
         Connection conn = null;
-        int valorRetorno = RETORNO_SUCESSO;
+        int valorRetorno = Util.RETORNO_SUCESSO;
         try {
             conn = Conexao.abreConexao();
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -324,7 +324,7 @@ public class Conexao {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
-                if (rs.getInt("tipo") == TIPO_PRONTO) {
+                if (rs.getInt("tipo") == Util.TIPO_PRONTO) {
                     produto = new ProdutoPronto(
                             id,
                             rs.getString("nome"),
@@ -354,7 +354,6 @@ public class Conexao {
                 + " FROM Produto INNER JOIN ProdutoPronto"
                 + " ON Produto.id = ProdutoPronto.id"
                 + " WHERE Produto.id=" + id + ";";
-        System.out.println(sql);
         Connection conn = null;
         ProdutoPronto produto = null;
         try {
@@ -431,11 +430,11 @@ public class Conexao {
         }
     }
 
-    public static int insereProdutoPronto(String nome, double valor) {
+    public static int insereProdutoPronto(String nome, double valor, int estoque) {
         String sqlProduto = "INSERT INTO Produto(valor) VALUES(?);";
-        String sqlProdutoPronto = "INSERT INTO ProdutoPronto(id, nome) VALUES(?, ?);";
+        String sqlProdutoPronto = "INSERT INTO ProdutoPronto(id, nome, estoque) VALUES(?, ?, ?);";
         Connection conn = null;
-        int idProduto = -1;
+        int idProduto = Util.RETORNO_ERRO_INDETERMINADO;
         try {
             conn = Conexao.abreConexao();
             conn.setAutoCommit(false);
@@ -452,14 +451,13 @@ public class Conexao {
                 if (rs.next()) {
                     idProduto = rs.getInt(1);
                 }
-
                 PreparedStatement pstmtProdutoPronto
                         = conn.prepareStatement(sqlProdutoPronto,
                                 Statement.RETURN_GENERATED_KEYS);
                 pstmtProdutoPronto.setInt(1, idProduto);
                 pstmtProdutoPronto.setString(2, nome);
+                pstmtProdutoPronto.setInt(3, estoque);
                 pstmtProdutoPronto.executeUpdate();
-
                 conn.commit();
             }
             conn.setAutoCommit(true);
@@ -468,13 +466,11 @@ public class Conexao {
                 // Reverter operação em caso de erro
                 if (conn != null) {
                     conn.rollback();
-
                 }
             } catch (SQLException ex2) {
                 Logger.getLogger(Conexao.class
                         .getName())
                         .log(Level.SEVERE, null, ex2);
-
             }
             Logger.getLogger(Conexao.class
                     .getName())
@@ -490,7 +486,7 @@ public class Conexao {
         String sqlProduto = "INSERT INTO Produto(valor) VALUES(?);";
         String sqlProdutoPersonalizado = "INSERT INTO ProdutoPersonalizado(id, recheio, cobertura, detalhe) VALUES(?, ?, ?, ?);";
         Connection conn = null;
-        int idProduto = -1;
+        int idProduto = Util.RETORNO_ERRO_INDETERMINADO;
         try {
             conn = Conexao.abreConexao();
             conn.setAutoCommit(false);
@@ -516,7 +512,6 @@ public class Conexao {
                 pstmtProdutoPersonalizado.setString(3, produtoPersonalizado.getCobertura());
                 pstmtProdutoPersonalizado.setString(4, produtoPersonalizado.getDetalhe());
                 pstmtProdutoPersonalizado.executeUpdate();
-
                 conn.commit();
             }
             conn.setAutoCommit(true);
@@ -525,13 +520,11 @@ public class Conexao {
                 // Reverter operação em caso de erro
                 if (conn != null) {
                     conn.rollback();
-
                 }
             } catch (SQLException ex2) {
                 Logger.getLogger(Conexao.class
                         .getName())
                         .log(Level.SEVERE, null, ex2);
-
             }
             Logger.getLogger(Conexao.class
                     .getName())
@@ -543,18 +536,32 @@ public class Conexao {
         }
     }
 
-    public static int atualizaProduto(Produto produto) {
-        String sql = "UPDATE Produto SET nome = ?, valor = ? WHERE id = ?;";
+    public static int atualizaProdutoPronto(ProdutoPronto produto) {
+        String sqlProduto = "UPDATE Produto SET valor = ? WHERE id = ?;";
+        String sqlProdutoPronto = "UPDATE ProdutoPronto SET nome = ?, estoque = ? WHERE id = ?;";
         Connection conn = null;
-        int valorRetorno = RETORNO_SUCESSO;
+        int valorRetorno = Util.RETORNO_SUCESSO;
         try {
             conn = Conexao.abreConexao();
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, produto.getNome());
-            pstmt.setDouble(2, produto.getValor());
-            pstmt.setInt(3, produto.getId());
-            pstmt.executeUpdate();
+            conn.setAutoCommit(false);
 
+            PreparedStatement pstmtProduto = conn.prepareStatement(sqlProduto);
+            pstmtProduto.setDouble(1, produto.getValor());
+            pstmtProduto.setInt(2, produto.getId());
+            int linhaAtualizada = pstmtProduto.executeUpdate();
+
+            // Reverter operação em caso de erro
+            if (linhaAtualizada != 1) {
+                conn.rollback();
+            } else {
+                PreparedStatement pstmtProdutoPronto = conn.prepareStatement(sqlProdutoPronto);
+                pstmtProdutoPronto.setString(1, produto.getNome());
+                pstmtProdutoPronto.setInt(2, produto.getEstoque());
+                pstmtProdutoPronto.setInt(3, produto.getId());
+                pstmtProdutoPronto.executeUpdate();
+                conn.commit();
+            }
+            conn.setAutoCommit(true);
         } catch (SQLException ex) {
             Logger.getLogger(Conexao.class
                     .getName())
@@ -566,10 +573,10 @@ public class Conexao {
         }
     }
 
-    public static int atualizaEstoqueProduto(int id, int estoque) {
+    public static int atualizaEstoqueProdutoPronto(int id, int estoque) {
         String sql = "UPDATE ProdutoPronto SET estoque = ? WHERE id = ?;";
         Connection conn = null;
-        int valorRetorno = RETORNO_SUCESSO;
+        int valorRetorno = Util.RETORNO_SUCESSO;
         try {
             conn = Conexao.abreConexao();
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -591,7 +598,7 @@ public class Conexao {
     public static int deletaProduto(int idProduto) {
         String sql = "DELETE FROM Produto WHERE id = ?;";
         Connection conn = null;
-        int valorRetorno = RETORNO_SUCESSO;
+        int valorRetorno = Util.RETORNO_SUCESSO;
         try {
             conn = Conexao.abreConexao();
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -612,7 +619,7 @@ public class Conexao {
     public static int deletaTransacao(int idTransacao) {
         String sql = "DELETE FROM Transacao WHERE id = ?;";
         Connection conn = null;
-        int valorRetorno = RETORNO_SUCESSO;
+        int valorRetorno = Util.RETORNO_SUCESSO;
 //        try{
 //            conn = Conexao.abreConexao();
 //            PreparedStatement pstmt = conn.prepareStatement(sql);

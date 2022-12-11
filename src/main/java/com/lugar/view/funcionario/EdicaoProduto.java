@@ -4,6 +4,7 @@
  */
 package com.lugar.view.funcionario;
 
+import com.lugar.confeitaria.Util;
 import com.lugar.controller.Conexao;
 import com.lugar.model.ProdutoPronto;
 import javax.swing.JOptionPane;
@@ -14,41 +15,72 @@ import javax.swing.JOptionPane;
  */
 public class EdicaoProduto extends javax.swing.JDialog {
 
+    private static final int INVALIDO = -1;
+    private static final int MUDANCA_APENAS_ESTOQUE = 1;
+    private static final int MUDANCA_NOME_OU_VALOR = 2;
+
     int id;
+    ProdutoPronto estadoAnterior;
+    java.awt.Frame pai;
 
     public EdicaoProduto(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
+        this.pai = parent;
         initComponents();
     }
 
     public EdicaoProduto(java.awt.Frame parent, boolean modal, int id) {
         super(parent, modal);
         this.id = id;
-        initComponents();
-
+        this.pai = parent;
         ProdutoPronto produto = Conexao.buscaProdutoPronto(id);
+        this.estadoAnterior = produto;
+        initComponents();
         campoNome.setText(produto.getNome());
         campoValor.setValue(produto.getValor());
+    }
+
+    private int validaCampos(String nomeForm, double valorForm, int estoqueForm) {
+        boolean valido = !nomeForm.isBlank() && valorForm > 0 && estoqueForm >= 0;
+        boolean mudancaNomeOuValor = valido && (!nomeForm.equals(this.estadoAnterior.getNome())
+                || valorForm != this.estadoAnterior.getValor());
+        if (valido) {
+            if (mudancaNomeOuValor) {
+                return MUDANCA_NOME_OU_VALOR;
+            } else if (estoqueForm != this.estadoAnterior.getEstoque()) {
+                return MUDANCA_APENAS_ESTOQUE;
+            }
+        }
+        return INVALIDO;
     }
 
     private void editaProduto() {
         String nomeForm = campoNome.getText().trim();
         double valorForm = (double) campoValor.getValue();
+        int estoqueForm = (int) campoEstoque.getValue();
 
-        if (!nomeForm.isBlank() && valorForm > 0) {
+        int validacao = this.validaCampos(nomeForm, valorForm, estoqueForm);
+        if (validacao != INVALIDO) {
             boolean confirmacao = JOptionPane.showConfirmDialog(null,
                     "Deseja editar este produto?",
                     "Edição de Produto", JOptionPane.YES_NO_OPTION,
                     JOptionPane.WARNING_MESSAGE) == 0;
 
             if (confirmacao) {
-                ProdutoPronto produtoEditado = new ProdutoPronto(id, nomeForm, valorForm, 0);
-                int resultado = Conexao.atualizaProduto(produtoEditado);
-                if (resultado == 0) {
-                    JOptionPane.showMessageDialog(null, "Edição realizada com sucesso!");
-                    this.dispose();
+                int resultado = Util.RETORNO_SUCESSO;
+                if (validacao == MUDANCA_APENAS_ESTOQUE) {
+                    resultado = Conexao.atualizaEstoqueProdutoPronto(id, estoqueForm);
                 } else {
-                    JOptionPane.showMessageDialog(null, "Não foi possível realizar a edição! Tente novamente mais tarde.");
+                    ProdutoPronto produtoEditado = new ProdutoPronto(id, nomeForm, valorForm, estoqueForm);
+                    resultado = Conexao.atualizaProdutoPronto(produtoEditado);
+                }
+                if (resultado == Util.RETORNO_SUCESSO) {
+                    JOptionPane.showMessageDialog(this.pai, "Edição realizada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                    this.dispose();
+                } else if (resultado == Util.RETORNO_ERRO_NAO_UNICO) {
+                    JOptionPane.showMessageDialog(this.pai, "Não foi possível realizar a edição, pois já existe um produto com este nome!", "Erro", JOptionPane.WARNING_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this.pai, "Não foi possível realizar a edição! Tente novamente mais tarde.", "Erro", JOptionPane.ERROR_MESSAGE);
                 }
             }
         }
@@ -62,11 +94,11 @@ public class EdicaoProduto extends javax.swing.JDialog {
 
         if (confirmacao) {
             int resultado = Conexao.deletaProduto(this.id);
-            if (resultado == 0) {
-                JOptionPane.showMessageDialog(null, "Deleção realizada com sucesso!");
+            if (resultado == Util.RETORNO_SUCESSO) {
+                JOptionPane.showMessageDialog(this.pai, "Deleção realizada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();
             } else {
-                JOptionPane.showMessageDialog(null, "Não foi possível realizar a deleção! Tente novamente mais tarde.");
+                JOptionPane.showMessageDialog(this.pai, "Não foi possível realizar a deleção! Tente novamente mais tarde.", "Erro", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -87,6 +119,8 @@ public class EdicaoProduto extends javax.swing.JDialog {
         textoNome = new javax.swing.JLabel();
         campoNome = new javax.swing.JFormattedTextField();
         textoValor = new javax.swing.JLabel();
+        textoEstoque = new javax.swing.JLabel();
+        campoEstoque = new javax.swing.JSpinner();
         campoValor = new javax.swing.JSpinner();
         painelBotoes = new javax.swing.JPanel();
         botaoDeletar = new javax.swing.JButton();
@@ -141,7 +175,24 @@ public class EdicaoProduto extends javax.swing.JDialog {
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.ipadx = 30;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCampos.add(textoValor, gridBagConstraints);
+
+        textoEstoque.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        textoEstoque.setText("Estoque:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 30;
+        painelCampos.add(textoEstoque, gridBagConstraints);
+
+        campoEstoque.setModel(new javax.swing.SpinnerNumberModel(this.estadoAnterior.getEstoque(), 0, null, 1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        painelCampos.add(campoEstoque, gridBagConstraints);
 
         campoValor.setModel(new javax.swing.SpinnerNumberModel(0.0d, 0.0d, null, 1.0d));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -149,6 +200,7 @@ public class EdicaoProduto extends javax.swing.JDialog {
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCampos.add(campoValor, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -231,8 +283,6 @@ public class EdicaoProduto extends javax.swing.JDialog {
         }
         //</editor-fold>
         //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -252,11 +302,13 @@ public class EdicaoProduto extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botaoDeletar;
     private javax.swing.JButton botaoEditar;
+    private javax.swing.JSpinner campoEstoque;
     private javax.swing.JFormattedTextField campoNome;
     private javax.swing.JSpinner campoValor;
     private javax.swing.JPanel painelBotoes;
     private javax.swing.JPanel painelCampos;
     private javax.swing.JPanel painelFormulario;
+    private javax.swing.JLabel textoEstoque;
     private javax.swing.JLabel textoNome;
     private javax.swing.JLabel textoValor;
     private javax.swing.JLabel titulo;

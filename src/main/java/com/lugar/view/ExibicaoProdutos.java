@@ -12,7 +12,6 @@ import com.lugar.view.cliente.AdicaoProdutoCarrinho;
 import com.lugar.view.cliente.Carrinho;
 import com.lugar.view.cliente.CriacaoProdutoPersonalizado;
 import com.lugar.view.funcionario.CadastroProduto;
-import com.lugar.view.funcionario.EdicaoEstoqueProduto;
 import com.lugar.view.funcionario.EdicaoProduto;
 import com.lugar.view.funcionario.ExibicaoTransacoes;
 import java.awt.Point;
@@ -58,17 +57,10 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
                     JTable tabela = (JTable) mouseEvent.getSource();
                     Point ponto = mouseEvent.getPoint();
                     int linha = tabela.rowAtPoint(ponto);
-                    int coluna = tabela.columnAtPoint(ponto);
                     // Clique duplo
                     if (mouseEvent.getClickCount() == 2 && tabela.getSelectedRow() != -1) {
-                        if (coluna == 2) {
-                            System.out.println(linha);
-                            // Tela de estoque
-                            chamaTelaEdicaoEstoque((int) modeloTabela.getValueAt(linha, 0));
-                        } else {
-                            // Tela de edição
-                            chamaTelaEdicao((int) modeloTabela.getValueAt(linha, 0));
-                        }
+                        // Tela de edição
+                        chamaTelaEdicao((int) modeloTabela.getValueAt(linha, 0));
                     }
                 }
             });
@@ -115,12 +107,6 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
     }
 
     // Fluxo de telas
-    private void chamaTelaEdicaoEstoque(int id) {
-        EdicaoEstoqueProduto edicaoEstoqueProduto = new EdicaoEstoqueProduto(this, true, id);
-        edicaoEstoqueProduto.setVisible(true);
-        this.atualizaTabela();
-    }
-
     private void chamaTelaEdicao(int id) {
         EdicaoProduto edicaoProduto = new EdicaoProduto(this, true, id);
         edicaoProduto.setVisible(true);
