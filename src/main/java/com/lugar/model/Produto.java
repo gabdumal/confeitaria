@@ -22,6 +22,12 @@ public abstract class Produto {
         this.carrinho = 0;
     }
 
+    public Produto(int id, double valor, int carrinho) {
+        this.id = id;
+        this.valor = valor;
+        this.carrinho = carrinho;
+    }
+
     public int getId() {
         return id;
     }

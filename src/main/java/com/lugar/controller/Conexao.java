@@ -419,7 +419,6 @@ public class Conexao {
                         rs.getInt("estoque")
                 );
                 listaProdutos.add(produto);
-
             }
         } catch (SQLException ex) {
             Logger.getLogger(Conexao.class
@@ -483,38 +482,55 @@ public class Conexao {
     }
 
     public static int insereProdutoPersonalizado(ProdutoPersonalizado produtoPersonalizado) {
-        String sqlProduto = "INSERT INTO Produto(valor) VALUES(?);";
-        String sqlProdutoPersonalizado = "INSERT INTO ProdutoPersonalizado(id, recheio, cobertura, detalhe) VALUES(?, ?, ?, ?);";
+        String sqlBusca = "SELECT Produto.id FROM Produto INNER JOIN ProdutoPersonalizado "
+                + "ON Produto.id = ProdutoPersonalizado.id WHERE valor = ? AND tipo = 1 "
+                + "AND recheio = ? AND cobertura = ? AND detalhe = ?;";
         Connection conn = null;
         int idProduto = Util.RETORNO_ERRO_INDETERMINADO;
         try {
+            double valorCalculado = 100;
+            // Se já existe, retorna ID. Senão, cria novo e retorna ID
             conn = Conexao.abreConexao();
-            conn.setAutoCommit(false);
+            PreparedStatement pstmtBusca = conn.prepareStatement(sqlBusca);
+            pstmtBusca.setDouble(1, valorCalculado);
+            pstmtBusca.setString(2, produtoPersonalizado.getRecheio());
+            pstmtBusca.setString(3, produtoPersonalizado.getCobertura());
+            pstmtBusca.setString(4, produtoPersonalizado.getDetalhe());
+            ResultSet rsBusca = pstmtBusca.executeQuery();
 
-            PreparedStatement pstmtProduto = conn.prepareStatement(sqlProduto, Statement.RETURN_GENERATED_KEYS);
-            pstmtProduto.setDouble(1, produtoPersonalizado.getValor());
-            int linhaInserida = pstmtProduto.executeUpdate();
-
-            // Reverter operação em caso de erro
-            if (linhaInserida != 1) {
-                conn.rollback();
+            if (rsBusca.next()) {
+                idProduto = rsBusca.getInt("id");
             } else {
-                ResultSet rs = pstmtProduto.getGeneratedKeys();
-                if (rs.next()) {
-                    idProduto = rs.getInt(1);
-                }
+                String sqlProduto = "INSERT INTO Produto(valor, tipo) VALUES(?, 1);";
+                String sqlProdutoPersonalizado = "INSERT INTO ProdutoPersonalizado(id, recheio, cobertura, detalhe) VALUES(?, ?, ?, ?);";
 
-                PreparedStatement pstmtProdutoPersonalizado
-                        = conn.prepareStatement(sqlProdutoPersonalizado,
-                                Statement.RETURN_GENERATED_KEYS);
-                pstmtProdutoPersonalizado.setInt(1, idProduto);
-                pstmtProdutoPersonalizado.setString(2, produtoPersonalizado.getRecheio());
-                pstmtProdutoPersonalizado.setString(3, produtoPersonalizado.getCobertura());
-                pstmtProdutoPersonalizado.setString(4, produtoPersonalizado.getDetalhe());
-                pstmtProdutoPersonalizado.executeUpdate();
-                conn.commit();
+                conn.setAutoCommit(false);
+
+                PreparedStatement pstmtProduto = conn.prepareStatement(sqlProduto, Statement.RETURN_GENERATED_KEYS);
+                pstmtProduto.setDouble(1, valorCalculado);
+                int linhaInserida = pstmtProduto.executeUpdate();
+
+                // Reverter operação em caso de erro
+                if (linhaInserida != 1) {
+                    conn.rollback();
+                } else {
+                    ResultSet rs = pstmtProduto.getGeneratedKeys();
+                    if (rs.next()) {
+                        idProduto = rs.getInt(1);
+                    }
+
+                    PreparedStatement pstmtProdutoPersonalizado
+                            = conn.prepareStatement(sqlProdutoPersonalizado,
+                                    Statement.RETURN_GENERATED_KEYS);
+                    pstmtProdutoPersonalizado.setInt(1, idProduto);
+                    pstmtProdutoPersonalizado.setString(2, produtoPersonalizado.getRecheio());
+                    pstmtProdutoPersonalizado.setString(3, produtoPersonalizado.getCobertura());
+                    pstmtProdutoPersonalizado.setString(4, produtoPersonalizado.getDetalhe());
+                    pstmtProdutoPersonalizado.executeUpdate();
+                    conn.commit();
+                }
+                conn.setAutoCommit(true);
             }
-            conn.setAutoCommit(true);
         } catch (SQLException ex) {
             try {
                 // Reverter operação em caso de erro

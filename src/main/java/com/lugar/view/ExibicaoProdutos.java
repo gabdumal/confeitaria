@@ -4,6 +4,7 @@
  */
 package com.lugar.view;
 
+import com.lugar.confeitaria.Util;
 import com.lugar.controller.Conexao;
 import com.lugar.model.Usuario;
 import com.lugar.model.ProdutoPronto;
@@ -140,8 +141,8 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
         CriacaoProdutoPersonalizado criacaoProdutoPersonalizado = new CriacaoProdutoPersonalizado(this, true);
         criacaoProdutoPersonalizado.setVisible(true);
         int idProduto = criacaoProdutoPersonalizado.getIdProduto();
-        int quantidade = criacaoProdutoPersonalizado.getQuantidade();
-        if (idProduto > -1) {
+        if (idProduto >= Util.RETORNO_SUCESSO) {
+            int quantidade = criacaoProdutoPersonalizado.getQuantidade();
             this.listaProdutosCarrinho.put(idProduto, quantidade);
         }
     }

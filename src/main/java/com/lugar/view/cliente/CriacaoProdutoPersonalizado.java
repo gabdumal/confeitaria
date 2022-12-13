@@ -4,6 +4,7 @@
  */
 package com.lugar.view.cliente;
 
+import com.lugar.confeitaria.Util;
 import com.lugar.controller.Conexao;
 import com.lugar.model.ProdutoPersonalizado;
 import javax.swing.JOptionPane;
@@ -17,6 +18,7 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
     private int idProduto;
     private int quantidade;
     private String tipo;
+    java.awt.Frame pai;
 
     public int getIdProduto() {
         return this.idProduto;
@@ -30,6 +32,7 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
         super(parent, modal);
         this.idProduto = -1;
         this.tipo = "Bolo";
+        this.pai = parent;
         initComponents();
         this.trocaPainel();
     }
@@ -51,17 +54,17 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
             String detalheForm = this.areaTextoDetalheBolo.getText().trim();
 
             ProdutoPersonalizado produtoPersonalizado
-                    = new ProdutoPersonalizado(this.idProduto, this.tipo + " - " + recheioForm, 100,
-                            99999, recheioForm, coberturaForm, detalheForm);
-
+                    = new ProdutoPersonalizado(this.idProduto, 0,
+                            recheioForm, coberturaForm, detalheForm);
             this.idProduto = Conexao.insereProdutoPersonalizado(produtoPersonalizado);
+            this.quantidade = (int) this.campoQuantidade.getValue();
         }
 
-        if (this.idProduto > -1) {
-            JOptionPane.showMessageDialog(null, "Produto adicionado ao carrinho!");
+        if (this.idProduto >= Util.RETORNO_SUCESSO) {
+            JOptionPane.showMessageDialog(this.pai, "Produto adicionado ao carrinho!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
             this.dispose();
         } else {
-            JOptionPane.showMessageDialog(null, "Não foi possível adicionar o produto! Tente novamente mais tarde.");
+            JOptionPane.showMessageDialog(this.pai, "Não foi possível adicionar o produto ao carrinho! Tente novamente mais tarde.", "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -433,68 +436,6 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(CriacaoProdutoPersonalizado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 

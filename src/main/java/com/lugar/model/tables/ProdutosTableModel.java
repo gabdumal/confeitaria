@@ -4,6 +4,7 @@
  */
 package com.lugar.model.tables;
 
+import com.lugar.confeitaria.Util;
 import com.lugar.model.Produto;
 import com.lugar.model.ProdutoPersonalizado;
 import com.lugar.model.ProdutoPronto;
@@ -16,13 +17,14 @@ import javax.swing.table.AbstractTableModel;
  */
 public class ProdutosTableModel extends AbstractTableModel {
 
-    private String colunas[] = {"#", "Produto", "Valor", "Quantidade"};
+    private String colunas[] = {"#", "Produto", "Valor", "Quantidade", "Total"};
     private List<Produto> listaProdutos;
 
     private final int COLUNA_ID = 0;
     private final int COLUNA_PRODUTO = 1;
     private final int COLUNA_VALOR = 2;
     private final int COLUNA_QUANTIDADE = 3;
+    private final int COLUNA_TOTAL = 4;
 
     public ProdutosTableModel(List<Produto> listaProdutos) {
         this.listaProdutos = listaProdutos;
@@ -70,6 +72,8 @@ public class ProdutosTableModel extends AbstractTableModel {
                 return produto.getValorFormatado();
             case COLUNA_QUANTIDADE:
                 return produto.getCarrinho();
+            case COLUNA_TOTAL:
+                return Util.formataDinheiro(produto.getValor() * produto.getCarrinho());
         }
         return null;
     }

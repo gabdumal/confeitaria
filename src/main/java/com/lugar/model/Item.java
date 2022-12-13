@@ -17,7 +17,7 @@ public class Item {
 
     public Item(int id, Produto produto) {
         this.id = id;
-        this.quantidade = produto.getQuantidade();
+        this.quantidade = produto.getCarrinho();
         this.valorTotal = produto.getValor() * this.quantidade;
         this.produto = produto;
     }

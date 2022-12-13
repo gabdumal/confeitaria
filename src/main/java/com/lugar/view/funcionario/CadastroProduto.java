@@ -33,7 +33,7 @@ public class CadastroProduto extends javax.swing.JDialog {
 
         if (validaCampos(nomeForm, valorForm, estoqueForm)) {
             int idProduto = Conexao.insereProdutoPronto(nomeForm, valorForm, estoqueForm);
-            if (idProduto > Util.RETORNO_ERRO_INDETERMINADO) {
+            if (idProduto >= Util.RETORNO_SUCESSO) {
                 JOptionPane.showMessageDialog(this.pai, "Cadastro realizado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();
             } else if (idProduto == Util.RETORNO_ERRO_NAO_UNICO) {
