@@ -17,7 +17,8 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
 
     private int idProduto;
     private int quantidade;
-    private String tipo;
+    private String receita;
+    private boolean editado;
     java.awt.Frame pai;
 
     public int getIdProduto() {
@@ -28,17 +29,36 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
         return this.quantidade;
     }
 
+    public boolean isEditado() {
+        return this.editado;
+    }
+
     public CriacaoProdutoPersonalizado(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         this.idProduto = -1;
-        this.tipo = "Bolo";
+        this.receita = "Bolo";
         this.pai = parent;
+        this.editado = false;
         initComponents();
         this.trocaPainel();
     }
 
+    public CriacaoProdutoPersonalizado(java.awt.Frame parent, boolean modal, ProdutoPersonalizado produto) {
+        super(parent, modal);
+        this.idProduto = produto.getId();
+        this.receita = "Bolo";
+        this.pai = parent;
+        this.editado = false;
+        initComponents();
+        this.campoQuantidade.setValue(produto.getCarrinho());
+        this.comboBoxRecheioBolo1.setSelectedItem(produto.getRecheio());
+        this.comboBoxCoberturaBolo.setSelectedItem(produto.getCobertura());
+        this.areaTextoDetalheBolo.setText(produto.getDetalhe());
+        this.trocaPainel();
+    }
+
     private void trocaPainel() {
-        if (this.tipo.equals("Bolo")) {
+        if (this.receita.equals("Bolo")) {
             this.painelCamposBolo.setVisible(true);
             this.painelCamposTrufa.setVisible(false);
         } else {
@@ -48,7 +68,7 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
     }
 
     private void criaProdutoPersonalizado() {
-        if (this.tipo.equals("Bolo")) {
+        if (this.receita.equals("Bolo")) {
             String recheioForm = this.comboBoxRecheioBolo1.getSelectedItem().toString();
             String coberturaForm = this.comboBoxCoberturaBolo.getSelectedItem().toString();
             String detalheForm = this.areaTextoDetalheBolo.getText().trim();
@@ -62,6 +82,7 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
 
         if (this.idProduto >= Util.RETORNO_SUCESSO) {
             JOptionPane.showMessageDialog(this.pai, "Produto adicionado ao carrinho!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            this.editado = true;
             this.dispose();
         } else {
             JOptionPane.showMessageDialog(this.pai, "Não foi possível adicionar o produto ao carrinho! Tente novamente mais tarde.", "Erro", JOptionPane.ERROR_MESSAGE);
@@ -83,8 +104,8 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
         painelInformacoesProduto = new javax.swing.JPanel();
         textoPrecoProduto = new javax.swing.JLabel();
         painelTipoQuantidade = new javax.swing.JPanel();
-        textoTipo = new javax.swing.JLabel();
-        comboBoxTipo = new javax.swing.JComboBox<>();
+        textoReceita = new javax.swing.JLabel();
+        comboBoxReceita = new javax.swing.JComboBox<>();
         textoQuantidade = new javax.swing.JLabel();
         campoQuantidade = new javax.swing.JSpinner();
         painelCamposTrufa = new javax.swing.JPanel();
@@ -144,28 +165,28 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
 
         painelTipoQuantidade.setLayout(new java.awt.GridBagLayout());
 
-        textoTipo.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        textoTipo.setText("Tipo:");
+        textoReceita.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        textoReceita.setText("Tipo:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.ipadx = 30;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
-        painelTipoQuantidade.add(textoTipo, gridBagConstraints);
+        painelTipoQuantidade.add(textoReceita, gridBagConstraints);
 
-        comboBoxTipo.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        comboBoxTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Bolo", "Trufa" }));
-        comboBoxTipo.addActionListener(new java.awt.event.ActionListener() {
+        comboBoxReceita.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        comboBoxReceita.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Bolo", "Trufa" }));
+        comboBoxReceita.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                comboBoxTipoActionPerformed(evt);
+                comboBoxReceitaActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
-        painelTipoQuantidade.add(comboBoxTipo, gridBagConstraints);
+        painelTipoQuantidade.add(comboBoxReceita, gridBagConstraints);
 
         textoQuantidade.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         textoQuantidade.setText("Quantidade:");
@@ -399,17 +420,16 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
 
     private void botaoEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoEnviarActionPerformed
         this.criaProdutoPersonalizado();
-//        this.dispose();
     }//GEN-LAST:event_botaoEnviarActionPerformed
 
     private void botaoCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCancelarActionPerformed
         this.dispose();
     }//GEN-LAST:event_botaoCancelarActionPerformed
 
-    private void comboBoxTipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxTipoActionPerformed
-        this.tipo = comboBoxTipo.getSelectedItem().toString();
+    private void comboBoxReceitaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxReceitaActionPerformed
+        this.receita = comboBoxReceita.getSelectedItem().toString();
         this.trocaPainel();
-    }//GEN-LAST:event_comboBoxTipoActionPerformed
+    }//GEN-LAST:event_comboBoxReceitaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -464,9 +484,9 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
     private javax.swing.JComboBox<String> comboBoxCoberturaTrufa;
     private javax.swing.JComboBox<String> comboBoxCorBolo1;
     private javax.swing.JComboBox<String> comboBoxFormaBolo;
+    private javax.swing.JComboBox<String> comboBoxReceita;
     private javax.swing.JComboBox<String> comboBoxRecheioBolo1;
     private javax.swing.JComboBox<String> comboBoxRecheioTrufa;
-    private javax.swing.JComboBox<String> comboBoxTipo;
     private javax.swing.JScrollPane painelAreaTextoDetalheBolo;
     private javax.swing.JScrollPane painelAreaTextoDetalheTrufa;
     private javax.swing.JPanel painelBotoes;
@@ -484,8 +504,8 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
     private javax.swing.JLabel textoFormaBolo;
     private javax.swing.JLabel textoPrecoProduto;
     private javax.swing.JLabel textoQuantidade;
+    private javax.swing.JLabel textoReceita;
     private javax.swing.JLabel textoRecheioTrufa;
-    private javax.swing.JLabel textoTipo;
     private javax.swing.JLabel titulo;
     // End of variables declaration//GEN-END:variables
 }

@@ -116,8 +116,8 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
 
     private void chamaTelaAdicaoProdutoCarrinho(int id) {
         ProdutoPronto produto = Conexao.buscaProdutoPronto(id);
-        int quantidadeCarrinho = this.listaProdutosCarrinho.getOrDefault(id, 1);
-        AdicaoProdutoCarrinho adicaoProdutoCarrinho = new AdicaoProdutoCarrinho(this, true, produto, quantidadeCarrinho);
+        produto.setCarrinho(this.listaProdutosCarrinho.getOrDefault(id, 1));
+        AdicaoProdutoCarrinho adicaoProdutoCarrinho = new AdicaoProdutoCarrinho(this, true, produto);
         adicaoProdutoCarrinho.setVisible(true);
         int quantidadeComprada = adicaoProdutoCarrinho.getQuantidade();
         this.listaProdutosCarrinho.put(id, quantidadeComprada);

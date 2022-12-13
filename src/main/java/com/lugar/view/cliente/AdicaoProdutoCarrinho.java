@@ -27,7 +27,7 @@ public class AdicaoProdutoCarrinho extends javax.swing.JDialog {
         initComponents();
     }
 
-    public AdicaoProdutoCarrinho(java.awt.Frame parent, boolean modal, Produto produto, int quantidadeCarrinho) {
+    public AdicaoProdutoCarrinho(java.awt.Frame parent, boolean modal, Produto produto) {
         super(parent, modal);
         String textoProduto = "";
         if (produto instanceof ProdutoPronto) {
@@ -37,8 +37,8 @@ public class AdicaoProdutoCarrinho extends javax.swing.JDialog {
             this.quantidadeMaxima = Integer.MAX_VALUE;
             textoProduto = ((ProdutoPersonalizado) produto).getRecheio();
         }
-        if (quantidadeCarrinho > 0) {
-            this.quantidade = quantidadeCarrinho;
+        if (produto.getCarrinho() > 0) {
+            this.quantidade = produto.getCarrinho();
         } else {
             this.quantidade = 1;
         }

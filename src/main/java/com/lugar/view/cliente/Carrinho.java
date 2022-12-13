@@ -83,6 +83,7 @@ public class Carrinho extends javax.swing.JDialog {
 
     private void atualizaModeloTabela() {
         // Atualiza lista de produtos
+        this.montaListaProdutos();
         for (Produto produto : listaProdutos) {
             produto.setCarrinho(listaProdutosCarrinho.get(produto.getId()));
         }
@@ -128,13 +129,26 @@ public class Carrinho extends javax.swing.JDialog {
     // Fluxo de telas
     private void chamaTelaEdicaoProdutoCarrinho(int id) {
         Produto produto = Conexao.buscaProduto(id);
-        int quantidadeCarrinho = this.listaProdutosCarrinho.get(id);
+        produto.setCarrinho(this.listaProdutosCarrinho.get(id));
 
-        AdicaoProdutoCarrinho adicaoProdutoCarrinho = new AdicaoProdutoCarrinho(this.pai, true, produto, quantidadeCarrinho);
-        adicaoProdutoCarrinho.setVisible(true);
-        int quantidadeComprada = adicaoProdutoCarrinho.getQuantidade();
-        this.listaProdutosCarrinho.put(id, quantidadeComprada);
-        this.atualizaTabela();
+        if (produto instanceof ProdutoPronto) {
+            AdicaoProdutoCarrinho adicaoProdutoCarrinho = new AdicaoProdutoCarrinho(this.pai, true, produto);
+            adicaoProdutoCarrinho.setVisible(true);
+            int quantidadeComprada = adicaoProdutoCarrinho.getQuantidade();
+            this.listaProdutosCarrinho.put(id, quantidadeComprada);
+            this.atualizaTabela();
+        } else {
+            CriacaoProdutoPersonalizado criacaoProdutoPersonalizado
+                    = new CriacaoProdutoPersonalizado(this.pai, true, (ProdutoPersonalizado) produto);
+            criacaoProdutoPersonalizado.setVisible(true);
+            if (criacaoProdutoPersonalizado.isEditado()) {
+                this.listaProdutosCarrinho.remove(id);
+                int idProdutoNovo = criacaoProdutoPersonalizado.getIdProduto();
+                int quantidadeComprada = criacaoProdutoPersonalizado.getQuantidade();
+                this.listaProdutosCarrinho.put(idProdutoNovo, quantidadeComprada);
+                this.atualizaTabela();
+            }
+        }
     }
 
     /**
