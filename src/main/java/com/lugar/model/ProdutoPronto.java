@@ -12,11 +12,13 @@ public class ProdutoPronto extends Produto {
 
     private String nome;
     private int estoque;
+    private double valor;
 
     public ProdutoPronto(int id, String nome, double valor, int estoque) {
-        super(id, valor);
+        super(id);
         this.nome = nome;
         this.estoque = estoque;
+        this.valor = valor;
     }
 
     public String getNome() {
@@ -25,6 +27,11 @@ public class ProdutoPronto extends Produto {
 
     public int getEstoque() {
         return estoque;
+    }
+
+    @Override
+    public double getValor() {
+        return this.valor;
     }
 
     public void setNome(String nome) {
@@ -36,6 +43,12 @@ public class ProdutoPronto extends Produto {
     public void setEstoque(int estoque) {
         if (estoque >= 0) {
             this.estoque = estoque;
+        }
+    }
+
+    public void setValor(double valor) {
+        if (valor >= 0) {
+            this.valor = valor;
         }
     }
 

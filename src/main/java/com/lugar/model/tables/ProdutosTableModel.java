@@ -66,7 +66,7 @@ public class ProdutosTableModel extends AbstractTableModel {
                 if (produto instanceof ProdutoPronto) {
                     return ((ProdutoPronto) produto).getNome();
                 } else {
-                    return ((ProdutoPersonalizado) produto).getRecheio();
+                    return ((ProdutoPersonalizado) produto).getRecheio(0);
                 }
             case COLUNA_VALOR:
                 return produto.getValorFormatado();

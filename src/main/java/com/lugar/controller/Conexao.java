@@ -5,6 +5,7 @@
 package com.lugar.controller;
 
 import com.lugar.confeitaria.Util;
+import com.lugar.model.Caracteristica;
 import com.lugar.model.Cliente;
 import com.lugar.model.Usuario;
 import com.lugar.model.Produto;
@@ -86,7 +87,6 @@ public class Conexao {
 
             sql = "CREATE TABLE IF NOT EXISTS \"Produto\" (\n"
                     + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
-                    + "	\"valor\"	REAL NOT NULL DEFAULT 0,\n"
                     + "	\"tipo\"	INTEGER NOT NULL DEFAULT 0 CHECK(\"tipo\" IN (0, 1)),"
                     + "	PRIMARY KEY(\"id\" AUTOINCREMENT)\n"
                     + ");";
@@ -96,6 +96,7 @@ public class Conexao {
                     + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
                     + "	\"nome\"	TEXT NOT NULL UNIQUE,\n"
                     + "	\"estoque\"	INTEGER NOT NULL DEFAULT 0,\n"
+                    + "	\"valor\"	REAL NOT NULL DEFAULT 0,\n"
                     + "	FOREIGN KEY(\"id\") REFERENCES \"Produto\"(\"id\") ON DELETE CASCADE,\n"
                     + "	PRIMARY KEY(\"id\")\n"
                     + ");";
@@ -103,9 +104,11 @@ public class Conexao {
 
             sql = "CREATE TABLE IF NOT EXISTS \"ProdutoPersonalizado\" (\n"
                     + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
-                    + "	\"recheio\"	TEXT NOT NULL,\n"
-                    + "	\"cobertura\"	TEXT NOT NULL,\n"
                     + "	\"detalhe\"	TEXT,\n"
+                    + "	\"receita\"	TEXT NOT NULL CHECK(receita IN('B','T')),\n"
+                    + "	\"idCobertura\"	INTEGER,\n"
+                    + "	\"idCor\"	INTEGER NOT NULL,\n"
+                    + "	\"idForma\"	INTEGER NOT NULL,\n"
                     + "	PRIMARY KEY(\"id\"),\n"
                     + "	FOREIGN KEY(\"id\") REFERENCES \"Produto\"(\"id\") ON DELETE CASCADE\n"
                     + ");";
@@ -151,7 +154,7 @@ public class Conexao {
                     + "	\"idEndereco\"	INTEGER NOT NULL,\n"
                     + "	\"cartao\"	TEXT NOT NULL CHECK(LENGTH(\"cartao\") == 16),\n"
                     + "	PRIMARY KEY(\"id\" AUTOINCREMENT),\n"
-                    + "	FOREIGN KEY(\"idEndereco\") REFERENCES \"Endereco\"(\"id\")\n"
+                    + "	FOREIGN KEY(\"idEndereco\") REFERENCES \"Endereco\"(\"id\") ON DELETE CASCADE\n"
                     + ");";
             stmt.addBatch(sql);
 
@@ -160,7 +163,36 @@ public class Conexao {
                     + "	\"matricula\"	TEXT NOT NULL UNIQUE,\n"
                     + "	\"funcao\"	TEXT NOT NULL,\n"
                     + "	PRIMARY KEY(\"id\" AUTOINCREMENT),\n"
-                    + "	FOREIGN KEY(\"id\") REFERENCES \"Usuario\"(\"id\")\n"
+                    + "	FOREIGN KEY(\"id\") REFERENCES \"Usuario\"(\"id\") ON DELETE CASCADE\n"
+                    + ");";
+            stmt.addBatch(sql);
+
+            sql = "CREATE TABLE IF NOT EXISTS \"Caracteristica\" (\n"
+                    + " \"id\"         INTEGER NOT NULL UNIQUE,\n"
+                    + " \"tipo\"       TEXT    NOT NULL CHECK (tipo IN (\"F\", \"R\", \"T\", \"C\") ),\n"
+                    + " \"nome\"       TEXT    NOT NULL UNIQUE,\n"
+                    + " \"valorGrama\" REAL    NOT NULL DEFAULT 0,\n"
+                    + "	PRIMARY KEY(\"id\" AUTOINCREMENT)\n"
+                    + ");";
+            stmt.addBatch(sql);
+
+            sql = "CREATE TABLE IF NOT EXISTS \"Forma\" (\n"
+                    + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
+                    + "	\"recheios\"	INTEGER NOT NULL DEFAULT 0,\n"
+                    + "	\"gramaRecheio\"	INTEGER NOT NULL DEFAULT 0,\n"
+                    + "	\"gramaCobertura\"	INTEGER NOT NULL DEFAULT 0,\n"
+                    + "	\"gramaMassa\"	INTEGER NOT NULL DEFAULT 0,\n"
+                    + "	PRIMARY KEY(\"id\"),\n"
+                    + "	FOREIGN KEY(\"id\") REFERENCES \"Caracteristica\"(\"id\") ON DELETE CASCADE\n"
+                    + ");";
+            stmt.addBatch(sql);
+
+            sql = "CREATE TABLE IF NOT EXISTS \"ProdutoPersonalizado_Recheio\" (\n"
+                    + "	\"idProdutoPersonalizado\"	INTEGER NOT NULL,\n"
+                    + "	\"idRecheio\"	INTEGER NOT NULL,\n"
+                    + "	FOREIGN KEY(\"idProdutoPersonalizado\") REFERENCES \"Produto\"(\"id\") ON DELETE CASCADE,\n"
+                    + "	FOREIGN KEY(\"idRecheio\") REFERENCES \"Caracteristica\"(\"id\") ON DELETE CASCADE,\n"
+                    + "	PRIMARY KEY(\"idProdutoPersonalizado\",\"idRecheio\")\n"
                     + ");";
             stmt.addBatch(sql);
 
@@ -172,19 +204,26 @@ public class Conexao {
             conn.commit();
 
             if (!rs.next()) {
-                sql = "INSERT INTO \"Transacao\" VALUES (0,12.0,'2020-08-17T10:11:16.908732','teste teste');\n"
-                        + "INSERT INTO \"Usuario\" VALUES (5,'Cliente Exemplo','cliente','senha',0,'cliente@email.com','32980675454');\n"
-                        + "INSERT INTO \"Usuario\" VALUES (6,'Funcionário Exemplo','admin','senha',1,'admin@email.com','32956435476');\n"
-                        + "INSERT INTO \"Produto\" (\"id\",\"valor\",\"tipo\") VALUES (1,100.0,1);\n"
-                        + "INSERT INTO \"Produto\" (\"id\",\"valor\",\"tipo\") VALUES (2,100.0,1);\n"
-                        + "INSERT INTO \"Produto\" (\"id\",\"valor\",\"tipo\") VALUES (3,5.56,0);\n"
-                        + "INSERT INTO \"Produto\" (\"id\",\"valor\",\"tipo\") VALUES (4,7.897,0);\n"
-                        + "INSERT INTO \"Produto\" (\"id\",\"valor\",\"tipo\") VALUES (5,3.67,0);\n"
-                        + "INSERT INTO \"ProdutoPersonalizado\" (\"id\",\"recheio\",\"cobertura\",\"detalhe\") VALUES (1,'Chocolate meio amargo','Glacê de limão','');\n"
-                        + "INSERT INTO \"ProdutoPersonalizado\" (\"id\",\"recheio\",\"cobertura\",\"detalhe\") VALUES (2,'Chocolate meio amargo','Chantilly','dsdas');\n"
-                        + "INSERT INTO \"ProdutoPronto\" (\"id\",\"nome\",\"estoque\") VALUES (3,'Brownie',8);\n"
-                        + "INSERT INTO \"ProdutoPronto\" (\"id\",\"nome\",\"estoque\") VALUES (4,'Bolo de milho simples',1);\n"
-                        + "INSERT INTO \"ProdutoPronto\" (\"id\",\"nome\",\"estoque\") VALUES (5,'Sorvete de manga apimentada',0);";
+                sql = "INSERT INTO \"Produto\" (\"id\",\"tipo\") VALUES (1,1);\n"
+                        + "INSERT INTO \"Produto\" (\"id\",\"tipo\") VALUES (2,1);\n"
+                        + "INSERT INTO \"Produto\" (\"id\",\"tipo\") VALUES (3,0);\n"
+                        + "INSERT INTO \"Produto\" (\"id\",\"tipo\") VALUES (4,0);\n"
+                        + "INSERT INTO \"Produto\" (\"id\",\"tipo\") VALUES (5,0);\n"
+                        + "INSERT INTO \"ProdutoPronto\" (\"id\",\"nome\",\"estoque\",\"valor\") VALUES (3,'Brownie',8,6.95);\n"
+                        + "INSERT INTO \"ProdutoPronto\" (\"id\",\"nome\",\"estoque\",\"valor\") VALUES (4,'Bolo de milho simples',1,7.89);\n"
+                        + "INSERT INTO \"ProdutoPronto\" (\"id\",\"nome\",\"estoque\",\"valor\") VALUES (5,'Sorvete de manga apimentada',0,3.67);\n"
+                        + "INSERT INTO \"ProdutoPersonalizado\" (\"id\",\"detalhe\",\"receita\",\"idForma\",\"idCor\",\"idCobertura\") VALUES (1,'Gostoso','B',2,3,4);\n"
+                        + "INSERT INTO \"Transacao\" (\"id\",\"valor\",\"diaHora\",\"descricao\") VALUES (0,12.0,'2020-08-17T10:11:16.908732','Transação teste');\n"
+                        + "INSERT INTO \"Usuario\" (\"id\",\"nome\",\"nomeUsuario\",\"senhaHash\",\"admin\",\"email\",\"telefone\") VALUES (5,'Cliente Exemplo','cliente','senha',0,'cliente@email.com','32980675454');\n"
+                        + "INSERT INTO \"Usuario\" (\"id\",\"nome\",\"nomeUsuario\",\"senhaHash\",\"admin\",\"email\",\"telefone\") VALUES (6,'Funcionário Exemplo','admin','senha',1,'admin@email.com','32956435476');\n"
+                        + "INSERT INTO \"Caracteristica\" (\"id\",\"tipo\",\"nome\",\"valorGrama\") VALUES (1,'R','Creme de morango',0.32);\n"
+                        + "INSERT INTO \"Caracteristica\" (\"id\",\"tipo\",\"nome\",\"valorGrama\") VALUES (2,'F','Redonda 20cm',0.0625);\n"
+                        + "INSERT INTO \"Caracteristica\" (\"id\",\"tipo\",\"nome\",\"valorGrama\") VALUES (3,'C','Azul',0);\n"
+                        + "INSERT INTO \"Caracteristica\" (\"id\",\"tipo\",\"nome\",\"valorGrama\") VALUES (4,'T','Glacê de limão',0.023);\n"
+                        + "INSERT INTO \"Caracteristica\" (\"id\",\"tipo\",\"nome\",\"valorGrama\") VALUES (5,'R','Ganache meio amargo',0.57);\n"
+                        + "INSERT INTO \"Forma\" (\"id\",\"recheios\",\"gramaRecheio\",\"gramaCobertura\",\"gramaMassa\") VALUES (2,1,100,150,800);\n"
+                        + "INSERT INTO \"ProdutoPersonalizado_Recheio\" (\"idProdutoPersonalizado\",\"idRecheio\") VALUES (1,1);\n"
+                        + "INSERT INTO \"ProdutoPersonalizado_Recheio\" (\"idProdutoPersonalizado\",\"idRecheio\") VALUES (1,5);\n";
 
                 String[] updates = sql.split("\n");
                 for (String update : updates) {
@@ -308,14 +347,20 @@ public class Conexao {
     }
 
     public static Produto buscaProduto(int id) {
-        String sql = "SELECT Produto.tipo, Produto.valor, "
-                + "ProdutoPronto.estoque, ProdutoPronto.nome, "
-                + "ProdutoPersonalizado.recheio, "
-                + "ProdutoPersonalizado.cobertura, ProdutoPersonalizado.detalhe "
-                + "FROM Produto "
-                + "LEFT JOIN ProdutoPersonalizado ON Produto.id = ProdutoPersonalizado.id "
-                + "LEFT JOIN ProdutoPronto ON Produto.id = ProdutoPronto.id "
-                + "WHERE Produto.id=" + id + ";";
+        String sql = "SELECT DISTINCT Produto.id, Produto.tipo as tipoProduto, ProdutoPronto.valor, ProdutoPronto.estoque, ProdutoPronto.nome,\n"
+                + "ProdutoPersonalizado.detalhe, Caracteristica.id AS idCaracteristica, Caracteristica.nome AS caracteristica, Caracteristica.tipo, Caracteristica.valorGrama,\n"
+                + "Forma.recheios, Forma.gramaRecheio, Forma.gramaCobertura, Forma.gramaMassa\n"
+                + "FROM Produto\n"
+                + "LEFT JOIN ProdutoPronto ON Produto.id = ProdutoPronto.id\n"
+                + "LEFT JOIN ProdutoPersonalizado ON Produto.id = ProdutoPersonalizado.id\n"
+                + "LEFT JOIN ProdutoPersonalizado_Recheio ON ProdutoPersonalizado.id = ProdutoPersonalizado_Recheio.idProdutoPersonalizado\n"
+                + "LEFT JOIN Caracteristica ON ProdutoPersonalizado.idForma = Caracteristica.id\n"
+                + "OR ProdutoPersonalizado.idCobertura = Caracteristica.id\n"
+                + "OR ProdutoPersonalizado.idCor = Caracteristica.id\n"
+                + "OR ProdutoPersonalizado_Recheio.idRecheio = Caracteristica.id\n"
+                + "LEFT JOIN Forma ON Caracteristica.id = Forma.id\n"
+                + "WHERE Produto.id = " + id + "\n"
+                + "ORDER BY Produto.id;";
         Connection conn = null;
         Produto produto = null;
 
@@ -323,8 +368,10 @@ public class Conexao {
             conn = Conexao.abreConexao();
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
+
+            // Cria Produto Pronto ou Personalizado
             if (rs.next()) {
-                if (rs.getInt("tipo") == Util.TIPO_PRONTO) {
+                if (rs.getInt("tipoProduto") == Util.TIPO_PRONTO) {
                     produto = new ProdutoPronto(
                             id,
                             rs.getString("nome"),
@@ -334,11 +381,34 @@ public class Conexao {
                 } else {
                     produto = new ProdutoPersonalizado(
                             id,
-                            rs.getDouble("valor"),
-                            rs.getString("recheio"),
-                            rs.getString("cobertura"),
+                            rs.getString("receita"),
                             rs.getString("detalhe")
                     );
+                    // Preenche características
+                    do {
+                        int idCaracteristica = rs.getInt("idCaracteristica");
+                        String tipo = rs.getString("tipo");
+                        Caracteristica caracteristica = new Caracteristica(
+                                idCaracteristica,
+                                tipo,
+                                rs.getString("caracteristica"),
+                                rs.getDouble("valorGrama")
+                        );
+                        switch (tipo) {
+                            case Util.CARACTERISTICA_RECHEIO:
+                                ((ProdutoPersonalizado) produto).addRecheio(caracteristica);
+                                break;
+                            case Util.CARACTERISTICA_COR:
+                                ((ProdutoPersonalizado) produto).setCor(caracteristica);
+                                break;
+                            case Util.CARACTERISTICA_COBERTURA:
+                                ((ProdutoPersonalizado) produto).setCobertura(caracteristica);
+                                break;
+                            case Util.CARACTERISTICA_FORMA:
+                                ((ProdutoPersonalizado) produto).setForma(caracteristica);
+                                break;
+                        }
+                    } while (rs.next());
                 }
             }
         } catch (SQLException ex) {
@@ -350,10 +420,10 @@ public class Conexao {
     }
 
     public static ProdutoPronto buscaProdutoPronto(int id) {
-        String sql = "SELECT ProdutoPronto.nome, Produto.valor, ProdutoPronto.estoque"
+        String sql = "SELECT ProdutoPronto.nome, ProdutoPronto.valor, ProdutoPronto.estoque"
                 + " FROM Produto INNER JOIN ProdutoPronto"
                 + " ON Produto.id = ProdutoPronto.id"
-                + " WHERE Produto.id=" + id + ";";
+                + " WHERE Produto.id=" + id + " AND tipo = 0;";
         Connection conn = null;
         ProdutoPronto produto = null;
         try {
@@ -367,7 +437,6 @@ public class Conexao {
                         rs.getDouble("valor"),
                         rs.getInt("estoque")
                 );
-
             }
         } catch (SQLException ex) {
             Logger.getLogger(Conexao.class
@@ -400,10 +469,11 @@ public class Conexao {
     }
 
     public static List<ProdutoPronto> buscaTodosProdutosProntos(boolean ehAdmin) {
-        String sql = "SELECT Produto.id, ProdutoPronto.nome, Produto.valor,"
+        String sql = "SELECT Produto.id, ProdutoPronto.nome, ProdutoPronto.valor,"
                 + " ProdutoPronto.estoque FROM Produto"
-                + " INNER JOIN ProdutoPronto ON Produto.id = ProdutoPronto.id";
-        sql += ehAdmin ? ";" : " WHERE estoque > 0;";
+                + " INNER JOIN ProdutoPronto ON Produto.id = ProdutoPronto.id"
+                + " WHERE tipo = 0";
+        sql += ehAdmin ? ";" : " AND estoque > 0;";
         Connection conn = null;
         List<ProdutoPronto> listaProdutos = new ArrayList<ProdutoPronto>();
         try {
@@ -482,32 +552,68 @@ public class Conexao {
     }
 
     public static int insereProdutoPersonalizado(ProdutoPersonalizado produtoPersonalizado) {
-        String sqlBusca = "SELECT Produto.id FROM Produto INNER JOIN ProdutoPersonalizado "
-                + "ON Produto.id = ProdutoPersonalizado.id WHERE valor = ? AND tipo = 1 "
-                + "AND recheio = ? AND cobertura = ? AND detalhe = ?;";
+        String sqlBuscaPrincipal = "SELECT DISTINCT Produto.id, Caracteristica.nome as recheio\n"
+                + "FROM Produto\n"
+                + "INNER JOIN ProdutoPersonalizado ON Produto.id = ProdutoPersonalizado.id\n"
+                + "INNER JOIN ProdutoPersonalizado_Recheio ON ProdutoPersonalizado_Recheio.idProdutoPersonalizado = ProdutoPersonalizado.id\n"
+                + "INNER JOIN Caracteristica\n"
+                + "ON  Caracteristica.id = ProdutoPersonalizado_Recheio.idRecheio\n"
+                + "AND ProdutoPersonalizado.idCobertura = (SELECT DISTINCT id FROM Caracteristica WHERE Caracteristica.tipo=\"T\" AND Caracteristica.nome = ? LIMIT 1)\n"
+                + "AND ProdutoPersonalizado.idCor = (SELECT DISTINCT id FROM Caracteristica WHERE Caracteristica.tipo=\"C\" AND Caracteristica.nome = ? LIMIT 1)\n"
+                + "AND ProdutoPersonalizado.idForma = (SELECT DISTINCT id FROM Caracteristica WHERE Caracteristica.tipo=\"F\" AND Caracteristica.nome = ? LIMIT 1)\n"
+                + "WHERE detalhe= ? AND Caracteristica.tipo=\"R\" ORDER BY Produto.id;";
         Connection conn = null;
         int idProduto = Util.RETORNO_ERRO_INDETERMINADO;
         try {
             double valorCalculado = 100;
             // Se já existe, retorna ID. Senão, cria novo e retorna ID
             conn = Conexao.abreConexao();
-            PreparedStatement pstmtBusca = conn.prepareStatement(sqlBusca);
-            pstmtBusca.setDouble(1, valorCalculado);
-            pstmtBusca.setString(2, produtoPersonalizado.getRecheio());
-            pstmtBusca.setString(3, produtoPersonalizado.getCobertura());
-            pstmtBusca.setString(4, produtoPersonalizado.getDetalhe());
-            ResultSet rsBusca = pstmtBusca.executeQuery();
+            PreparedStatement pstmtBuscaPrincipal = conn.prepareStatement(sqlBuscaPrincipal);
+            pstmtBuscaPrincipal.setString(1, produtoPersonalizado.getCobertura().getNome());
+            pstmtBuscaPrincipal.setString(2, produtoPersonalizado.getCor().getNome());
+            pstmtBuscaPrincipal.setString(3, produtoPersonalizado.getForma().getNome());
+            pstmtBuscaPrincipal.setString(4, produtoPersonalizado.getDetalhe());
+            ResultSet rsBuscaPrincipal = pstmtBuscaPrincipal.executeQuery();
 
-            if (rsBusca.next()) {
-                idProduto = rsBusca.getInt("id");
+            boolean mudanca = false;
+            int tamanhoRecheiosPreenchidos = 0;
+            List<Caracteristica> recheiosPreenchidos = null;
+
+            if (rsBuscaPrincipal.next()) {
+                idProduto = rsBuscaPrincipal.getInt("id");
+                recheiosPreenchidos = produtoPersonalizado.getRecheios();
+                tamanhoRecheiosPreenchidos = recheiosPreenchidos.size();
+                boolean[] recheiosBatem = new boolean[tamanhoRecheiosPreenchidos];
+                int contador = 0;
+                do {
+                    for (int i = 0; i < tamanhoRecheiosPreenchidos; i++) {
+                        String recheioBanco = rsBuscaPrincipal.getString("recheio");
+                        if (recheioBanco.equals(recheiosPreenchidos.get(i))) {
+                            recheiosBatem[i] = true;
+                        }
+                    }
+                    contador++;
+                } while (rsBuscaPrincipal.next());
+                if (contador == tamanhoRecheiosPreenchidos) {
+                    for (boolean b : recheiosBatem) {
+                        if (!b) {
+                            mudanca = true;
+                        }
+                    }
+                } else {
+                    mudanca = true;
+                }
+            }
+
+            if (!mudanca) {
+                return idProduto;
             } else {
-                String sqlProduto = "INSERT INTO Produto(valor, tipo) VALUES(?, 1);";
-                String sqlProdutoPersonalizado = "INSERT INTO ProdutoPersonalizado(id, recheio, cobertura, detalhe) VALUES(?, ?, ?, ?);";
+                String sqlProduto = "INSERT INTO Produto(tipo) VALUES(1);";
+                String sqlProdutoPersonalizado = "INSERT INTO ProdutoPersonalizado(id, detalhe, receita, idCobertura, idCor, idForma) VALUES(?, ?, ?, ?, ?, ?);";
 
                 conn.setAutoCommit(false);
 
                 PreparedStatement pstmtProduto = conn.prepareStatement(sqlProduto, Statement.RETURN_GENERATED_KEYS);
-                pstmtProduto.setDouble(1, valorCalculado);
                 int linhaInserida = pstmtProduto.executeUpdate();
 
                 // Reverter operação em caso de erro
@@ -523,14 +629,36 @@ public class Conexao {
                             = conn.prepareStatement(sqlProdutoPersonalizado,
                                     Statement.RETURN_GENERATED_KEYS);
                     pstmtProdutoPersonalizado.setInt(1, idProduto);
-                    pstmtProdutoPersonalizado.setString(2, produtoPersonalizado.getRecheio());
-                    pstmtProdutoPersonalizado.setString(3, produtoPersonalizado.getCobertura());
-                    pstmtProdutoPersonalizado.setString(4, produtoPersonalizado.getDetalhe());
-                    pstmtProdutoPersonalizado.executeUpdate();
-                    conn.commit();
+                    pstmtProdutoPersonalizado.setString(2, produtoPersonalizado.getDetalhe());
+                    pstmtProdutoPersonalizado.setString(3, produtoPersonalizado.getReceita());
+                    pstmtProdutoPersonalizado.setInt(4, produtoPersonalizado.getCobertura().getId());
+                    pstmtProdutoPersonalizado.setInt(5, produtoPersonalizado.getCor().getId());
+                    pstmtProdutoPersonalizado.setInt(6, produtoPersonalizado.getForma().getId());
+                    linhaInserida = pstmtProdutoPersonalizado.executeUpdate();
+
+                    // Reverter operação em caso de erro
+                    if (linhaInserida != 1) {
+                        conn.rollback();
+                    } else {
+                        String sqlRecheio = "INSERT INTO ProdutoPersonalizado(id, detalhe) VALUES";
+                        for (int i = 0; i < tamanhoRecheiosPreenchidos; i++) {
+                            sqlRecheio.concat("(" + idProduto + ",  ?");
+                        }
+                        sqlRecheio.concat(";");
+
+                        PreparedStatement pstmtRecheio = conn.prepareStatement(sqlRecheio);
+                        int i = 1;
+                        for (Caracteristica recheio : recheiosPreenchidos) {
+                            pstmtRecheio.setInt(i, recheio.getId());
+                            i++;
+                        }
+                        pstmtRecheio.executeUpdate();
+
+                        conn.commit();
+                    }
                 }
-                conn.setAutoCommit(true);
             }
+            conn.setAutoCommit(true);
         } catch (SQLException ex) {
             try {
                 // Reverter operação em caso de erro

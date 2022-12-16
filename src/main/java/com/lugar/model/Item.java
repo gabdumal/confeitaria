@@ -15,8 +15,8 @@ public class Item {
     private int quantidade;
     private Produto produto;
 
-    public Item(int id, Produto produto) {
-        this.id = id;
+    public Item(Produto produto) {
+        this.id = -1;
         this.quantidade = produto.getCarrinho();
         this.valorTotal = produto.getValor() * this.quantidade;
         this.produto = produto;
@@ -37,5 +37,4 @@ public class Item {
     public Produto getProduto() {
         return produto;
     }
-
 }

@@ -5,6 +5,8 @@
 package com.lugar.view.cliente;
 
 import com.lugar.controller.Conexao;
+import com.lugar.model.Item;
+import com.lugar.model.Pedido;
 import com.lugar.model.Produto;
 import com.lugar.model.ProdutoPersonalizado;
 import com.lugar.model.ProdutoPronto;
@@ -75,7 +77,7 @@ public class Carrinho extends javax.swing.JDialog {
             int quantidadeCarrinho = listaProdutosCarrinho.get(id);
             if (produto instanceof ProdutoPersonalizado
                     || (produto instanceof ProdutoPronto && quantidadeCarrinho > 0)) {
-                produto.setCarrinho(listaProdutosCarrinho.get(id));
+                produto.setCarrinho(quantidadeCarrinho);
                 this.listaProdutos.add(produto);
             }
         }
@@ -110,20 +112,19 @@ public class Carrinho extends javax.swing.JDialog {
                 "Fechar pedido", JOptionPane.YES_NO_OPTION,
                 JOptionPane.WARNING_MESSAGE) == 0;
 
-//        if (confirmacao) {
-//            List<Item> listaItens = new ArrayList<Item>();
-//
-//            for (Produto produto : listaProdutos) {
-//                if (produto.getQuantidade() > 0) {
-//                    Item item = new Item(0, produto);
-//                    listaItens.add(item);
-//                }
-//            }
-//
-//            Pedido pedido = new Pedido(0, 'S', false, listaItens);
-//
-//            this.dispose();
-//        }
+        if (confirmacao) {
+            List<Item> listaItens = new ArrayList<Item>();
+
+            for (Produto produto : this.listaProdutos) {
+                if (produto.getCarrinho() > 0) {
+                    Item item = new Item(produto);
+                    listaItens.add(item);
+                }
+            }
+
+            // Pedido pedido = new Pedido(0, 'S', false, listaItens);
+            this.dispose();
+        }
     }
 
     // Fluxo de telas

@@ -13,18 +13,15 @@ import com.lugar.confeitaria.Util;
 public abstract class Produto {
 
     private int id;
-    private double valor;
     private int carrinho;
 
-    public Produto(int id, double valor) {
+    public Produto(int id) {
         this.id = id;
-        this.valor = valor;
         this.carrinho = 0;
     }
 
-    public Produto(int id, double valor, int carrinho) {
+    public Produto(int id, int carrinho) {
         this.id = id;
-        this.valor = valor;
         this.carrinho = carrinho;
     }
 
@@ -32,12 +29,10 @@ public abstract class Produto {
         return id;
     }
 
-    public double getValor() {
-        return valor;
-    }
+    public abstract double getValor();
 
     public String getValorFormatado() {
-        return Util.formataDinheiro(this.valor);
+        return Util.formataDinheiro(this.getValor());
     }
 
     public int getCarrinho() {
@@ -47,12 +42,6 @@ public abstract class Produto {
     public void setId(int id) {
         if (id >= 0) {
             this.id = id;
-        }
-    }
-
-    public void setValor(double valor) {
-        if (valor >= 0) {
-            this.valor = valor;
         }
     }
 
