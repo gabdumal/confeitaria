@@ -8,7 +8,7 @@ import com.lugar.confeitaria.Util;
 import com.lugar.controller.Conexao;
 import com.lugar.model.Usuario;
 import com.lugar.model.ProdutoPronto;
-import com.lugar.model.tables.ProdutosProntosTableModel;
+import com.lugar.model.data.ProdutosProntosTableModel;
 import com.lugar.view.cliente.AdicaoProdutoCarrinho;
 import com.lugar.view.cliente.Carrinho;
 import com.lugar.view.cliente.CriacaoProdutoPersonalizado;

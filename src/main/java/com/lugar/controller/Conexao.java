@@ -7,6 +7,7 @@ package com.lugar.controller;
 import com.lugar.confeitaria.Util;
 import com.lugar.model.Caracteristica;
 import com.lugar.model.Cliente;
+import com.lugar.model.Forma;
 import com.lugar.model.Usuario;
 import com.lugar.model.Produto;
 import com.lugar.model.ProdutoPronto;
@@ -178,7 +179,7 @@ public class Conexao {
 
             sql = "CREATE TABLE IF NOT EXISTS \"Forma\" (\n"
                     + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
-                    + "	\"recheios\"	INTEGER NOT NULL DEFAULT 0,\n"
+                    + "	\"recheios\"	INTEGER NOT NULL DEFAULT 0 CHECK(recheios >=0 AND recheios <=3),\n"
                     + "	\"gramaRecheio\"	INTEGER NOT NULL DEFAULT 0,\n"
                     + "	\"gramaCobertura\"	INTEGER NOT NULL DEFAULT 0,\n"
                     + "	\"gramaMassa\"	INTEGER NOT NULL DEFAULT 0,\n"
@@ -188,11 +189,12 @@ public class Conexao {
             stmt.addBatch(sql);
 
             sql = "CREATE TABLE IF NOT EXISTS \"ProdutoPersonalizado_Recheio\" (\n"
+                    + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
                     + "	\"idProdutoPersonalizado\"	INTEGER NOT NULL,\n"
                     + "	\"idRecheio\"	INTEGER NOT NULL,\n"
-                    + "	FOREIGN KEY(\"idProdutoPersonalizado\") REFERENCES \"Produto\"(\"id\") ON DELETE CASCADE,\n"
                     + "	FOREIGN KEY(\"idRecheio\") REFERENCES \"Caracteristica\"(\"id\") ON DELETE CASCADE,\n"
-                    + "	PRIMARY KEY(\"idProdutoPersonalizado\",\"idRecheio\")\n"
+                    + "	FOREIGN KEY(\"idProdutoPersonalizado\") REFERENCES \"Produto\"(\"id\") ON DELETE CASCADE,\n"
+                    + "	PRIMARY KEY(\"id\" AUTOINCREMENT)\n"
                     + ");";
             stmt.addBatch(sql);
 
@@ -222,7 +224,6 @@ public class Conexao {
                         + "INSERT INTO \"Caracteristica\" (\"id\",\"tipo\",\"nome\",\"valorGrama\") VALUES (4,'T','Glacê de limão',0.023);\n"
                         + "INSERT INTO \"Caracteristica\" (\"id\",\"tipo\",\"nome\",\"valorGrama\") VALUES (5,'R','Ganache meio amargo',0.57);\n"
                         + "INSERT INTO \"Forma\" (\"id\",\"recheios\",\"gramaRecheio\",\"gramaCobertura\",\"gramaMassa\") VALUES (2,1,100,150,800);\n"
-                        + "INSERT INTO \"ProdutoPersonalizado_Recheio\" (\"idProdutoPersonalizado\",\"idRecheio\") VALUES (1,1);\n"
                         + "INSERT INTO \"ProdutoPersonalizado_Recheio\" (\"idProdutoPersonalizado\",\"idRecheio\") VALUES (1,5);\n";
 
                 String[] updates = sql.split("\n");
@@ -348,7 +349,7 @@ public class Conexao {
 
     public static Produto buscaProduto(int id) {
         String sql = "SELECT DISTINCT Produto.id, Produto.tipo as tipoProduto, ProdutoPronto.valor, ProdutoPronto.estoque, ProdutoPronto.nome,\n"
-                + "ProdutoPersonalizado.detalhe, Caracteristica.id AS idCaracteristica, Caracteristica.nome AS caracteristica, Caracteristica.tipo, Caracteristica.valorGrama,\n"
+                + "ProdutoPersonalizado.detalhe, ProdutoPersonalizado.receita, Caracteristica.id AS idCaracteristica, Caracteristica.nome AS caracteristica, Caracteristica.tipo, Caracteristica.valorGrama,\n"
                 + "Forma.recheios, Forma.gramaRecheio, Forma.gramaCobertura, Forma.gramaMassa\n"
                 + "FROM Produto\n"
                 + "LEFT JOIN ProdutoPronto ON Produto.id = ProdutoPronto.id\n"
@@ -468,6 +469,71 @@ public class Conexao {
         }
     }
 
+    public static List<List<Caracteristica>> buscaTodasCaracteristicas() {
+        String sql = "SELECT Caracteristica.id, Caracteristica.nome, "
+                + "Caracteristica.tipo, Caracteristica.valorGrama, "
+                + "Forma.recheios, Forma.gramaRecheio, forma.gramaCobertura, "
+                + "Forma.gramaMassa FROM Caracteristica "
+                + "LEFT JOIN Forma ON Caracteristica.id = Forma.id;";
+        Connection conn = null;
+        List<List<Caracteristica>> listaDeListasDeCaracteristicas = new ArrayList<List<Caracteristica>>();
+        try {
+            conn = Conexao.abreConexao();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            List<Caracteristica> listaFormas = new ArrayList<Caracteristica>();
+            List<Caracteristica> listaCores = new ArrayList<Caracteristica>();
+            List<Caracteristica> listaCoberturas = new ArrayList<Caracteristica>();
+            List<Caracteristica> listaRecheios = new ArrayList<Caracteristica>();
+
+            while (rs.next()) {
+                String tipo = rs.getString("tipo");
+                Caracteristica caracteristica = null;
+                if (tipo.equals(Util.CARACTERISTICA_FORMA)) {
+                    caracteristica = new Forma(
+                            rs.getInt("id"),
+                            rs.getString("tipo"),
+                            rs.getString("nome"),
+                            rs.getDouble("valorGrama"),
+                            rs.getInt("recheios"),
+                            rs.getDouble("gramaRecheio"),
+                            rs.getDouble("gramaCobertura"),
+                            rs.getDouble("gramaMassa")
+                    );
+                    listaFormas.add(caracteristica);
+                } else {
+                    caracteristica = new Caracteristica(
+                            rs.getInt("id"),
+                            rs.getString("tipo"),
+                            rs.getString("nome"),
+                            rs.getDouble("valorGrama")
+                    );
+                    switch (tipo) {
+                        case Util.CARACTERISTICA_COR:
+                            listaCores.add(caracteristica);
+                            break;
+                        case Util.CARACTERISTICA_COBERTURA:
+                            listaCoberturas.add(caracteristica);
+                            break;
+                        case Util.CARACTERISTICA_RECHEIO:
+                            listaRecheios.add(caracteristica);
+                            break;
+                    }
+                }
+            }
+            listaDeListasDeCaracteristicas.add(listaFormas);
+            listaDeListasDeCaracteristicas.add(listaCores);
+            listaDeListasDeCaracteristicas.add(listaCoberturas);
+            listaDeListasDeCaracteristicas.add(listaRecheios);
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexao.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            Conexao.fechaConexao(conn);
+            return listaDeListasDeCaracteristicas;
+        }
+    }
+
     public static List<ProdutoPronto> buscaTodosProdutosProntos(boolean ehAdmin) {
         String sql = "SELECT Produto.id, ProdutoPronto.nome, ProdutoPronto.valor,"
                 + " ProdutoPronto.estoque FROM Produto"
@@ -565,9 +631,11 @@ public class Conexao {
         Connection conn = null;
         int idProduto = Util.RETORNO_ERRO_INDETERMINADO;
         try {
+
             double valorCalculado = 100;
             // Se já existe, retorna ID. Senão, cria novo e retorna ID
             conn = Conexao.abreConexao();
+            conn.setAutoCommit(false);
             PreparedStatement pstmtBuscaPrincipal = conn.prepareStatement(sqlBuscaPrincipal);
             pstmtBuscaPrincipal.setString(1, produtoPersonalizado.getCobertura().getNome());
             pstmtBuscaPrincipal.setString(2, produtoPersonalizado.getCor().getNome());
@@ -578,17 +646,17 @@ public class Conexao {
             boolean mudanca = false;
             int tamanhoRecheiosPreenchidos = 0;
             List<Caracteristica> recheiosPreenchidos = null;
+            recheiosPreenchidos = produtoPersonalizado.getRecheios();
+            tamanhoRecheiosPreenchidos = recheiosPreenchidos.size();
 
             if (rsBuscaPrincipal.next()) {
                 idProduto = rsBuscaPrincipal.getInt("id");
-                recheiosPreenchidos = produtoPersonalizado.getRecheios();
-                tamanhoRecheiosPreenchidos = recheiosPreenchidos.size();
                 boolean[] recheiosBatem = new boolean[tamanhoRecheiosPreenchidos];
                 int contador = 0;
                 do {
                     for (int i = 0; i < tamanhoRecheiosPreenchidos; i++) {
                         String recheioBanco = rsBuscaPrincipal.getString("recheio");
-                        if (recheioBanco.equals(recheiosPreenchidos.get(i))) {
+                        if (recheioBanco.equals(recheiosPreenchidos.get(i).getNome())) {
                             recheiosBatem[i] = true;
                         }
                     }
@@ -603,6 +671,8 @@ public class Conexao {
                 } else {
                     mudanca = true;
                 }
+            } else {
+                mudanca = true;
             }
 
             if (!mudanca) {
@@ -610,8 +680,6 @@ public class Conexao {
             } else {
                 String sqlProduto = "INSERT INTO Produto(tipo) VALUES(1);";
                 String sqlProdutoPersonalizado = "INSERT INTO ProdutoPersonalizado(id, detalhe, receita, idCobertura, idCor, idForma) VALUES(?, ?, ?, ?, ?, ?);";
-
-                conn.setAutoCommit(false);
 
                 PreparedStatement pstmtProduto = conn.prepareStatement(sqlProduto, Statement.RETURN_GENERATED_KEYS);
                 int linhaInserida = pstmtProduto.executeUpdate();
@@ -640,11 +708,11 @@ public class Conexao {
                     if (linhaInserida != 1) {
                         conn.rollback();
                     } else {
-                        String sqlRecheio = "INSERT INTO ProdutoPersonalizado(id, detalhe) VALUES";
+                        String sqlRecheio = "INSERT INTO ProdutoPersonalizado_Recheio(idProdutoPersonalizado, idRecheio) VALUES";
                         for (int i = 0; i < tamanhoRecheiosPreenchidos; i++) {
-                            sqlRecheio.concat("(" + idProduto + ",  ?");
+                            sqlRecheio = sqlRecheio.concat("(" + idProduto + ",  ?), ");
                         }
-                        sqlRecheio.concat(";");
+                        sqlRecheio = sqlRecheio.substring(0, sqlRecheio.length() - 2).concat(";");
 
                         PreparedStatement pstmtRecheio = conn.prepareStatement(sqlRecheio);
                         int i = 1;
@@ -652,8 +720,8 @@ public class Conexao {
                             pstmtRecheio.setInt(i, recheio.getId());
                             i++;
                         }
-                        pstmtRecheio.executeUpdate();
 
+                        pstmtRecheio.executeUpdate();
                         conn.commit();
                     }
                 }

@@ -50,4 +50,9 @@ public class Caracteristica {
         this.valorGrama = valorGrama;
     }
 
+    @Override
+    public String toString() {
+        return this.nome;
+    }
+
 }

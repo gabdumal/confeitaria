@@ -35,7 +35,7 @@ public class AdicaoProdutoCarrinho extends javax.swing.JDialog {
             textoProduto = ((ProdutoPronto) produto).getNome();
         } else {
             this.quantidadeMaxima = Integer.MAX_VALUE;
-            textoProduto = ((ProdutoPersonalizado) produto).getRecheio();
+            textoProduto = ((ProdutoPersonalizado) produto).getRecheio(0).getNome();
         }
         if (produto.getCarrinho() > 0) {
             this.quantidade = produto.getCarrinho();

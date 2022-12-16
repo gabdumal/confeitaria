@@ -13,18 +13,30 @@ import java.util.List;
  */
 public class ProdutoPersonalizado extends Produto {
 
-    private Caracteristica forma;
-    private List<Caracteristica> recheios;
-    private Caracteristica cobertura;
-    private Caracteristica cor;
     private String receita;
     private String detalhe;
+    private Caracteristica forma;
+    private Caracteristica cor;
+    private Caracteristica cobertura;
+    private List<Caracteristica> recheios;
 
     public ProdutoPersonalizado(int id, String receita, String detalhe) {
         super(id);
         this.recheios = new ArrayList<Caracteristica>();
         this.receita = receita;
         this.detalhe = detalhe;
+    }
+
+    public ProdutoPersonalizado(int id, String receita, String detalhe,
+            Caracteristica forma, Caracteristica cor, Caracteristica cobertura,
+            List<Caracteristica> recheios) {
+        super(id);
+        this.receita = receita;
+        this.detalhe = detalhe;
+        this.forma = forma;
+        this.cor = cor;
+        this.cobertura = cobertura;
+        this.recheios = recheios;
     }
 
     public Caracteristica getForma() {

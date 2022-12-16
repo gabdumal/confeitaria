@@ -22,10 +22,10 @@ public class Util {
     public final static int TIPO_PERSONALIZADO = 1;
     public final static String RECEITA_BOLO = "B";
     public final static String RECEITA_TRUFA = "T";
-    public final static String CARACTERISTICA_COBERTURA = "T";
-    public final static String CARACTERISTICA_COR = "C";
-    public final static String CARACTERISTICA_RECHEIO = "R";
     public final static String CARACTERISTICA_FORMA = "F";
+    public final static String CARACTERISTICA_COR = "C";
+    public final static String CARACTERISTICA_COBERTURA = "T";
+    public final static String CARACTERISTICA_RECHEIO = "R";
 
     public static String formataDinheiro(double valor) {
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
