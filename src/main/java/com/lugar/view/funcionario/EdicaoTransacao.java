@@ -173,6 +173,8 @@ public class EdicaoTransacao extends javax.swing.JDialog {
 
     private void botaoDeletarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoDeletarActionPerformed
         this.deletaTransacao();
+        this.dispose();
+
     }//GEN-LAST:event_botaoDeletarActionPerformed
 
     private void campoDescricaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoDescricaoActionPerformed

@@ -56,7 +56,6 @@ public class ExibicaoTransacoes extends javax.swing.JDialog {
         this.atualizaModeloTabela();
         tabelaTransacoes.setModel(this.modeloTabela);
         tabelaTransacoes.removeColumn(tabelaTransacoes.getColumnModel().getColumn(0));
-        //PERGUNTAR O PQ DESSA LINHA
     }
 
     private void atualizaModeloTabela() {
@@ -67,6 +66,7 @@ public class ExibicaoTransacoes extends javax.swing.JDialog {
     private void chamaTelaEdicao(int id) {
         EdicaoTransacao tela = new EdicaoTransacao(pai, true, id);
         tela.setVisible(true);
+        this.atualizaTabela();
     }
 
     /**

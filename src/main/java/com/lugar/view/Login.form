@@ -75,7 +75,7 @@
         </Component>
         <Component class="javax.swing.JFormattedTextField" name="campoUsuario">
           <Properties>
-            <Property name="text" type="java.lang.String" value="cliente"/>
+            <Property name="text" type="java.lang.String" value="admin"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="campoUsuarioActionPerformed"/>
