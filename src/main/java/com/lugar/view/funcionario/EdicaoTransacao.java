@@ -7,6 +7,7 @@ package com.lugar.view.funcionario;
 import com.lugar.controller.Conexao;
 import com.lugar.model.Produto;
 import javax.swing.JOptionPane;
+import com.lugar.confeitaria.Util;
 
 /**
  *
@@ -15,6 +16,7 @@ import javax.swing.JOptionPane;
 public class EdicaoTransacao extends javax.swing.JDialog {
 
     int id;
+    java.awt.Frame pai;
 
     public EdicaoTransacao(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -24,7 +26,24 @@ public class EdicaoTransacao extends javax.swing.JDialog {
     public EdicaoTransacao(java.awt.Frame parent, boolean modal, int id) {
         super(parent, modal);
         this.id = id;
+        this.pai = parent;
         initComponents();
+    }
+
+    private void deletaTransacao() {
+        boolean confirmacao = JOptionPane.showConfirmDialog(null,
+                "Deseja deletar esta transação permanentemente?",
+                "Deleção de transação", JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE) == 0;
+        if (confirmacao) {
+            int resultado = Conexao.deletaTransacao(this.id);
+            if (resultado == Util.RETORNO_SUCESSO) {
+                JOptionPane.showMessageDialog(this.pai, "Deleção realizada com Sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this.pai, "Não foi possivel realizar a deleção! Tente novamente mais tarde.", "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 
     /**
@@ -153,10 +172,8 @@ public class EdicaoTransacao extends javax.swing.JDialog {
     }//GEN-LAST:event_botaoEditarActionPerformed
 
     private void botaoDeletarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoDeletarActionPerformed
-        boolean confirmacao = JOptionPane.showConfirmDialog(null,
-                "Deseja deletar esta transação permanentemente?",
-                "Deleção de transação", JOptionPane.YES_NO_OPTION,
-                JOptionPane.WARNING_MESSAGE) == 0;
+        this.deletaTransacao();
+        this.dispose();
 
     }//GEN-LAST:event_botaoDeletarActionPerformed
 
