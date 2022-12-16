@@ -636,13 +636,20 @@ public class Conexao {
         String sql = "DELETE FROM Transacao WHERE id = ?;";
         Connection conn = null;
         int valorRetorno = Util.RETORNO_SUCESSO;
-//        try{
-//            conn = Conexao.abreConexao();
-//            PreparedStatement pstmt = conn.prepareStatement(sql);
-//            pstmt.setInt(1, idTransacao);
-//            pstmt.executeUpdate();
-//        }
-        return 0;
+        try {
+            conn = Conexao.abreConexao();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, idTransacao);
+            pstmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexao.class
+                    .getName())
+                    .log(Level.SEVERE, null, ex);
+            valorRetorno = Conexao.determinaValorErro(ex.getMessage());
+        } finally {
+            Conexao.fechaConexao(conn);
+            return valorRetorno;
+        }
     }
 
     public static List<Transacao> buscaTodasTransacoes() {
