@@ -28,11 +28,11 @@ public class EdicaoTransacao extends javax.swing.JDialog {
         super(parent, modal);
         this.id = id;
         this.pai = parent;
-//        Transacao transacao = Conexao.buscaTransacao(id);
-//        this.estadoAnterior = transacao;
+        Transacao transacao = Conexao.buscaTransacao(id);
+        this.estadoAnterior = transacao;
         initComponents();
-//        campoValor.setValue(transacao.getValor());
-//        campoDescricao.setText(transacao.getDescricao());
+        campoValor.setValue(transacao.getValor());
+        campoDescricao.setText(transacao.getDescricao());
     }
 
     private void deletaTransacao() {
