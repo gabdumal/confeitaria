@@ -848,6 +848,28 @@ public class Conexao {
         }
     }
 
+    public static int atualizaTransacao(int id, double valor, String descricao) {
+        String sqlTransacao = "UPDATE Transacao SET valor = ?, descricao = ? WHERE id = ?;";
+        Connection conn = null;
+        int valorRetorno = Util.RETORNO_SUCESSO;
+        try {
+            conn = Conexao.abreConexao();
+            PreparedStatement pstmt = conn.prepareStatement(sqlTransacao);
+            pstmt.setDouble(1, valor);
+            pstmt.setString(2, descricao);
+            pstmt.setInt(3, id);
+            pstmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexao.class
+                    .getName())
+                    .log(Level.SEVERE, null, ex);
+            valorRetorno = Conexao.determinaValorErro(ex.getMessage());
+        } finally {
+            Conexao.fechaConexao(conn);
+            return valorRetorno;
+        }
+    }
+
     public static List<Transacao> buscaTodasTransacoes() {
         String sql = "SELECT id, valor, diaHora, descricao FROM Transacao;";
         Connection conn = null;
