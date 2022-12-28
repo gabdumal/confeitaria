@@ -107,8 +107,20 @@ public class Carrinho extends javax.swing.JDialog {
     }
 
     private void fecharPedido() {
+        float valorTotal = (float) 0.0;
+        this.listaProdutos = new ArrayList<Produto>();
+        for (int id : listaProdutosCarrinho.keySet()) {
+            Produto produto = Conexao.buscaProduto(id);
+            int quantidadeCarrinho = listaProdutosCarrinho.get(id);
+            if (produto instanceof ProdutoPersonalizado
+                    || (produto instanceof ProdutoPronto && quantidadeCarrinho > 0)) {
+                produto.setCarrinho(quantidadeCarrinho);
+                valorTotal += quantidadeCarrinho * produto.getValor();
+
+            }
+        }
         boolean confirmacao = JOptionPane.showConfirmDialog(null,
-                "Deseja fechar o pedido?",
+                "Deseja fechar o pedido no valor " + valorTotal + " reais?",
                 "Fechar pedido", JOptionPane.YES_NO_OPTION,
                 JOptionPane.WARNING_MESSAGE) == 0;
 
