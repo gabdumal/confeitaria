@@ -315,15 +315,16 @@ public class CadastroCliente extends javax.swing.JDialog {
         String senhaForm = String.valueOf(campoSenha.getPassword()).trim();
         String emailForm = campoEmail.getText().trim();
         String telefoneForm = campoTelefone.getText().trim();
-        String enderecoForm = campoEndereco.getText().trim();
+//        String enderecoForm = campoEndereco.getText().trim();
+        String idEndereço = "xxx";
         String cartaoForm = campoCartao.getText().trim();
         String identificadorForm = campoIdentificador.getText().trim();
 
-        if (validaCadastro(nomeForm, nomeUsuarioForm, senhaForm, emailForm, telefoneForm, enderecoForm, cartaoForm, identificadorForm) == 0) {
+        if (validaCadastro(nomeForm, nomeUsuarioForm, senhaForm, emailForm, telefoneForm, idEndereço, cartaoForm, identificadorForm) == 0) {
 
             int resultado = Conexao.insereCliente(
-                    new Cliente(0, nomeForm, nomeUsuarioForm, senhaForm, false, 0,
-                            emailForm, telefoneForm, enderecoForm, cartaoForm, identificadorForm));
+                    new Cliente(0, nomeForm, nomeUsuarioForm, senhaForm, false,
+                            emailForm, telefoneForm, idEndereço, cartaoForm, identificadorForm));
             if (resultado == 0) {
                 JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!");
                 this.dispose();
