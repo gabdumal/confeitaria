@@ -5,6 +5,8 @@
 package com.lugar.confeitaria;
 
 import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -38,4 +40,27 @@ public class Util {
         return diaHora.format(formatador);
     }
 
+    public static boolean dataValida(String data) {
+        String formatString = "dd/MM/yyyy";
+        try {
+            SimpleDateFormat format = new SimpleDateFormat(formatString);
+            format.setLenient(false);
+            format.parse(data);
+        } catch (ParseException | IllegalArgumentException e) {
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean horaValida(String hora) {
+        String formatString = "HH:mm:ss";
+        try {
+            SimpleDateFormat format = new SimpleDateFormat(formatString);
+            format.setLenient(false);
+            format.parse(hora);
+        } catch (ParseException | IllegalArgumentException e) {
+            return false;
+        }
+        return true;
+    }
 }

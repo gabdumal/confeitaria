@@ -14,6 +14,7 @@ import com.lugar.model.data.ProdutosTableModel;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -106,7 +107,7 @@ public class Carrinho extends javax.swing.JDialog {
         this.atualizaTabela();
     }
 
-    private void fecharPedido() {
+    private void fecharPedido()  {
         float valorTotal = (float) 0.0;
         this.listaProdutos = new ArrayList<Produto>();
         for (int id : listaProdutosCarrinho.keySet()) {
@@ -119,12 +120,9 @@ public class Carrinho extends javax.swing.JDialog {
 
             }
         }
-        boolean confirmacao = JOptionPane.showConfirmDialog(null,
-                "Deseja fechar o pedido no valor " + valorTotal + " reais?",
-                "Fechar pedido", JOptionPane.YES_NO_OPTION,
-                JOptionPane.WARNING_MESSAGE) == 0;
-
-        if (confirmacao) {
+        ConfirmacaoPedido confirmacaoPedido = new ConfirmacaoPedido(this.pai, true, valorTotal);
+        confirmacaoPedido.setVisible(true);
+        if (confirmacaoPedido.isConfirmado()) {
             List<Item> listaItens = new ArrayList<Item>();
 
             for (Produto produto : this.listaProdutos) {
@@ -133,8 +131,8 @@ public class Carrinho extends javax.swing.JDialog {
                     listaItens.add(item);
                 }
             }
-
-            // Pedido pedido = new Pedido(0, 'S', false, listaItens);
+            Pedido pedido = new Pedido(0, LocalDateTime.now(), confirmacaoPedido.getDataHota(), listaItens);
+            System.out.println( pedido);
             this.dispose();
         }
     }
