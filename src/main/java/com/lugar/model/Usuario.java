@@ -64,4 +64,15 @@ public class Usuario {
         return admin;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
 }

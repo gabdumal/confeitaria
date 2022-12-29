@@ -11,9 +11,10 @@ package com.lugar.model;
 public class Cliente extends Usuario {
 
     private int idCliente;
-    private String IdEndereco;
+    private int IdEndereco;
     private String cartao;
     private String identificador;
+    private Endereco endereco;
 
     public Cliente(
             int idUsuario,
@@ -23,18 +24,20 @@ public class Cliente extends Usuario {
             boolean admin,
             String email,
             String telefone,
-            String IdEndereco,
+            int IdEndereco,
             String cartao,
-            String identificador
+            String identificador,
+            Endereco endereco
     ) {
         super(idUsuario, nome, nomeUsuario, senhaHash, admin, email, telefone);
         this.idCliente = idUsuario;
         this.IdEndereco = IdEndereco;
         this.cartao = cartao;
         this.identificador = identificador;
+        this.endereco = endereco;
     }
 
-    public String getEndereco() {
+    public int getIdEndereco() {
         return IdEndereco;
     }
 
@@ -49,4 +52,9 @@ public class Cliente extends Usuario {
     public int getIdCliente() {
         return idCliente;
     }
+
+    public Endereco getEndereco() {
+        return endereco;
+    }
+
 }

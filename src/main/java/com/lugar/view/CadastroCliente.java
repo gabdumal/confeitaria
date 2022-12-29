@@ -6,7 +6,7 @@ package com.lugar.view;
 
 import com.lugar.controller.Conexao;
 import com.lugar.model.Cliente;
-import com.lugar.model.Usuario;
+import com.lugar.model.Endereco;
 import javax.swing.JOptionPane;
 
 /**
@@ -79,6 +79,7 @@ public class CadastroCliente extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCampos.add(textoNome, gridBagConstraints);
 
+        campoNome.setText("rodrogo");
         campoNome.setPreferredSize(new java.awt.Dimension(200, 22));
         campoNome.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -102,6 +103,7 @@ public class CadastroCliente extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCampos.add(textoSenha, gridBagConstraints);
 
+        campoSenha.setText("senha");
         campoSenha.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 campoSenhaActionPerformed(evt);
@@ -124,6 +126,7 @@ public class CadastroCliente extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCampos.add(textoNomeUsuario, gridBagConstraints);
 
+        campoNomeUsuario.setText("rodcode2");
         campoNomeUsuario.setPreferredSize(new java.awt.Dimension(200, 22));
         campoNomeUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -147,6 +150,7 @@ public class CadastroCliente extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCampos.add(textoEmail, gridBagConstraints);
 
+        campoEmail.setText("rodwe@gmail.com");
         campoEmail.setPreferredSize(new java.awt.Dimension(200, 22));
         campoEmail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -170,6 +174,7 @@ public class CadastroCliente extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCampos.add(textoTelefone, gridBagConstraints);
 
+        campoTelefone.setText("24999679969");
         campoTelefone.setPreferredSize(new java.awt.Dimension(200, 22));
         campoTelefone.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -183,6 +188,7 @@ public class CadastroCliente extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCampos.add(campoTelefone, gridBagConstraints);
 
+        campoEndereco.setText("rua das mansoes");
         campoEndereco.setPreferredSize(new java.awt.Dimension(200, 22));
         campoEndereco.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -225,6 +231,7 @@ public class CadastroCliente extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCampos.add(textoCartaoCredito, gridBagConstraints);
 
+        campoCartao.setText("4444123412341234");
         campoCartao.setPreferredSize(new java.awt.Dimension(200, 22));
         campoCartao.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -238,6 +245,7 @@ public class CadastroCliente extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCampos.add(campoCartao, gridBagConstraints);
 
+        campoIdentificador.setText("11111122280");
         campoIdentificador.setPreferredSize(new java.awt.Dimension(200, 22));
         campoIdentificador.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -315,16 +323,17 @@ public class CadastroCliente extends javax.swing.JDialog {
         String senhaForm = String.valueOf(campoSenha.getPassword()).trim();
         String emailForm = campoEmail.getText().trim();
         String telefoneForm = campoTelefone.getText().trim();
-//        String enderecoForm = campoEndereco.getText().trim();
-        String idEndereço = "xxx";
+        String enderecoForm = campoEndereco.getText().trim(); //MEXER
+        int idEndereço = 1;
         String cartaoForm = campoCartao.getText().trim();
         String identificadorForm = campoIdentificador.getText().trim();
 
-        if (validaCadastro(nomeForm, nomeUsuarioForm, senhaForm, emailForm, telefoneForm, idEndereço, cartaoForm, identificadorForm) == 0) {
-
+        if (validaCadastro(nomeForm, nomeUsuarioForm, senhaForm, emailForm, telefoneForm, enderecoForm, cartaoForm, identificadorForm) == 0) {
+            Endereco endereco = new Endereco("120", "ao lado predio azul", "rua dos bobos", "japuiba", "angra", "rj", "12348-00");
             int resultado = Conexao.insereCliente(
                     new Cliente(0, nomeForm, nomeUsuarioForm, senhaForm, false,
-                            emailForm, telefoneForm, idEndereço, cartaoForm, identificadorForm));
+                            emailForm, telefoneForm, idEndereço, cartaoForm, identificadorForm, endereco)
+            );
             if (resultado == 0) {
                 JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!");
                 this.dispose();
