@@ -4,6 +4,7 @@
  */
 package com.lugar.view;
 
+import com.lugar.confeitaria.Util;
 import com.lugar.controller.Conexao;
 import com.lugar.model.Cliente;
 import com.lugar.model.Endereco;
@@ -330,14 +331,14 @@ public class CadastroCliente extends javax.swing.JDialog {
 
         if (validaCadastro(nomeForm, nomeUsuarioForm, senhaForm, emailForm, telefoneForm, enderecoForm, cartaoForm, identificadorForm) == 0) {
             Endereco endereco = new Endereco("120", "ao lado predio azul", "rua dos bobos", "japuiba", "angra", "rj", "12348-00");
-            int resultado = Conexao.insereCliente(
+            int idCliente = Conexao.insereCliente(
                     new Cliente(0, nomeForm, nomeUsuarioForm, senhaForm, false,
                             emailForm, telefoneForm, idEndereço, cartaoForm, identificadorForm, endereco)
             );
-            if (resultado == 0) {
+            if (idCliente >= Util.RETORNO_SUCESSO) {
                 JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!");
                 this.dispose();
-            } else if (resultado == -2) {
+            } else if (idCliente == Util.RETORNO_ERRO_NAO_UNICO) {
                 JOptionPane.showMessageDialog(null, "Não foi possível realizar o cadastro! O usuário preenchido já existe no sistema.");
             } else {
                 JOptionPane.showMessageDialog(null, "Não foi possível realizar o cadastro! Tente novamente mais tarde.");

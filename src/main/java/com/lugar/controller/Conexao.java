@@ -643,8 +643,8 @@ public class Conexao {
     }
 
     public static int insereProdutoPronto(String nome, double valor, int estoque) {
-        String sqlProduto = "INSERT INTO Produto(valor) VALUES(?);";
-        String sqlProdutoPronto = "INSERT INTO ProdutoPronto(id, nome, estoque) VALUES(?, ?, ?);";
+        String sqlProduto = "INSERT INTO Produto(tipo) VALUES(0);";
+        String sqlProdutoPronto = "INSERT INTO ProdutoPronto(id, nome, estoque, valor) VALUES(?, ?, ?, ?);";
         Connection conn = null;
         int idProduto = Util.RETORNO_ERRO_INDETERMINADO;
         try {
@@ -652,7 +652,6 @@ public class Conexao {
             conn.setAutoCommit(false);
 
             PreparedStatement pstmtProduto = conn.prepareStatement(sqlProduto, Statement.RETURN_GENERATED_KEYS);
-            pstmtProduto.setDouble(1, valor);
             int linhaInserida = pstmtProduto.executeUpdate();
 
             // Reverter operação em caso de erro
@@ -669,6 +668,7 @@ public class Conexao {
                 pstmtProdutoPronto.setInt(1, idProduto);
                 pstmtProdutoPronto.setString(2, nome);
                 pstmtProdutoPronto.setInt(3, estoque);
+                pstmtProdutoPronto.setDouble(4, valor);
                 pstmtProdutoPronto.executeUpdate();
                 conn.commit();
             }
@@ -826,28 +826,25 @@ public class Conexao {
     }
 
     public static int atualizaProdutoPronto(ProdutoPronto produto) {
-        String sqlProduto = "UPDATE Produto SET valor = ? WHERE id = ?;";
-        String sqlProdutoPronto = "UPDATE ProdutoPronto SET nome = ?, estoque = ? WHERE id = ?;";
+
+        String sqlProdutoPronto = "UPDATE ProdutoPronto SET nome = ?, estoque = ?, valor = ? WHERE id = ?;";
         Connection conn = null;
         int valorRetorno = Util.RETORNO_SUCESSO;
         try {
             conn = Conexao.abreConexao();
             conn.setAutoCommit(false);
 
-            PreparedStatement pstmtProduto = conn.prepareStatement(sqlProduto);
-            pstmtProduto.setDouble(1, produto.getValor());
-            pstmtProduto.setInt(2, produto.getId());
-            int linhaAtualizada = pstmtProduto.executeUpdate();
+            PreparedStatement pstmtProdutoPronto = conn.prepareStatement(sqlProdutoPronto);
+            pstmtProdutoPronto.setString(1, produto.getNome());
+            pstmtProdutoPronto.setInt(2, produto.getEstoque());
+            pstmtProdutoPronto.setDouble(3, produto.getValor());
+            pstmtProdutoPronto.setInt(4, produto.getId());
+            int linhaAtualizada = pstmtProdutoPronto.executeUpdate();
 
             // Reverter operação em caso de erro
             if (linhaAtualizada != 1) {
                 conn.rollback();
             } else {
-                PreparedStatement pstmtProdutoPronto = conn.prepareStatement(sqlProdutoPronto);
-                pstmtProdutoPronto.setString(1, produto.getNome());
-                pstmtProdutoPronto.setInt(2, produto.getEstoque());
-                pstmtProdutoPronto.setInt(3, produto.getId());
-                pstmtProdutoPronto.executeUpdate();
                 conn.commit();
             }
             conn.setAutoCommit(true);
@@ -858,8 +855,8 @@ public class Conexao {
             valorRetorno = Conexao.determinaValorErro(ex.getMessage());
         } finally {
             Conexao.fechaConexao(conn);
-            return valorRetorno;
         }
+            return valorRetorno;
     }
 
     public static int atualizaEstoqueProdutoPronto(int id, int estoque) {
