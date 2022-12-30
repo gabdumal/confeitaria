@@ -14,23 +14,21 @@ import java.util.List;
 public class Pedido {
 
     private int id;
-    private double valorTotal;
-    private char estado; // S - aceito pelo cliente; A = aceito e agendado; F  = aceito e fechado; C  = cancelado
-    private boolean agendado;
+//    private char estado; // S - aceito pelo cliente; A = aceito e agendado; F  = aceito e fechado; C  = cancelado
+//    private boolean agendado;
     private LocalDateTime dataSolicitacao;
     private LocalDateTime dataEntrega;
     private String comentario;
     private List<Item> listaItens;
 
-    public Pedido(int id, char estado, boolean agendado, List<Item> listaItens) {
+    public Pedido(int id, LocalDateTime dataSolicitacao, LocalDateTime dataEntrega, List<Item> listaItens) {
         this.id = id;
-        this.estado = estado;
-        this.agendado = agendado;
+//        this.estado = estado;
+//        this.agendado = agendado;
+        this.dataSolicitacao = dataSolicitacao;
+        this.dataEntrega = dataEntrega;
         this.listaItens = listaItens;
-        this.valorTotal = 0;
-        for (Item item : listaItens) {
-            this.valorTotal += item.getValorTotal();
-        }
+
     }
 
     public int getId() {
@@ -38,15 +36,11 @@ public class Pedido {
     }
 
     public double getValorTotal() {
+        double valorTotal = 0;
+        for (Item item : listaItens) {
+            valorTotal += item.getValorTotal();
+        }
         return valorTotal;
-    }
-
-    public char getEstado() {
-        return estado;
-    }
-
-    public boolean isAgendado() {
-        return agendado;
     }
 
     public List<Item> getListaItens() {

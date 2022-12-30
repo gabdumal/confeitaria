@@ -4,9 +4,13 @@
  */
 package com.lugar.confeitaria;
 
+import com.lugar.exceptions.ExcecaoDataPassada;
 import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 /**
  *
@@ -38,4 +42,47 @@ public class Util {
         return diaHora.format(formatador);
     }
 
+    public static boolean dataValida(String data) {
+        String formatString = "dd/MM/yyyy";
+        try {
+            SimpleDateFormat format = new SimpleDateFormat(formatString);
+            format.setLenient(false);
+            format.parse(data);
+
+        } catch (ParseException | IllegalArgumentException e) {
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean horaValida(String hora) {
+        String formatString = "HH:mm:ss";
+        try {
+            SimpleDateFormat format = new SimpleDateFormat(formatString);
+            format.setLenient(false);
+            format.parse(hora);
+        } catch (ParseException | IllegalArgumentException e) {
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean dataPassada(String dataEntrega) {
+        String formatString = "dd/MM/yyyy";
+        try {
+            SimpleDateFormat format = new SimpleDateFormat(formatString);
+            LocalDateTime hoje = LocalDateTime.now();
+            String hojeFormatado = formataDiaHora(hoje);
+            Date date1 = format.parse(hojeFormatado);
+            Date date2 = format.parse(dataEntrega);
+            if (date1.equals(date2)) {
+                return false;
+            } else if (date2.before(date1)) {
+                return false;
+            }
+        } catch (ParseException | IllegalArgumentException ex) {
+            return false;
+        }
+        return true;
+    }
 }

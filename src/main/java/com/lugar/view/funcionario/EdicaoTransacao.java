@@ -5,8 +5,8 @@
 package com.lugar.view.funcionario;
 
 import com.lugar.controller.Conexao;
-import com.lugar.model.Produto;
 import javax.swing.JOptionPane;
+import com.lugar.model.Transacao;
 import com.lugar.confeitaria.Util;
 
 /**
@@ -16,6 +16,7 @@ import com.lugar.confeitaria.Util;
 public class EdicaoTransacao extends javax.swing.JDialog {
 
     int id;
+    Transacao estadoAnterior;
     java.awt.Frame pai;
 
     public EdicaoTransacao(java.awt.Frame parent, boolean modal) {
@@ -27,7 +28,11 @@ public class EdicaoTransacao extends javax.swing.JDialog {
         super(parent, modal);
         this.id = id;
         this.pai = parent;
+        Transacao transacao = Conexao.buscaTransacao(id);
+        this.estadoAnterior = transacao;
         initComponents();
+        campoValor.setValue(transacao.getValor());
+        campoDescricao.setText(transacao.getDescricao());
     }
 
     private void deletaTransacao() {
@@ -42,6 +47,25 @@ public class EdicaoTransacao extends javax.swing.JDialog {
                 this.dispose();
             } else {
                 JOptionPane.showMessageDialog(this.pai, "Não foi possivel realizar a deleção! Tente novamente mais tarde.", "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    private void editaTransacao() {
+        String descricao = campoDescricao.getText();
+        double valor = (double) campoValor.getValue();
+
+        if ((!descricao.isBlank()) && (valor > 0)) {
+            boolean confirmacao = JOptionPane.showConfirmDialog(null, "Deseja confirmar a edição dessa transação?", "Edição de transação", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == 0;
+            if (confirmacao) {
+                int resultado = Util.RETORNO_SUCESSO;
+                resultado = Conexao.atualizaTransacao(this.id, valor, descricao);
+                if (resultado == Util.RETORNO_SUCESSO) {
+                    JOptionPane.showMessageDialog(this.pai, "Edição realizada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                    this.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(this.pai, "Infelizmente não foi possivel editar, tente novamente mais tarde!", "Erro", JOptionPane.ERROR_MESSAGE);
+                }
             }
         }
     }
@@ -168,7 +192,8 @@ public class EdicaoTransacao extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botaoEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoEditarActionPerformed
-
+        this.editaTransacao();
+        this.dispose();
     }//GEN-LAST:event_botaoEditarActionPerformed
 
     private void botaoDeletarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoDeletarActionPerformed

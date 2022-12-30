@@ -15,6 +15,8 @@ public class Usuario {
     private String nomeUsuario;
     private String senhaHash;
     private boolean admin;
+    private String email;
+    private String telefone;
 
     public Usuario(
             int id,
@@ -33,15 +35,18 @@ public class Usuario {
             String nome,
             String nomeUsuario,
             String senhaHash,
-            boolean admin
+            boolean admin,
+            String email,
+            String telefone
     ) {
         this.id = id;
         this.nome = nome;
         this.nomeUsuario = nomeUsuario;
         this.senhaHash = senhaHash;
         this.admin = admin;
+        this.email = email;
+        this.telefone = telefone;
     }
-
 
     public String getNome() {
         return nome;
@@ -59,4 +64,15 @@ public class Usuario {
         return admin;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
 }

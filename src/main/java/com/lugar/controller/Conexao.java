@@ -10,6 +10,7 @@ import com.lugar.model.Cliente;
 import com.lugar.model.Forma;
 import com.lugar.model.Usuario;
 import com.lugar.model.Produto;
+import com.lugar.model.Endereco;
 import com.lugar.model.ProdutoPronto;
 import com.lugar.model.ProdutoPersonalizado;
 import com.lugar.model.Transacao;
@@ -133,8 +134,7 @@ public class Conexao {
                     + "	\"cidade\"	TEXT NOT NULL,\n"
                     + "	\"uf\"	TEXT NOT NULL,\n"
                     + "	\"cep\"	TEXT NOT NULL,\n"
-                    + "	PRIMARY KEY(\"id\" AUTOINCREMENT),\n"
-                    + "	FOREIGN KEY(\"id\") REFERENCES \"Endereco\"(\"id\") ON DELETE CASCADE\n"
+                    + "	PRIMARY KEY(\"id\" AUTOINCREMENT)\n"
                     + ");";
             stmt.addBatch(sql);
 
@@ -154,6 +154,7 @@ public class Conexao {
                     + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
                     + "	\"idEndereco\"	INTEGER NOT NULL,\n"
                     + "	\"cartao\"	TEXT NOT NULL CHECK(LENGTH(\"cartao\") == 16),\n"
+                    + "	\"identificador\" TEXT NOT NULL,\n"
                     + "	PRIMARY KEY(\"id\" AUTOINCREMENT),\n"
                     + "	FOREIGN KEY(\"idEndereco\") REFERENCES \"Endereco\"(\"id\") ON DELETE CASCADE\n"
                     + ");";
@@ -246,6 +247,7 @@ public class Conexao {
         }
     }
 
+    // a partir daqui uma interface para cada subclasse
     public static List<Usuario> buscaTodosUsuariosLogin() {
         Connection conn = null;
         List<Usuario> listaUsuarios = new ArrayList<Usuario>();
@@ -262,8 +264,7 @@ public class Conexao {
                         rs.getInt("id"),
                         rs.getString("nomeUsuario"),
                         rs.getString("senhaHash"),
-                        rs.getInt("admin") == 1
-                );
+                        rs.getInt("admin") == 1);
                 listaUsuarios.add(usuario);
             }
         } catch (SQLException ex) {
@@ -297,31 +298,85 @@ public class Conexao {
     }
 
     public static int insereCliente(Cliente cliente) {
-        String sql = "INSERT INTO Usuario(nome, nomeUsuario, senhaHash, admin, email, telefone, endereco, cartao, identificador) VALUES(?, ?, ?, 0, ?, ?, ?, ?, ?);";
+        String sqlUsuario = "INSERT INTO Usuario(nome, nomeUsuario, senhaHash, admin, email, telefone) VALUES(?, ?, ?, 0, ?, ?);";
+        String sqlCliente = "INSERT INTO Cliente(id, idEndereco, cartao, identificador) VALUES(?,?,?,?);";
+        String sqlEndereco = "INSERT INTO Endereco(numero, complemento, logradouro, bairro, cidade, uf, cep) VALUES(?,?,?,?,?,?,?)";
+
         Connection conn = null;
-        int valorRetorno = Util.RETORNO_SUCESSO;
+        int idUsuario = Util.RETORNO_SUCESSO;
+        int idEndereco = Util.RETORNO_SUCESSO;
         try {
             conn = Conexao.abreConexao();
-            PreparedStatement pstmt = conn.prepareStatement(sql);
+            conn.setAutoCommit(false);
 
-            pstmt.setString(1, cliente.getNome());
-            pstmt.setString(2, cliente.getNomeUsuario());
-            pstmt.setString(3, cliente.getSenhaHash());
-            pstmt.setString(4, cliente.getEmail());
-            pstmt.setString(5, cliente.getTelefone());
-            pstmt.setString(6, cliente.getEndereco());
-            pstmt.setString(7, cliente.getCartao());
-            pstmt.setString(8, cliente.getIdentificador());
+            PreparedStatement pstmtUsuario = conn.prepareStatement(sqlUsuario, Statement.RETURN_GENERATED_KEYS);
 
-            pstmt.executeUpdate();
-            return 0;
+            pstmtUsuario.setString(1, cliente.getNome());
+            pstmtUsuario.setString(2, cliente.getNomeUsuario());
+            pstmtUsuario.setString(3, cliente.getSenhaHash());
+            pstmtUsuario.setString(4, cliente.getEmail());
+            pstmtUsuario.setString(5, cliente.getTelefone());
+
+            int linhaInserida = pstmtUsuario.executeUpdate();
+            // Reverter operação em caso de erro
+            if (linhaInserida != 1) {
+                conn.rollback();
+            } else {
+                Endereco enderecoCliente = cliente.getEndereco();
+                PreparedStatement pstmtEndereco = conn.prepareStatement(sqlEndereco, Statement.RETURN_GENERATED_KEYS);
+
+                pstmtEndereco.setString(1, enderecoCliente.getNumero());
+                pstmtEndereco.setString(2, enderecoCliente.getComplemento());
+                pstmtEndereco.setString(3, enderecoCliente.getLogradouro());
+                pstmtEndereco.setString(4, enderecoCliente.getBairro());
+                pstmtEndereco.setString(5, enderecoCliente.getCidade());
+                pstmtEndereco.setString(6, enderecoCliente.getUf());
+                pstmtEndereco.setString(7, enderecoCliente.getCep());
+                int linhaInserida2 = pstmtEndereco.executeUpdate();
+                if (linhaInserida2 != 1) {
+                    conn.rollback();
+                } else {
+                    ResultSet rs = pstmtUsuario.getGeneratedKeys();
+                    if (rs.next()) {
+                        idUsuario = rs.getInt(1);
+                    }
+                    rs = pstmtEndereco.getGeneratedKeys();
+
+                    if (rs.next()) {
+                        idEndereco = rs.getInt(1);
+                    }
+
+                    PreparedStatement pstmtCliente = conn.prepareStatement(sqlCliente,
+                            Statement.RETURN_GENERATED_KEYS);
+                    pstmtCliente.setInt(1, idUsuario);
+                    pstmtCliente.setInt(2, idEndereco);
+                    pstmtCliente.setString(3, cliente.getCartao());
+                    pstmtCliente.setString(4, cliente.getIdentificador());
+
+                    pstmtCliente.executeUpdate();
+                    conn.commit();
+                }
+            }
+            conn.setAutoCommit(true);
+
         } catch (SQLException ex) {
-            Logger.getLogger(Conexao.class.getName())
+            try {
+                // Reverter operação em caso de erro
+                if (conn != null) {
+                    conn.rollback();
+                }
+            } catch (SQLException ex2) {
+                Logger.getLogger(Conexao.class
+                        .getName())
+                        .log(Level.SEVERE, null, ex2);
+            }
+            Logger.getLogger(Conexao.class
+                    .getName())
                     .log(Level.SEVERE, null, ex);
-            valorRetorno = determinaValorErro(ex.getMessage());
+            idUsuario = determinaValorErro(ex.getMessage());
         } finally {
             Conexao.fechaConexao(conn);
-            return valorRetorno;
+            return idUsuario;
         }
     }
 
@@ -377,14 +432,12 @@ public class Conexao {
                             id,
                             rs.getString("nome"),
                             rs.getDouble("valor"),
-                            rs.getInt("estoque")
-                    );
+                            rs.getInt("estoque"));
                 } else {
                     produto = new ProdutoPersonalizado(
                             id,
                             rs.getString("receita"),
-                            rs.getString("detalhe")
-                    );
+                            rs.getString("detalhe"));
                     // Preenche características
                     do {
                         int idCaracteristica = rs.getInt("idCaracteristica");
@@ -393,8 +446,7 @@ public class Conexao {
                                 idCaracteristica,
                                 tipo,
                                 rs.getString("caracteristica"),
-                                rs.getDouble("valorGrama")
-                        );
+                                rs.getDouble("valorGrama"));
                         switch (tipo) {
                             case Util.CARACTERISTICA_RECHEIO:
                                 ((ProdutoPersonalizado) produto).addRecheio(caracteristica);
@@ -436,8 +488,7 @@ public class Conexao {
                         id,
                         rs.getString("nome"),
                         rs.getDouble("valor"),
-                        rs.getInt("estoque")
-                );
+                        rs.getInt("estoque"));
             }
         } catch (SQLException ex) {
             Logger.getLogger(Conexao.class
@@ -466,6 +517,27 @@ public class Conexao {
         } finally {
             Conexao.fechaConexao(conn);
             return estoque;
+        }
+    }
+
+    public static Transacao buscaTransacao(int id) {
+        String sql = "SELECT valor, descricao, diaHora FROM Transacao WHERE id=" + id + ";";
+        Connection conn = null;
+        Transacao transacaoAntiga = null;
+        try {
+            conn = Conexao.abreConexao();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            if (rs.next()) {
+                LocalDateTime dataHora = LocalDateTime.parse(rs.getString("diaHora"));
+                transacaoAntiga = new Transacao(id, rs.getInt("valor"), dataHora, rs.getString("descricao"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexao.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            Conexao.fechaConexao(conn);
+            return transacaoAntiga;
         }
     }
 
@@ -498,16 +570,14 @@ public class Conexao {
                             rs.getInt("recheios"),
                             rs.getDouble("gramaRecheio"),
                             rs.getDouble("gramaCobertura"),
-                            rs.getDouble("gramaMassa")
-                    );
+                            rs.getDouble("gramaMassa"));
                     listaFormas.add(caracteristica);
                 } else {
                     caracteristica = new Caracteristica(
                             rs.getInt("id"),
                             rs.getString("tipo"),
                             rs.getString("nome"),
-                            rs.getDouble("valorGrama")
-                    );
+                            rs.getDouble("valorGrama"));
                     switch (tipo) {
                         case Util.CARACTERISTICA_COR:
                             listaCores.add(caracteristica);
@@ -552,8 +622,7 @@ public class Conexao {
                         rs.getInt("id"),
                         rs.getString("nome"),
                         rs.getDouble("valor"),
-                        rs.getInt("estoque")
-                );
+                        rs.getInt("estoque"));
                 listaProdutos.add(produto);
             }
         } catch (SQLException ex) {
@@ -566,8 +635,8 @@ public class Conexao {
     }
 
     public static int insereProdutoPronto(String nome, double valor, int estoque) {
-        String sqlProduto = "INSERT INTO Produto(valor) VALUES(?);";
-        String sqlProdutoPronto = "INSERT INTO ProdutoPronto(id, nome, estoque) VALUES(?, ?, ?);";
+        String sqlProduto = "INSERT INTO Produto(tipo) VALUES(0);";
+        String sqlProdutoPronto = "INSERT INTO ProdutoPronto(id, nome, estoque, valor) VALUES(?, ?, ?, ?);";
         Connection conn = null;
         int idProduto = Util.RETORNO_ERRO_INDETERMINADO;
         try {
@@ -575,7 +644,6 @@ public class Conexao {
             conn.setAutoCommit(false);
 
             PreparedStatement pstmtProduto = conn.prepareStatement(sqlProduto, Statement.RETURN_GENERATED_KEYS);
-            pstmtProduto.setDouble(1, valor);
             int linhaInserida = pstmtProduto.executeUpdate();
 
             // Reverter operação em caso de erro
@@ -586,12 +654,12 @@ public class Conexao {
                 if (rs.next()) {
                     idProduto = rs.getInt(1);
                 }
-                PreparedStatement pstmtProdutoPronto
-                        = conn.prepareStatement(sqlProdutoPronto,
-                                Statement.RETURN_GENERATED_KEYS);
+                PreparedStatement pstmtProdutoPronto = conn.prepareStatement(sqlProdutoPronto,
+                        Statement.RETURN_GENERATED_KEYS);
                 pstmtProdutoPronto.setInt(1, idProduto);
                 pstmtProdutoPronto.setString(2, nome);
                 pstmtProdutoPronto.setInt(3, estoque);
+                pstmtProdutoPronto.setDouble(4, valor);
                 pstmtProdutoPronto.executeUpdate();
                 conn.commit();
             }
@@ -693,9 +761,8 @@ public class Conexao {
                         idProduto = rs.getInt(1);
                     }
 
-                    PreparedStatement pstmtProdutoPersonalizado
-                            = conn.prepareStatement(sqlProdutoPersonalizado,
-                                    Statement.RETURN_GENERATED_KEYS);
+                    PreparedStatement pstmtProdutoPersonalizado = conn.prepareStatement(sqlProdutoPersonalizado,
+                            Statement.RETURN_GENERATED_KEYS);
                     pstmtProdutoPersonalizado.setInt(1, idProduto);
                     pstmtProdutoPersonalizado.setString(2, produtoPersonalizado.getDetalhe());
                     pstmtProdutoPersonalizado.setString(3, produtoPersonalizado.getReceita());
@@ -749,28 +816,25 @@ public class Conexao {
     }
 
     public static int atualizaProdutoPronto(ProdutoPronto produto) {
-        String sqlProduto = "UPDATE Produto SET valor = ? WHERE id = ?;";
-        String sqlProdutoPronto = "UPDATE ProdutoPronto SET nome = ?, estoque = ? WHERE id = ?;";
+
+        String sqlProdutoPronto = "UPDATE ProdutoPronto SET nome = ?, estoque = ?, valor = ? WHERE id = ?;";
         Connection conn = null;
         int valorRetorno = Util.RETORNO_SUCESSO;
         try {
             conn = Conexao.abreConexao();
             conn.setAutoCommit(false);
 
-            PreparedStatement pstmtProduto = conn.prepareStatement(sqlProduto);
-            pstmtProduto.setDouble(1, produto.getValor());
-            pstmtProduto.setInt(2, produto.getId());
-            int linhaAtualizada = pstmtProduto.executeUpdate();
+            PreparedStatement pstmtProdutoPronto = conn.prepareStatement(sqlProdutoPronto);
+            pstmtProdutoPronto.setString(1, produto.getNome());
+            pstmtProdutoPronto.setInt(2, produto.getEstoque());
+            pstmtProdutoPronto.setDouble(3, produto.getValor());
+            pstmtProdutoPronto.setInt(4, produto.getId());
+            int linhaAtualizada = pstmtProdutoPronto.executeUpdate();
 
             // Reverter operação em caso de erro
             if (linhaAtualizada != 1) {
                 conn.rollback();
             } else {
-                PreparedStatement pstmtProdutoPronto = conn.prepareStatement(sqlProdutoPronto);
-                pstmtProdutoPronto.setString(1, produto.getNome());
-                pstmtProdutoPronto.setInt(2, produto.getEstoque());
-                pstmtProdutoPronto.setInt(3, produto.getId());
-                pstmtProdutoPronto.executeUpdate();
                 conn.commit();
             }
             conn.setAutoCommit(true);
@@ -781,8 +845,10 @@ public class Conexao {
             valorRetorno = Conexao.determinaValorErro(ex.getMessage());
         } finally {
             Conexao.fechaConexao(conn);
-            return valorRetorno;
         }
+
+        return valorRetorno;
+
     }
 
     public static int atualizaEstoqueProdutoPronto(int id, int estoque) {
@@ -848,6 +914,28 @@ public class Conexao {
         }
     }
 
+    public static int atualizaTransacao(int id, double valor, String descricao) {
+        String sqlTransacao = "UPDATE Transacao SET valor = ?, descricao = ? WHERE id = ?;";
+        Connection conn = null;
+        int valorRetorno = Util.RETORNO_SUCESSO;
+        try {
+            conn = Conexao.abreConexao();
+            PreparedStatement pstmt = conn.prepareStatement(sqlTransacao);
+            pstmt.setDouble(1, valor);
+            pstmt.setString(2, descricao);
+            pstmt.setInt(3, id);
+            pstmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexao.class
+                    .getName())
+                    .log(Level.SEVERE, null, ex);
+            valorRetorno = Conexao.determinaValorErro(ex.getMessage());
+        } finally {
+            Conexao.fechaConexao(conn);
+            return valorRetorno;
+        }
+    }
+
     public static List<Transacao> buscaTodasTransacoes() {
         String sql = "SELECT id, valor, diaHora, descricao FROM Transacao;";
         Connection conn = null;
@@ -862,8 +950,7 @@ public class Conexao {
                         rs.getInt("id"),
                         rs.getDouble("valor"),
                         dataHora,
-                        rs.getString("descricao")
-                );
+                        rs.getString("descricao"));
                 listaTransacoes.add(transacao);
 
             }
