@@ -10,6 +10,7 @@ import com.lugar.model.Cliente;
 import com.lugar.model.Forma;
 import com.lugar.model.Usuario;
 import com.lugar.model.Produto;
+import com.lugar.model.Endereco;
 import com.lugar.model.ProdutoPronto;
 import com.lugar.model.ProdutoPersonalizado;
 import com.lugar.model.Transacao;
@@ -133,8 +134,7 @@ public class Conexao {
                     + "	\"cidade\"	TEXT NOT NULL,\n"
                     + "	\"uf\"	TEXT NOT NULL,\n"
                     + "	\"cep\"	TEXT NOT NULL,\n"
-                    + "	PRIMARY KEY(\"id\" AUTOINCREMENT),\n"
-                    + "	FOREIGN KEY(\"id\") REFERENCES \"Endereco\"(\"id\") ON DELETE CASCADE\n"
+                    + "	PRIMARY KEY(\"id\" AUTOINCREMENT)\n"
                     + ");";
             stmt.addBatch(sql);
 
@@ -154,6 +154,7 @@ public class Conexao {
                     + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
                     + "	\"idEndereco\"	INTEGER NOT NULL,\n"
                     + "	\"cartao\"	TEXT NOT NULL CHECK(LENGTH(\"cartao\") == 16),\n"
+                    + "	\"identificador\" TEXT NOT NULL,\n"
                     + "	PRIMARY KEY(\"id\" AUTOINCREMENT),\n"
                     + "	FOREIGN KEY(\"idEndereco\") REFERENCES \"Endereco\"(\"id\") ON DELETE CASCADE\n"
                     + ");";
@@ -245,7 +246,8 @@ public class Conexao {
             Conexao.fechaConexao(conn);
         }
     }
-
+    
+// a partir daqui uma interface para cada subclasse
     public static List<Usuario> buscaTodosUsuariosLogin() {
         Connection conn = null;
         List<Usuario> listaUsuarios = new ArrayList<Usuario>();
@@ -297,31 +299,86 @@ public class Conexao {
     }
 
     public static int insereCliente(Cliente cliente) {
-        String sql = "INSERT INTO Usuario(nome, nomeUsuario, senhaHash, admin, email, telefone, endereco, cartao, identificador) VALUES(?, ?, ?, 0, ?, ?, ?, ?, ?);";
+        String sqlUsuario = "INSERT INTO Usuario(nome, nomeUsuario, senhaHash, admin, email, telefone) VALUES(?, ?, ?, 0, ?, ?);";
+        String sqlCliente = "INSERT INTO Cliente(id, idEndereco, cartao, identificador) VALUES(?,?,?,?);";
+        String sqlEndereco = "INSERT INTO Endereco(numero, complemento, logradouro, bairro, cidade, uf, cep) VALUES(?,?,?,?,?,?,?)";
+
         Connection conn = null;
-        int valorRetorno = Util.RETORNO_SUCESSO;
+        int idUsuario = Util.RETORNO_SUCESSO;
+        int idEndereco = Util.RETORNO_SUCESSO;
         try {
             conn = Conexao.abreConexao();
-            PreparedStatement pstmt = conn.prepareStatement(sql);
+            conn.setAutoCommit(false);
 
-            pstmt.setString(1, cliente.getNome());
-            pstmt.setString(2, cliente.getNomeUsuario());
-            pstmt.setString(3, cliente.getSenhaHash());
-            pstmt.setString(4, cliente.getEmail());
-            pstmt.setString(5, cliente.getTelefone());
-            pstmt.setString(6, cliente.getEndereco());
-            pstmt.setString(7, cliente.getCartao());
-            pstmt.setString(8, cliente.getIdentificador());
+            PreparedStatement pstmtUsuario = conn.prepareStatement(sqlUsuario, Statement.RETURN_GENERATED_KEYS);
 
-            pstmt.executeUpdate();
-            return 0;
+            pstmtUsuario.setString(1, cliente.getNome());
+            pstmtUsuario.setString(2, cliente.getNomeUsuario());
+            pstmtUsuario.setString(3, cliente.getSenhaHash());
+            pstmtUsuario.setString(4, cliente.getEmail());
+            pstmtUsuario.setString(5, cliente.getTelefone());
+
+            int linhaInserida = pstmtUsuario.executeUpdate();
+            // Reverter operação em caso de erro
+            if (linhaInserida != 1) {
+                conn.rollback();
+            } else {
+                Endereco enderecoCliente = cliente.getEndereco();
+                PreparedStatement pstmtEndereco = conn.prepareStatement(sqlEndereco, Statement.RETURN_GENERATED_KEYS);
+
+                pstmtEndereco.setString(1, enderecoCliente.getNumero());
+                pstmtEndereco.setString(2, enderecoCliente.getComplemento());
+                pstmtEndereco.setString(3, enderecoCliente.getLogradouro());
+                pstmtEndereco.setString(4, enderecoCliente.getBairro());
+                pstmtEndereco.setString(5, enderecoCliente.getCidade());
+                pstmtEndereco.setString(6, enderecoCliente.getUf());
+                pstmtEndereco.setString(7, enderecoCliente.getCep());
+                int linhaInserida2 = pstmtEndereco.executeUpdate();
+                if (linhaInserida2 != 1) {
+                    conn.rollback();
+                } else {
+                    ResultSet rs = pstmtUsuario.getGeneratedKeys();
+                    if (rs.next()) {
+                        idUsuario = rs.getInt(1);
+                    }
+                    rs = pstmtEndereco.getGeneratedKeys();
+
+                    if (rs.next()) {
+                        idEndereco = rs.getInt(1);
+                    }
+
+                    PreparedStatement pstmtCliente
+                            = conn.prepareStatement(sqlCliente,
+                                    Statement.RETURN_GENERATED_KEYS);
+                    pstmtCliente.setInt(1, idUsuario);
+                    pstmtCliente.setInt(2, idEndereco);
+                    pstmtCliente.setString(3, cliente.getCartao());
+                    pstmtCliente.setString(4, cliente.getIdentificador());
+
+                    pstmtCliente.executeUpdate();
+                    conn.commit();
+                }
+            }
+            conn.setAutoCommit(true);
+
         } catch (SQLException ex) {
-            Logger.getLogger(Conexao.class.getName())
+            try {
+                // Reverter operação em caso de erro
+                if (conn != null) {
+                    conn.rollback();
+                }
+            } catch (SQLException ex2) {
+                Logger.getLogger(Conexao.class
+                        .getName())
+                        .log(Level.SEVERE, null, ex2);
+            }
+            Logger.getLogger(Conexao.class
+                    .getName())
                     .log(Level.SEVERE, null, ex);
-            valorRetorno = determinaValorErro(ex.getMessage());
+            idUsuario = determinaValorErro(ex.getMessage());
         } finally {
             Conexao.fechaConexao(conn);
-            return valorRetorno;
+            return idUsuario;
         }
     }
 
@@ -587,8 +644,8 @@ public class Conexao {
     }
 
     public static int insereProdutoPronto(String nome, double valor, int estoque) {
-        String sqlProduto = "INSERT INTO Produto(valor) VALUES(?);";
-        String sqlProdutoPronto = "INSERT INTO ProdutoPronto(id, nome, estoque) VALUES(?, ?, ?);";
+        String sqlProduto = "INSERT INTO Produto(tipo) VALUES(0);";
+        String sqlProdutoPronto = "INSERT INTO ProdutoPronto(id, nome, estoque, valor) VALUES(?, ?, ?, ?);";
         Connection conn = null;
         int idProduto = Util.RETORNO_ERRO_INDETERMINADO;
         try {
@@ -596,7 +653,6 @@ public class Conexao {
             conn.setAutoCommit(false);
 
             PreparedStatement pstmtProduto = conn.prepareStatement(sqlProduto, Statement.RETURN_GENERATED_KEYS);
-            pstmtProduto.setDouble(1, valor);
             int linhaInserida = pstmtProduto.executeUpdate();
 
             // Reverter operação em caso de erro
@@ -613,6 +669,7 @@ public class Conexao {
                 pstmtProdutoPronto.setInt(1, idProduto);
                 pstmtProdutoPronto.setString(2, nome);
                 pstmtProdutoPronto.setInt(3, estoque);
+                pstmtProdutoPronto.setDouble(4, valor);
                 pstmtProdutoPronto.executeUpdate();
                 conn.commit();
             }
@@ -770,28 +827,25 @@ public class Conexao {
     }
 
     public static int atualizaProdutoPronto(ProdutoPronto produto) {
-        String sqlProduto = "UPDATE Produto SET valor = ? WHERE id = ?;";
-        String sqlProdutoPronto = "UPDATE ProdutoPronto SET nome = ?, estoque = ? WHERE id = ?;";
+
+        String sqlProdutoPronto = "UPDATE ProdutoPronto SET nome = ?, estoque = ?, valor = ? WHERE id = ?;";
         Connection conn = null;
         int valorRetorno = Util.RETORNO_SUCESSO;
         try {
             conn = Conexao.abreConexao();
             conn.setAutoCommit(false);
 
-            PreparedStatement pstmtProduto = conn.prepareStatement(sqlProduto);
-            pstmtProduto.setDouble(1, produto.getValor());
-            pstmtProduto.setInt(2, produto.getId());
-            int linhaAtualizada = pstmtProduto.executeUpdate();
+            PreparedStatement pstmtProdutoPronto = conn.prepareStatement(sqlProdutoPronto);
+            pstmtProdutoPronto.setString(1, produto.getNome());
+            pstmtProdutoPronto.setInt(2, produto.getEstoque());
+            pstmtProdutoPronto.setDouble(3, produto.getValor());
+            pstmtProdutoPronto.setInt(4, produto.getId());
+            int linhaAtualizada = pstmtProdutoPronto.executeUpdate();
 
             // Reverter operação em caso de erro
             if (linhaAtualizada != 1) {
                 conn.rollback();
             } else {
-                PreparedStatement pstmtProdutoPronto = conn.prepareStatement(sqlProdutoPronto);
-                pstmtProdutoPronto.setString(1, produto.getNome());
-                pstmtProdutoPronto.setInt(2, produto.getEstoque());
-                pstmtProdutoPronto.setInt(3, produto.getId());
-                pstmtProdutoPronto.executeUpdate();
                 conn.commit();
             }
             conn.setAutoCommit(true);
@@ -802,8 +856,8 @@ public class Conexao {
             valorRetorno = Conexao.determinaValorErro(ex.getMessage());
         } finally {
             Conexao.fechaConexao(conn);
-            return valorRetorno;
         }
+        return valorRetorno;
     }
 
     public static int atualizaEstoqueProdutoPronto(int id, int estoque) {
