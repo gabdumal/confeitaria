@@ -6,10 +6,17 @@ package com.lugar.view.cliente;
 
 import com.lugar.view.funcionario.*;
 import com.lugar.confeitaria.Util;
+import static com.lugar.confeitaria.Util.formataDiaHora;
 import com.lugar.controller.Conexao;
 import com.lugar.model.ExcecaoCampoInvalido;
+import com.lugar.model.ExcecaoDataPassada;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -30,7 +37,6 @@ public class ConfirmacaoPedido extends javax.swing.JDialog {
         this.confirmado = false;
         this.valorTotal = valorTotal;
         initComponents();
-        // TODO
     }
 
     public boolean isConfirmado() {
@@ -45,16 +51,18 @@ public class ConfirmacaoPedido extends javax.swing.JDialog {
         return comentario;
     }
 
-    private LocalDateTime validaCampos(String dataForm, String horaForm) throws ExcecaoCampoInvalido {
+    private LocalDateTime validaCampos(String dataForm, String horaForm) throws ExcecaoCampoInvalido, ExcecaoDataPassada {
         if (!Util.dataValida(dataForm)) {
             throw new ExcecaoCampoInvalido("data");
+        }
+        if (!Util.dataPassada(dataForm)) {
+            throw new ExcecaoDataPassada();
         }
         if (!Util.horaValida(horaForm + ":00")) {
             throw new ExcecaoCampoInvalido("hora");
         }
 
         LocalDateTime dataHora = LocalDateTime.parse(dataForm + " " + horaForm + ":00", DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
-        
         return dataHora;
     }
 
@@ -70,6 +78,9 @@ public class ConfirmacaoPedido extends javax.swing.JDialog {
             this.dispose();
         } catch (ExcecaoCampoInvalido ex) {
             JOptionPane.showMessageDialog(this.pai, "Não foi possível realizar o cadastro! Um ou mais campos foram preenchidos incorretamente.", "Erro", JOptionPane.WARNING_MESSAGE);
+        }
+         catch (ExcecaoDataPassada ex) {
+            JOptionPane.showMessageDialog(this.pai, "Não foi possível realizar o cadastro! A data de entrega precisa ser ao menos um dia após a atual.", "Erro", JOptionPane.WARNING_MESSAGE);
         }
     }
 
@@ -118,7 +129,7 @@ public class ConfirmacaoPedido extends javax.swing.JDialog {
 
         textoPrecoProduto.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         textoPrecoProduto.setText("R$ 0,00");
-        textoPrecoProduto.setText("R$ " + valorTotal);
+        textoPrecoProduto.setText("Valor R$ " + valorTotal);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
         painelInformacoesProduto.add(textoPrecoProduto, gridBagConstraints);

@@ -64,7 +64,7 @@
                 <Property name="text" type="java.lang.String" value="R$ 0,00"/>
               </Properties>
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="textoPrecoProduto.setText(&quot;R$ &quot; + valorTotal);"/>
+                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="textoPrecoProduto.setText(&quot;Valor R$ &quot; + valorTotal);"/>
               </AuxValues>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
