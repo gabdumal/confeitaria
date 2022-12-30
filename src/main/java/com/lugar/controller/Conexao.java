@@ -246,8 +246,8 @@ public class Conexao {
             Conexao.fechaConexao(conn);
         }
     }
-    
-// a partir daqui uma interface para cada subclasse
+
+    // a partir daqui uma interface para cada subclasse
     public static List<Usuario> buscaTodosUsuariosLogin() {
         Connection conn = null;
         List<Usuario> listaUsuarios = new ArrayList<Usuario>();
@@ -264,8 +264,7 @@ public class Conexao {
                         rs.getInt("id"),
                         rs.getString("nomeUsuario"),
                         rs.getString("senhaHash"),
-                        rs.getInt("admin") == 1
-                );
+                        rs.getInt("admin") == 1);
                 listaUsuarios.add(usuario);
             }
         } catch (SQLException ex) {
@@ -347,9 +346,8 @@ public class Conexao {
                         idEndereco = rs.getInt(1);
                     }
 
-                    PreparedStatement pstmtCliente
-                            = conn.prepareStatement(sqlCliente,
-                                    Statement.RETURN_GENERATED_KEYS);
+                    PreparedStatement pstmtCliente = conn.prepareStatement(sqlCliente,
+                            Statement.RETURN_GENERATED_KEYS);
                     pstmtCliente.setInt(1, idUsuario);
                     pstmtCliente.setInt(2, idEndereco);
                     pstmtCliente.setString(3, cliente.getCartao());
@@ -434,14 +432,12 @@ public class Conexao {
                             id,
                             rs.getString("nome"),
                             rs.getDouble("valor"),
-                            rs.getInt("estoque")
-                    );
+                            rs.getInt("estoque"));
                 } else {
                     produto = new ProdutoPersonalizado(
                             id,
                             rs.getString("receita"),
-                            rs.getString("detalhe")
-                    );
+                            rs.getString("detalhe"));
                     // Preenche características
                     do {
                         int idCaracteristica = rs.getInt("idCaracteristica");
@@ -450,8 +446,7 @@ public class Conexao {
                                 idCaracteristica,
                                 tipo,
                                 rs.getString("caracteristica"),
-                                rs.getDouble("valorGrama")
-                        );
+                                rs.getDouble("valorGrama"));
                         switch (tipo) {
                             case Util.CARACTERISTICA_RECHEIO:
                                 ((ProdutoPersonalizado) produto).addRecheio(caracteristica);
@@ -493,8 +488,7 @@ public class Conexao {
                         id,
                         rs.getString("nome"),
                         rs.getDouble("valor"),
-                        rs.getInt("estoque")
-                );
+                        rs.getInt("estoque"));
             }
         } catch (SQLException ex) {
             Logger.getLogger(Conexao.class
@@ -576,16 +570,14 @@ public class Conexao {
                             rs.getInt("recheios"),
                             rs.getDouble("gramaRecheio"),
                             rs.getDouble("gramaCobertura"),
-                            rs.getDouble("gramaMassa")
-                    );
+                            rs.getDouble("gramaMassa"));
                     listaFormas.add(caracteristica);
                 } else {
                     caracteristica = new Caracteristica(
                             rs.getInt("id"),
                             rs.getString("tipo"),
                             rs.getString("nome"),
-                            rs.getDouble("valorGrama")
-                    );
+                            rs.getDouble("valorGrama"));
                     switch (tipo) {
                         case Util.CARACTERISTICA_COR:
                             listaCores.add(caracteristica);
@@ -630,8 +622,7 @@ public class Conexao {
                         rs.getInt("id"),
                         rs.getString("nome"),
                         rs.getDouble("valor"),
-                        rs.getInt("estoque")
-                );
+                        rs.getInt("estoque"));
                 listaProdutos.add(produto);
             }
         } catch (SQLException ex) {
@@ -663,9 +654,8 @@ public class Conexao {
                 if (rs.next()) {
                     idProduto = rs.getInt(1);
                 }
-                PreparedStatement pstmtProdutoPronto
-                        = conn.prepareStatement(sqlProdutoPronto,
-                                Statement.RETURN_GENERATED_KEYS);
+                PreparedStatement pstmtProdutoPronto = conn.prepareStatement(sqlProdutoPronto,
+                        Statement.RETURN_GENERATED_KEYS);
                 pstmtProdutoPronto.setInt(1, idProduto);
                 pstmtProdutoPronto.setString(2, nome);
                 pstmtProdutoPronto.setInt(3, estoque);
@@ -771,9 +761,8 @@ public class Conexao {
                         idProduto = rs.getInt(1);
                     }
 
-                    PreparedStatement pstmtProdutoPersonalizado
-                            = conn.prepareStatement(sqlProdutoPersonalizado,
-                                    Statement.RETURN_GENERATED_KEYS);
+                    PreparedStatement pstmtProdutoPersonalizado = conn.prepareStatement(sqlProdutoPersonalizado,
+                            Statement.RETURN_GENERATED_KEYS);
                     pstmtProdutoPersonalizado.setInt(1, idProduto);
                     pstmtProdutoPersonalizado.setString(2, produtoPersonalizado.getDetalhe());
                     pstmtProdutoPersonalizado.setString(3, produtoPersonalizado.getReceita());
@@ -857,7 +846,9 @@ public class Conexao {
         } finally {
             Conexao.fechaConexao(conn);
         }
+
         return valorRetorno;
+
     }
 
     public static int atualizaEstoqueProdutoPronto(int id, int estoque) {
@@ -959,8 +950,7 @@ public class Conexao {
                         rs.getInt("id"),
                         rs.getDouble("valor"),
                         dataHora,
-                        rs.getString("descricao")
-                );
+                        rs.getString("descricao"));
                 listaTransacoes.add(transacao);
 
             }
