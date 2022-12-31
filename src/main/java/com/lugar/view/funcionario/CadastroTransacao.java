@@ -5,6 +5,7 @@
 package com.lugar.view.funcionario;
 
 import com.lugar.controller.Conexao;
+import com.lugar.controller.OperacoesTransacao;
 import com.lugar.model.Transacao;
 import javax.swing.JOptionPane;
 import java.time.LocalDateTime;
@@ -144,7 +145,8 @@ public class CadastroTransacao extends javax.swing.JDialog {
 
         Transacao transacao = new Transacao(0, valor, agora, descricao);
 
-        int resultado = Conexao.insereTransacao(transacao);
+        OperacoesTransacao novaTransacao = new OperacoesTransacao();
+        int resultado = novaTransacao.insere(transacao);
         if (resultado == 0) {
             JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!");
             this.dispose();

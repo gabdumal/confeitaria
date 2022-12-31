@@ -6,6 +6,7 @@ package com.lugar.view;
 
 import com.lugar.confeitaria.Util;
 import com.lugar.controller.Conexao;
+import com.lugar.controller.OperacoesProdutoPronto;
 import com.lugar.model.Usuario;
 import com.lugar.model.ProdutoPronto;
 import com.lugar.model.data.ProdutosProntosTableModel;
@@ -115,7 +116,8 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
     }
 
     private void chamaTelaAdicaoProdutoCarrinho(int id) {
-        ProdutoPronto produto = Conexao.buscaProdutoPronto(id);
+        OperacoesProdutoPronto novoProdutoPronto = new OperacoesProdutoPronto();
+        ProdutoPronto produto = novoProdutoPronto.busca(id);
         produto.setCarrinho(this.listaProdutosCarrinho.getOrDefault(id, 1));
         AdicaoProdutoCarrinho adicaoProdutoCarrinho = new AdicaoProdutoCarrinho(this, true, produto);
         adicaoProdutoCarrinho.setVisible(true);

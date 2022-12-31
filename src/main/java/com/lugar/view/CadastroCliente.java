@@ -6,6 +6,7 @@ package com.lugar.view;
 
 import com.lugar.confeitaria.Util;
 import com.lugar.controller.Conexao;
+import com.lugar.controller.OperacoesCliente;
 import com.lugar.model.Cliente;
 import com.lugar.model.Endereco;
 import javax.swing.JOptionPane;
@@ -331,7 +332,9 @@ public class CadastroCliente extends javax.swing.JDialog {
 
         if (validaCadastro(nomeForm, nomeUsuarioForm, senhaForm, emailForm, telefoneForm, enderecoForm, cartaoForm, identificadorForm) == 0) {
             Endereco endereco = new Endereco("120", "ao lado predio azul", "rua dos bobos", "japuiba", "angra", "rj", "12348-00");
-            int idCliente = Conexao.insereCliente(
+
+            OperacoesCliente cliente = new OperacoesCliente();
+            int idCliente = cliente.insere(
                     new Cliente(0, nomeForm, nomeUsuarioForm, senhaForm, false,
                             emailForm, telefoneForm, idEndereço, cartaoForm, identificadorForm, endereco)
             );

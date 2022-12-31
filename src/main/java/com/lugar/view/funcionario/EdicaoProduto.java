@@ -6,6 +6,7 @@ package com.lugar.view.funcionario;
 
 import com.lugar.confeitaria.Util;
 import com.lugar.controller.Conexao;
+import com.lugar.controller.OperacoesProdutoPronto;
 import com.lugar.model.ProdutoPronto;
 import javax.swing.JOptionPane;
 
@@ -33,7 +34,8 @@ public class EdicaoProduto extends javax.swing.JDialog {
         super(parent, modal);
         this.id = id;
         this.pai = parent;
-        ProdutoPronto produto = Conexao.buscaProdutoPronto(id);
+        OperacoesProdutoPronto novoProdutoPronto = new OperacoesProdutoPronto();
+        ProdutoPronto produto = novoProdutoPronto.busca(id);
         this.estadoAnterior = produto;
         initComponents();
         campoNome.setText(produto.getNome());

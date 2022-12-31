@@ -4,43 +4,44 @@
  */
 package com.lugar.controller;
 
-import com.lugar.model.Usuario;
+import com.lugar.model.ProdutoPronto;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  *
- * @author lugar
+ * @author lucas
  */
-public class OperacoesUsuario implements OperacoesConexao<Usuario> {
+public class OperacoesProdutoPronto implements OperacoesConexao<ProdutoPronto> {
 
     @Override
-    public List<Usuario> buscaTodos() {
+    public List<ProdutoPronto> buscaTodos() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 
+    @Override
+    public ProdutoPronto busca(int id) {
+        String sql = "SELECT ProdutoPronto.nome, ProdutoPronto.valor, ProdutoPronto.estoque"
+                + " FROM Produto INNER JOIN ProdutoPronto"
+                + " ON Produto.id = ProdutoPronto.id"
+                + " WHERE Produto.id=" + id + " AND tipo = 0;";
         Connection conn = null;
-        List<Usuario> listaUsuarios = new ArrayList<Usuario>();
+        ProdutoPronto produto = null;
         try {
             conn = Conexao.abreConexao();
-            if (conn == null) {
-                return listaUsuarios;
-            }
-            String sql = "SELECT id, nomeUsuario, senhaHash, admin FROM Usuario;";
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                Usuario usuario = new Usuario(
-                        rs.getInt("id"),
-                        rs.getString("nomeUsuario"),
-                        rs.getString("senhaHash"),
-                        rs.getInt("admin") == 1);
-                listaUsuarios.add(usuario);
-
+            if (rs.next()) {
+                produto = new ProdutoPronto(
+                        id,
+                        rs.getString("nome"),
+                        rs.getDouble("valor"),
+                        rs.getInt("estoque"));
             }
         } catch (SQLException ex) {
             Logger.getLogger(Conexao.class
@@ -48,27 +49,22 @@ public class OperacoesUsuario implements OperacoesConexao<Usuario> {
         } finally {
             Conexao.fechaConexao(conn);
         }
-        return listaUsuarios;
+        return produto;
     }
 
+    @Override
+    public int insere(ProdutoPronto objeto) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public int atualiza(ProdutoPronto objeto) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 
     @Override
     public int deleta(int id) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    @Override
-    public int insere(Usuario objeto) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public int atualiza(Usuario objeto) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public Usuario busca(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 }

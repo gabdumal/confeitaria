@@ -4,7 +4,7 @@
  */
 package com.lugar.view.cliente;
 
-import com.lugar.controller.Conexao;
+import com.lugar.controller.OperacoesProduto;
 import com.lugar.model.Item;
 import com.lugar.model.Pedido;
 import com.lugar.model.Produto;
@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
 
 /**
@@ -74,7 +73,8 @@ public class Carrinho extends javax.swing.JDialog {
     private void montaListaProdutos() {
         this.listaProdutos = new ArrayList<Produto>();
         for (int id : listaProdutosCarrinho.keySet()) {
-            Produto produto = Conexao.buscaProduto(id);
+            OperacoesProduto novoProduto = new OperacoesProduto();
+            Produto produto = novoProduto.busca(id);
             int quantidadeCarrinho = listaProdutosCarrinho.get(id);
             if (produto instanceof ProdutoPersonalizado
                     || (produto instanceof ProdutoPronto && quantidadeCarrinho > 0)) {
@@ -107,11 +107,12 @@ public class Carrinho extends javax.swing.JDialog {
         this.atualizaTabela();
     }
 
-    private void fecharPedido()  {
+    private void fecharPedido() {
         float valorTotal = (float) 0.0;
         this.listaProdutos = new ArrayList<Produto>();
         for (int id : listaProdutosCarrinho.keySet()) {
-            Produto produto = Conexao.buscaProduto(id);
+            OperacoesProduto novoProduto = new OperacoesProduto();
+            Produto produto = novoProduto.busca(id);
             int quantidadeCarrinho = listaProdutosCarrinho.get(id);
             if (produto instanceof ProdutoPersonalizado
                     || (produto instanceof ProdutoPronto && quantidadeCarrinho > 0)) {
@@ -132,14 +133,15 @@ public class Carrinho extends javax.swing.JDialog {
                 }
             }
             Pedido pedido = new Pedido(0, LocalDateTime.now(), confirmacaoPedido.getDataHota(), listaItens);
-            System.out.println( pedido);
+            System.out.println(pedido);
             this.dispose();
         }
     }
 
     // Fluxo de telas
     private void chamaTelaEdicaoProdutoCarrinho(int id) {
-        Produto produto = Conexao.buscaProduto(id);
+        OperacoesProduto novoProduto = new OperacoesProduto();
+        Produto produto = novoProduto.busca(id);
         produto.setCarrinho(this.listaProdutosCarrinho.get(id));
 
         if (produto instanceof ProdutoPronto) {
