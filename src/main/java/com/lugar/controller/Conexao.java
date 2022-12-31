@@ -38,7 +38,7 @@ public class Conexao {
      *
      * @return o objeto Connection
      */
-    private static Connection abreConexao() {
+    static Connection abreConexao() {
         String url = "jdbc:sqlite:confeitaria.db";
         Connection conexao = null;
         try {
@@ -51,7 +51,7 @@ public class Conexao {
         return conexao;
     }
 
-    private static void fechaConexao(Connection conn) {
+    static void fechaConexao(Connection conn) {
         try {
             if (conn != null) {
                 conn.close();
@@ -248,54 +248,27 @@ public class Conexao {
     }
 
     // a partir daqui uma interface para cada subclasse
-    public static List<Usuario> buscaTodosUsuariosLogin() {
-        Connection conn = null;
-        List<Usuario> listaUsuarios = new ArrayList<Usuario>();
-        try {
-            conn = Conexao.abreConexao();
-            if (conn == null) {
-                return listaUsuarios;
-            }
-            String sql = "SELECT id, nomeUsuario, senhaHash, admin FROM Usuario;";
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                Usuario usuario = new Usuario(
-                        rs.getInt("id"),
-                        rs.getString("nomeUsuario"),
-                        rs.getString("senhaHash"),
-                        rs.getInt("admin") == 1);
-                listaUsuarios.add(usuario);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            Conexao.fechaConexao(conn);
-            return listaUsuarios;
-        }
-    }
-
-    public static int insereUsuario(String nome, String nomeUsuario, String senhaHash) {
-        String sql = "INSERT INTO Usuario(nome, nomeUsuario, senhaHash, admin) VALUES(?, ?, ?, ?);";
-        Connection conn = null;
-        int valorRetorno = Util.RETORNO_SUCESSO;
-        try {
-            conn = Conexao.abreConexao();
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, nome);
-            pstmt.setString(2, nomeUsuario);
-            pstmt.setString(3, senhaHash);
-            pstmt.setInt(4, 0);
-            pstmt.executeUpdate();
-        } catch (SQLException ex) {
-            Logger.getLogger(Conexao.class.getName())
-                    .log(Level.SEVERE, null, ex);
-            valorRetorno = determinaValorErro(ex.getMessage());
-        } finally {
-            Conexao.fechaConexao(conn);
-            return valorRetorno;
-        }
-    }
+//    public static int insereUsuario(String nome, String nomeUsuario, String senhaHash) {
+//        String sql = "INSERT INTO Usuario(nome, nomeUsuario, senhaHash, admin) VALUES(?, ?, ?, ?);";
+//        Connection conn = null;
+//        int valorRetorno = Util.RETORNO_SUCESSO;
+//        try {
+//            conn = Conexao.abreConexao();
+//            PreparedStatement pstmt = conn.prepareStatement(sql);
+//            pstmt.setString(1, nome);
+//            pstmt.setString(2, nomeUsuario);
+//            pstmt.setString(3, senhaHash);
+//            pstmt.setInt(4, 0);
+//            pstmt.executeUpdate();
+//        } catch (SQLException ex) {
+//            Logger.getLogger(Conexao.class.getName())
+//                    .log(Level.SEVERE, null, ex);
+//            valorRetorno = determinaValorErro(ex.getMessage());
+//        } finally {
+//            Conexao.fechaConexao(conn);
+//            return valorRetorno;
+//        }
+//    }
 
     public static int insereCliente(Cliente cliente) {
         String sqlUsuario = "INSERT INTO Usuario(nome, nomeUsuario, senhaHash, admin, email, telefone) VALUES(?, ?, ?, 0, ?, ?);";
@@ -890,8 +863,8 @@ public class Conexao {
             valorRetorno = Conexao.determinaValorErro(ex.getMessage());
         } finally {
             Conexao.fechaConexao(conn);
-            return valorRetorno;
         }
+        return valorRetorno;
     }
 
     public static int deletaTransacao(int idTransacao) {
@@ -910,8 +883,8 @@ public class Conexao {
             valorRetorno = Conexao.determinaValorErro(ex.getMessage());
         } finally {
             Conexao.fechaConexao(conn);
-            return valorRetorno;
         }
+        return valorRetorno;
     }
 
     public static int atualizaTransacao(int id, double valor, String descricao) {
@@ -932,8 +905,8 @@ public class Conexao {
             valorRetorno = Conexao.determinaValorErro(ex.getMessage());
         } finally {
             Conexao.fechaConexao(conn);
-            return valorRetorno;
         }
+        return valorRetorno;
     }
 
     public static List<Transacao> buscaTodasTransacoes() {
@@ -959,8 +932,8 @@ public class Conexao {
                     .getName()).log(Level.SEVERE, null, ex);
         } finally {
             Conexao.fechaConexao(conn);
-            return listaTransacoes;
         }
+        return listaTransacoes;
 
     }
 }
