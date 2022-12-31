@@ -34,7 +34,7 @@ public class Transacao {
     }
 
     public String getValorFormatado() {
-        return Util.formataDinheiro(this.valor);
+        return Util.formataDinheiro(this.getValor());
     }
 
     public LocalDateTime getDiaHora() {

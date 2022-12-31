@@ -4,20 +4,12 @@
  */
 package com.lugar.view.cliente;
 
-import com.lugar.view.funcionario.*;
 import com.lugar.confeitaria.Util;
-import static com.lugar.confeitaria.Util.formataDiaHora;
-import com.lugar.controller.Conexao;
-import com.lugar.exceptions.ExcecaoCampoInvalido;
-import com.lugar.exceptions.ExcecaoDataPassada;
+import com.lugar.model.exceptions.ExcecaoCampoInvalido;
+import com.lugar.model.exceptions.ExcecaoDataPassada;
 import java.awt.Color;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -26,18 +18,26 @@ import javax.swing.JOptionPane;
  */
 public class ConfirmacaoPedido extends javax.swing.JDialog {
 
-    java.awt.Frame pai;
-    boolean confirmado;
-    LocalDateTime dataHota;
-    String comentario;
-    static float valorTotal;
+    private java.awt.Frame pai;
+    private boolean confirmado;
+    private LocalDateTime dataHota;
+    private String comentario;
+    private double valorTotal;
 
-    public ConfirmacaoPedido(java.awt.Frame parent, boolean modal, float valorTotal) {
+    public ConfirmacaoPedido(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
+        this.pai = parent;
+        this.confirmado = false;
+        initComponents();
+    }
+
+    public ConfirmacaoPedido(java.awt.Frame parent, boolean modal, double valorTotal) {
         super(parent, modal);
         this.pai = parent;
         this.confirmado = false;
         this.valorTotal = valorTotal;
         initComponents();
+        this.textoPrecoProduto.setText(Util.formataDinheiro(valorTotal));
     }
 
     public boolean isConfirmado() {
@@ -71,7 +71,6 @@ public class ConfirmacaoPedido extends javax.swing.JDialog {
         String dataForm = campoData.getText().trim();
         String horaForm = campoHora.getText().trim();
         String comentarioForm = areaTextoComentario.getText().trim();
-
         try {
             this.dataHota = validaCampos(dataForm, horaForm);
             this.comentario = comentarioForm;
@@ -129,7 +128,6 @@ public class ConfirmacaoPedido extends javax.swing.JDialog {
 
         textoPrecoProduto.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         textoPrecoProduto.setText("R$ 0,00");
-        textoPrecoProduto.setText("Valor R$ " + valorTotal);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
         painelInformacoesProduto.add(textoPrecoProduto, gridBagConstraints);
@@ -338,7 +336,7 @@ public class ConfirmacaoPedido extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                ConfirmacaoPedido dialog = new ConfirmacaoPedido(new javax.swing.JFrame(), true, valorTotal);
+                ConfirmacaoPedido dialog = new ConfirmacaoPedido(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

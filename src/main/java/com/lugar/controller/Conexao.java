@@ -199,6 +199,27 @@ public class Conexao {
                     + ");";
             stmt.addBatch(sql);
 
+            sql = "CREATE TABLE IF NOT EXISTS \"Pedido\" (\n"
+                    + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
+                    + "	\"estado\"	TEXT NOT NULL,\n"
+                    + "	\"dataEntrega\"	TEXT NOT NULL,\n"
+                    + "	\"comentario\"	TEXT,\n"
+                    + "	FOREIGN KEY(\"id\") REFERENCES \"Transacao\"(\"id\") ON DELETE CASCADE,\n"
+                    + "	PRIMARY KEY(\"id\")\n"
+                    + ");";
+            stmt.addBatch(sql);
+
+            sql = "CREATE TABLE IF NOT EXISTS \"Item\" (\n"
+                    + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
+                    + "	\"valorTotal\"	REAL NOT NULL,\n"
+                    + "	\"quantidade\"	INTEGER NOT NULL,\n"
+                    + "	\"idProduto\"	INTEGER NOT NULL,\n"
+                    + "	\"idPedido\"	INTEGER NOT NULL,\n"
+                    + "	FOREIGN KEY(\"idPedido\") REFERENCES \"Pedido\"(\"id\") ON DELETE CASCADE,\n"
+                    + "	PRIMARY KEY(\"id\" AUTOINCREMENT)\n"
+                    + ");";
+            stmt.addBatch(sql);
+
             stmt.executeBatch();
             conn.commit();
 

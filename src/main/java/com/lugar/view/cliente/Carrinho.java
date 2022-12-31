@@ -87,9 +87,9 @@ public class Carrinho extends javax.swing.JDialog {
     private void atualizaModeloTabela() {
         // Atualiza lista de produtos
         this.montaListaProdutos();
-        for (Produto produto : listaProdutos) {
-            produto.setCarrinho(listaProdutosCarrinho.get(produto.getId()));
-        }
+//        for (Produto produto : listaProdutos) {
+//            produto.setCarrinho(listaProdutosCarrinho.get(produto.getId()));
+//        }
         this.modeloTabela = new ProdutosTableModel(this.listaProdutos);
     }
 
@@ -108,19 +108,27 @@ public class Carrinho extends javax.swing.JDialog {
     }
 
     private void fecharPedido() {
-        float valorTotal = (float) 0.0;
-        this.listaProdutos = new ArrayList<Produto>();
-        for (int id : listaProdutosCarrinho.keySet()) {
-            OperacoesProduto novoProduto = new OperacoesProduto();
-            Produto produto = novoProduto.busca(id);
-            int quantidadeCarrinho = listaProdutosCarrinho.get(id);
-            if (produto instanceof ProdutoPersonalizado
-                    || (produto instanceof ProdutoPronto && quantidadeCarrinho > 0)) {
-                produto.setCarrinho(quantidadeCarrinho);
-                valorTotal += quantidadeCarrinho * produto.getValor();
-
-            }
+        if (this.listaProdutos.size() == 0) {
+            return;
         }
+
+        double valorTotal = 0;
+//        this.listaProdutos = new ArrayList<Produto>();
+//        for (int id : listaProdutosCarrinho.keySet()) {
+//            OperacoesProduto novoProduto = new OperacoesProduto();
+//            Produto produto = novoProduto.busca(id);
+//            int quantidadeCarrinho = listaProdutosCarrinho.get(id);
+//            if (produto instanceof ProdutoPersonalizado
+//                    || (produto instanceof ProdutoPronto && quantidadeCarrinho > 0)) {
+//                produto.setCarrinho(quantidadeCarrinho);
+//                valorTotal += quantidadeCarrinho * produto.getValor();
+//            }
+//        }
+        for (Produto produto : listaProdutos) {
+            valorTotal += produto.getValor() * produto.getCarrinho();
+        }
+
+        // Solicita confirmação do usuário
         ConfirmacaoPedido confirmacaoPedido = new ConfirmacaoPedido(this.pai, true, valorTotal);
         confirmacaoPedido.setVisible(true);
         if (confirmacaoPedido.isConfirmado()) {
@@ -132,8 +140,9 @@ public class Carrinho extends javax.swing.JDialog {
                     listaItens.add(item);
                 }
             }
-            Pedido pedido = new Pedido(0, LocalDateTime.now(), confirmacaoPedido.getDataHota(), listaItens);
-            System.out.println(pedido);
+            Pedido pedido = new Pedido(-1, 'S', confirmacaoPedido.getDataHota(),
+                    confirmacaoPedido.getComentario(), listaItens);
+
             this.dispose();
         }
     }

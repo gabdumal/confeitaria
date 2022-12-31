@@ -4,7 +4,7 @@
  */
 package com.lugar.confeitaria;
 
-import com.lugar.exceptions.ExcecaoDataPassada;
+import com.lugar.model.exceptions.ExcecaoDataPassada;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

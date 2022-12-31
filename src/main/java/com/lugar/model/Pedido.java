@@ -11,31 +11,24 @@ import java.util.List;
  *
  * @author lugar
  */
-public class Pedido {
+public class Pedido extends Transacao {
 
-    private int id;
-//    private char estado; // S - aceito pelo cliente; A = aceito e agendado; F  = aceito e fechado; C  = cancelado
-//    private boolean agendado;
-    private LocalDateTime dataSolicitacao;
+    private char estado; //F: Finalizado; E: Pronto para entrega; S: Solicitado
     private LocalDateTime dataEntrega;
     private String comentario;
     private List<Item> listaItens;
 
-    public Pedido(int id, LocalDateTime dataSolicitacao, LocalDateTime dataEntrega, List<Item> listaItens) {
-        this.id = id;
-//        this.estado = estado;
-//        this.agendado = agendado;
-        this.dataSolicitacao = dataSolicitacao;
+    public Pedido(int id, char estado, LocalDateTime dataEntrega,
+            String comentario, List<Item> listaItens) {
+        super(id, Pedido.calculaValorTotal(listaItens), LocalDateTime.now(), "Pedido");
+        this.estado = estado;
         this.dataEntrega = dataEntrega;
+        this.comentario = comentario;
         this.listaItens = listaItens;
-
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public double getValorTotal() {
+    @Override
+    public double getValor() {
         double valorTotal = 0;
         for (Item item : listaItens) {
             valorTotal += item.getValorTotal();
@@ -45,6 +38,14 @@ public class Pedido {
 
     public List<Item> getListaItens() {
         return listaItens;
+    }
+
+    private static double calculaValorTotal(List<Item> listaItens) {
+        double valorTotal = 0;
+        for (Item item : listaItens) {
+            valorTotal += item.getValorTotal();
+        }
+        return valorTotal;
     }
 
 }
