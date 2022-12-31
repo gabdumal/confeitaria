@@ -6,6 +6,7 @@ package com.lugar.view.cliente;
 
 import com.lugar.confeitaria.Util;
 import com.lugar.controller.Conexao;
+import com.lugar.controller.OperacoesCaracteristica;
 import com.lugar.model.Caracteristica;
 import com.lugar.model.Forma;
 import com.lugar.model.ProdutoPersonalizado;
@@ -118,7 +119,8 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
         this.modeloRecheios1 = new DefaultComboBoxModel();
         this.modeloRecheios2 = new DefaultComboBoxModel();
         this.modeloRecheios3 = new DefaultComboBoxModel();
-        List<List<Caracteristica>> listaDeListasDeCaracteristicas = Conexao.buscaTodasCaracteristicas();
+        OperacoesCaracteristica novaListaDeListas = new OperacoesCaracteristica();
+        List<List<Caracteristica>> listaDeListasDeCaracteristicas = novaListaDeListas.buscaTodos();
         this.listaFormas = listaDeListasDeCaracteristicas.get(0);
         this.listaCores = listaDeListasDeCaracteristicas.get(1);
         this.listaCoberturas = listaDeListasDeCaracteristicas.get(2);

@@ -8,6 +8,7 @@ import com.lugar.controller.Conexao;
 import javax.swing.JOptionPane;
 import com.lugar.model.Transacao;
 import com.lugar.confeitaria.Util;
+import com.lugar.controller.OperacoesTransacao;
 
 /**
  *
@@ -28,7 +29,8 @@ public class EdicaoTransacao extends javax.swing.JDialog {
         super(parent, modal);
         this.id = id;
         this.pai = parent;
-        Transacao transacao = Conexao.buscaTransacao(id);
+        OperacoesTransacao novaTransacao = new OperacoesTransacao();
+        Transacao transacao = novaTransacao.busca(id);
         this.estadoAnterior = transacao;
         initComponents();
         campoValor.setValue(transacao.getValor());
