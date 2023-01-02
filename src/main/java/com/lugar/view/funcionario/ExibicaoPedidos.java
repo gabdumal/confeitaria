@@ -4,9 +4,9 @@
  */
 package com.lugar.view.funcionario;
 
-import com.lugar.controller.OperacoesTransacao;
-import com.lugar.model.Transacao;
-import com.lugar.model.tables.TransacoesTableModel;
+import com.lugar.controller.OperacoesPedido;
+import com.lugar.model.Pedido;
+import com.lugar.model.tables.PedidosTableModel;
 import java.awt.Point;
 import java.util.List;
 import java.awt.event.MouseAdapter;
@@ -17,22 +17,22 @@ import javax.swing.JTable;
  *
  * @author lugar
  */
-public class ExibicaoTransacoes extends javax.swing.JDialog {
+public class ExibicaoPedidos extends javax.swing.JDialog {
 
     private java.awt.Frame pai;
-    private List<Transacao> listaTransacoes;
-    private TransacoesTableModel modeloTabela;
-    private OperacoesTransacao operacoesTransacao;
+    private List<Pedido> listaPedidos;
+    private PedidosTableModel modeloTabela;
+    private OperacoesPedido operacoesPedido;
 
-    public ExibicaoTransacoes(java.awt.Frame parent, boolean modal) {
+    public ExibicaoPedidos(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         this.pai = parent;
-        this.operacoesTransacao = new OperacoesTransacao();
-        this.listaTransacoes = this.operacoesTransacao.buscaTodos();
-        this.modeloTabela = new TransacoesTableModel(this.listaTransacoes);
+        this.operacoesPedido = new OperacoesPedido();
+        this.listaPedidos = this.operacoesPedido.buscaTodos();
+        this.modeloTabela = new PedidosTableModel(this.listaPedidos);
         initComponents();
 
-        tabelaTransacoes.addMouseListener(new MouseAdapter() {
+        tabelaPedidos.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent mouseEvent) {
                 JTable tabela = (JTable) mouseEvent.getSource();
@@ -47,25 +47,19 @@ public class ExibicaoTransacoes extends javax.swing.JDialog {
         });
     }
 
-    private void chamarTelaCadastroTransacao() {
-        CadastroTransacao tela = new CadastroTransacao(pai, true);
-        tela.setVisible(true);
-        this.atualizaTabela();
-    }
-
     private void atualizaTabela() {
         this.atualizaModeloTabela();
-        tabelaTransacoes.setModel(this.modeloTabela);
-        tabelaTransacoes.removeColumn(tabelaTransacoes.getColumnModel().getColumn(0));
+        tabelaPedidos.setModel(this.modeloTabela);
+        tabelaPedidos.removeColumn(tabelaPedidos.getColumnModel().getColumn(0));
     }
 
     private void atualizaModeloTabela() {
-        this.listaTransacoes = this.operacoesTransacao.buscaTodos();
-        this.modeloTabela = new TransacoesTableModel(listaTransacoes);
+        this.listaPedidos = this.operacoesPedido.buscaTodos();
+        this.modeloTabela = new PedidosTableModel(listaPedidos);
     }
 
     private void chamaTelaEdicao(int id) {
-        EdicaoTransacao tela = new EdicaoTransacao(pai, true, id);
+        EdicaoPedido tela = new EdicaoPedido(pai, true, id);
         if (!tela.isPedido()) {
             tela.setVisible(true);
             this.atualizaTabela();
@@ -85,13 +79,12 @@ public class ExibicaoTransacoes extends javax.swing.JDialog {
 
         painelAcoes = new javax.swing.JPanel();
         botaoVoltar = new javax.swing.JButton();
-        botaoCadastrarT = new javax.swing.JButton();
         painelTabela = new javax.swing.JPanel();
         telaRolavel = new javax.swing.JScrollPane();
-        tabelaTransacoes = new javax.swing.JTable();
+        tabelaPedidos = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Transações");
+        setTitle("Pedidos");
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         painelAcoes.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
@@ -104,14 +97,6 @@ public class ExibicaoTransacoes extends javax.swing.JDialog {
         });
         painelAcoes.add(botaoVoltar);
 
-        botaoCadastrarT.setText("Cadastrar transação");
-        botaoCadastrarT.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botaoCadastrarTActionPerformed(evt);
-            }
-        });
-        painelAcoes.add(botaoCadastrarT);
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -121,10 +106,10 @@ public class ExibicaoTransacoes extends javax.swing.JDialog {
 
         painelTabela.setLayout(new java.awt.BorderLayout());
 
-        tabelaTransacoes.setModel(this.getModeloTabela());
-        tabelaTransacoes.removeColumn(tabelaTransacoes.getColumnModel().getColumn(0));
-        tabelaTransacoes.getTableHeader().setReorderingAllowed(false);
-        telaRolavel.setViewportView(tabelaTransacoes);
+        tabelaPedidos.setModel(this.getModeloTabela());
+        tabelaPedidos.removeColumn(tabelaPedidos.getColumnModel().getColumn(0));
+        tabelaPedidos.getTableHeader().setReorderingAllowed(false);
+        telaRolavel.setViewportView(tabelaPedidos);
 
         painelTabela.add(telaRolavel, java.awt.BorderLayout.CENTER);
 
@@ -144,10 +129,6 @@ public class ExibicaoTransacoes extends javax.swing.JDialog {
         this.dispose();
     }//GEN-LAST:event_botaoVoltarActionPerformed
 
-    private void botaoCadastrarTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCadastrarTActionPerformed
-        this.chamarTelaCadastroTransacao();
-    }//GEN-LAST:event_botaoCadastrarTActionPerformed
-
     /**
      * @param args the command line arguments
      */
@@ -165,23 +146,21 @@ public class ExibicaoTransacoes extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ExibicaoTransacoes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ExibicaoPedidos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ExibicaoTransacoes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ExibicaoPedidos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ExibicaoTransacoes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ExibicaoPedidos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ExibicaoTransacoes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ExibicaoPedidos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                ExibicaoTransacoes dialog = new ExibicaoTransacoes(new javax.swing.JFrame(), true);
+                ExibicaoPedidos dialog = new ExibicaoPedidos(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -193,16 +172,15 @@ public class ExibicaoTransacoes extends javax.swing.JDialog {
         });
     }
 
-    public TransacoesTableModel getModeloTabela() {
+    public PedidosTableModel getModeloTabela() {
         return modeloTabela;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton botaoCadastrarT;
     private javax.swing.JButton botaoVoltar;
     private javax.swing.JPanel painelAcoes;
     private javax.swing.JPanel painelTabela;
-    private javax.swing.JTable tabelaTransacoes;
+    private javax.swing.JTable tabelaPedidos;
     private javax.swing.JScrollPane telaRolavel;
     // End of variables declaration//GEN-END:variables
 }

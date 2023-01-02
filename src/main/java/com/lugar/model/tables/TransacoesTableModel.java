@@ -2,9 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.lugar.model.data;
+package com.lugar.model.tables;
 
-import com.lugar.model.ProdutoPronto;
+import com.lugar.model.Transacao;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
@@ -12,18 +12,18 @@ import javax.swing.table.AbstractTableModel;
  *
  * @author lugar
  */
-public class ProdutosProntosTableModel extends AbstractTableModel {
+public class TransacoesTableModel extends AbstractTableModel {
 
-    private String colunas[] = {"#", "Produto", "Valor", "Estoque"};
-    private List<ProdutoPronto> listaProdutos;
+    private String colunas[] = {"#", "Descrição", "Data", "Valor"};
+    private List<Transacao> listaTransacoes;
 
     private final int COLUNA_ID = 0;
-    private final int COLUNA_PRODUTO = 1;
-    private final int COLUNA_VALOR = 2;
-    private final int COLUNA_ESTOQUE = 3;
+    private final int COLUNA_DESCRICAO = 1;
+    private final int COLUNA_DIAHORA = 2;
+    private final int COLUNA_VALOR = 3;
 
-    public ProdutosProntosTableModel(List<ProdutoPronto> listaProdutos) {
-        this.listaProdutos = listaProdutos;
+    public TransacoesTableModel(List<Transacao> listaTransacoes) {
+        this.listaTransacoes = listaTransacoes;
     }
 
     @Override
@@ -33,7 +33,7 @@ public class ProdutosProntosTableModel extends AbstractTableModel {
 
     @Override
     public int getRowCount() {
-        return listaProdutos.size();
+        return listaTransacoes.size();
     }
 
     @Override
@@ -53,19 +53,17 @@ public class ProdutosProntosTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        ProdutoPronto produto = this.listaProdutos.get(rowIndex);
-
+        Transacao transacao = this.listaTransacoes.get(rowIndex);
         switch (columnIndex) {
             case COLUNA_ID:
-                return produto.getId();
-            case COLUNA_PRODUTO:
-                return produto.getNome();
+                return transacao.getId();
+            case COLUNA_DESCRICAO:
+                return transacao.getDescricao();
+            case COLUNA_DIAHORA:
+                return transacao.getDiaHoraFormatado();
             case COLUNA_VALOR:
-                return produto.getValorFormatado();
-            case COLUNA_ESTOQUE:
-                return produto.getEstoque();
+                return transacao.getValorFormatado();
         }
         return null;
     }
-
 }

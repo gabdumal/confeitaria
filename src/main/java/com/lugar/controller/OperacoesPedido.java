@@ -9,12 +9,15 @@ import com.lugar.model.Item;
 import com.lugar.model.Pedido;
 import com.lugar.model.Produto;
 import com.lugar.model.ProdutoPronto;
+import com.lugar.model.Transacao;
 import com.lugar.model.exceptions.ExcecaoNovoEstoqueInvalido;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,7 +30,32 @@ public class OperacoesPedido implements OperacoesConexao<Pedido> {
 
     @Override
     public List<Pedido> buscaTodos() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        String sql = "SELECT Transacao.id, Transacao.valor, Transacao.diaHora, Transacao.ehPedido, Pedido.estado, Pedido.dataEntrega FROM Transacao INNER JOIN Pedido ON Transacao.id = Pedido.id WHERE Transacao.ehPedido = 1;";
+        Connection conn = null;
+        List<Pedido> listaPedidos = new ArrayList<Pedido>();
+        try {
+            conn = Conexao.abreConexao();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                LocalDateTime diaHora = LocalDateTime.parse(rs.getString("diaHora"));
+                LocalDateTime dataEntrega = LocalDateTime.parse(rs.getString("dataEntrega"));
+                Pedido pedido = new Pedido(
+                        rs.getInt("id"),
+                        rs.getDouble("valor"),
+                        diaHora,
+                        dataEntrega,
+                        rs.getString("estado")
+                );
+                listaPedidos.add(pedido);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexao.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            Conexao.fechaConexao(conn);
+        }
+        return listaPedidos;
     }
 
     @Override
@@ -38,7 +66,7 @@ public class OperacoesPedido implements OperacoesConexao<Pedido> {
 
     @Override
     public int insere(Pedido pedido) {
-        String sqlTransacao = "INSERT INTO Transacao(valor, diaHora, descricao) VALUES(?, ?, ?);";
+        String sqlTransacao = "INSERT INTO Transacao(valor, diaHora, descricao, ehPedido) VALUES(?, ?, ?, 1);";
         String sqlPedido = "INSERT INTO Pedido(id, estado, dataEntrega, comentario) VALUES(?, ?, ?, ?);";
 
         Connection conn = null;

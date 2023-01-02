@@ -9,12 +9,13 @@ import com.lugar.controller.Conexao;
 import com.lugar.controller.OperacoesProdutoPronto;
 import com.lugar.model.Usuario;
 import com.lugar.model.ProdutoPronto;
-import com.lugar.model.data.ProdutosProntosTableModel;
+import com.lugar.model.tables.ProdutosProntosTableModel;
 import com.lugar.view.cliente.AdicaoProdutoCarrinho;
 import com.lugar.view.cliente.Carrinho;
 import com.lugar.view.cliente.CriacaoProdutoPersonalizado;
 import com.lugar.view.funcionario.CadastroProduto;
 import com.lugar.view.funcionario.EdicaoProduto;
+import com.lugar.view.funcionario.ExibicaoPedidos;
 import com.lugar.view.funcionario.ExibicaoTransacoes;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
@@ -149,8 +150,13 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
         }
     }
 
-    private void chamaTelaTransacao() {
+    private void chamaTelaTransacoes() {
         ExibicaoTransacoes tela = new ExibicaoTransacoes(this, true);
+        tela.setVisible(true);
+    }
+
+    private void chamaTelaPedidos() {
+        ExibicaoPedidos tela = new ExibicaoPedidos(this, true);
         tela.setVisible(true);
     }
 
@@ -173,6 +179,7 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
         itemMenuCriarProdutoPersonalizado = new javax.swing.JMenuItem();
         menuPedidos = new javax.swing.JMenu();
         itemMenuCarrinho = new javax.swing.JMenuItem();
+        itemMenuListaPedidos = new javax.swing.JMenuItem();
         menuTransacoes = new javax.swing.JMenu();
         itemMenuLista = new javax.swing.JMenuItem();
 
@@ -237,10 +244,17 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
             menuPedidos.add(itemMenuCarrinho);
         }
 
-        if(!usuario.isAdmin()){
-
-            barraMenu.add(menuPedidos);
+        if(usuario.isAdmin()){
+            itemMenuListaPedidos.setText("Lista");
+            itemMenuListaPedidos.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    itemMenuListaPedidosActionPerformed(evt);
+                }
+            });
+            menuPedidos.add(itemMenuListaPedidos);
         }
+
+        barraMenu.add(menuPedidos);
 
         menuTransacoes.setText("Transações");
         menuTransacoes.addActionListener(new java.awt.event.ActionListener() {
@@ -278,7 +292,7 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
     }//GEN-LAST:event_itemMenuCarrinhoActionPerformed
 
     private void itemMenuListaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMenuListaActionPerformed
-        this.chamaTelaTransacao();
+        this.chamaTelaTransacoes();
     }//GEN-LAST:event_itemMenuListaActionPerformed
 
     private void itemMenuCriarProdutoPersonalizadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMenuCriarProdutoPersonalizadoActionPerformed
@@ -292,6 +306,10 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
     private void menuTransacoesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuTransacoesActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_menuTransacoesActionPerformed
+
+    private void itemMenuListaPedidosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMenuListaPedidosActionPerformed
+        this.chamaTelaPedidos();
+    }//GEN-LAST:event_itemMenuListaPedidosActionPerformed
 
     /**
      * @param args the command line arguments
@@ -345,6 +363,7 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
     private javax.swing.JMenuItem itemMenuCarrinho;
     private javax.swing.JMenuItem itemMenuCriarProdutoPersonalizado;
     private javax.swing.JMenuItem itemMenuLista;
+    private javax.swing.JMenuItem itemMenuListaPedidos;
     private javax.swing.JMenu menuPedidos;
     private javax.swing.JMenu menuProdutos;
     private javax.swing.JMenu menuTransacoes;

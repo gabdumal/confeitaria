@@ -4,6 +4,7 @@
  */
 package com.lugar.model;
 
+import com.lugar.confeitaria.Util;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -24,6 +25,13 @@ public class Pedido extends Transacao {
         this.instanciaSimplificada = true;
     }
 
+    public Pedido(int id, double valor, LocalDateTime diaHora, LocalDateTime dataEntrega, String estado) {
+        super(id, valor, diaHora, "Pedido", true);
+        this.dataEntrega = dataEntrega;
+        this.estado = estado;
+        this.instanciaSimplificada = true;
+    }
+
     public Pedido(int id, String estado, LocalDateTime dataEntrega,
             String comentario, List<Item> listaItens) {
         this(id, LocalDateTime.now(), estado, dataEntrega, comentario, listaItens);
@@ -41,19 +49,29 @@ public class Pedido extends Transacao {
 
     @Override
     public double getValor() {
-        if (this.instanciaSimplificada) {
-            return ((Transacao) this).getValor();
-        } else {
-            double valorTotal = 0;
-            for (Item item : listaItens) {
-                valorTotal += item.getValorTotal();
-            }
-            return valorTotal;
+        double valorTotal = 0;
+        for (Item item : listaItens) {
+            valorTotal += item.getValorTotal();
         }
+        return valorTotal;
+
     }
 
     public String getEstado() {
         return estado;
+    }
+
+    public String getEstadoFormatado() {
+        switch (estado) {
+            case "F":
+                return "Finalizado";
+            case "E":
+                return "Pronto p/ entrega";
+            case "S":
+                return "Solicitado";
+            default:
+                return "";
+        }
     }
 
     public LocalDateTime getDataEntrega() {
@@ -62,6 +80,10 @@ public class Pedido extends Transacao {
 
     public String getDataEntregaString() {
         return dataEntrega.toString();
+    }
+
+    public String getDataEntregaFormatada() {
+        return Util.formataDiaHora(dataEntrega);
     }
 
     public String getComentario() {
