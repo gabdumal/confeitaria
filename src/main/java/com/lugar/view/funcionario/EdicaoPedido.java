@@ -4,14 +4,9 @@
  */
 package com.lugar.view.funcionario;
 
-import javax.swing.JOptionPane;
-import com.lugar.confeitaria.Util;
-import com.lugar.controller.OperacoesCaracteristica;
 import com.lugar.controller.OperacoesPedido;
-import com.lugar.model.Caracteristica;
 import com.lugar.model.Pedido;
 import com.lugar.model.SetStringString;
-import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 
 /**
@@ -37,8 +32,8 @@ public class EdicaoPedido extends javax.swing.JDialog {
         this.pai = parent;
         this.operacoesPedido = new OperacoesPedido();
         Pedido pedido = operacoesPedido.busca(id);
-        initComponents();
         this.carregaComboBox();
+        initComponents();
         textoValorPreenchido.setText(pedido.getValorFormatado());
         textoSolicitadoPreenchido.setText(pedido.getDiaHoraFormatado());
         textoEntregaPreenchido.setText(pedido.getDataEntregaFormatada());
@@ -214,6 +209,8 @@ public class EdicaoPedido extends javax.swing.JDialog {
         gridBagConstraints.ipadx = 30;
         painelCampos.add(textoComentario, gridBagConstraints);
 
+        painelRolavelComentario.setEnabled(false);
+
         areaTextoComentario.setColumns(20);
         areaTextoComentario.setRows(5);
         painelRolavelComentario.setViewportView(areaTextoComentario);
@@ -231,6 +228,8 @@ public class EdicaoPedido extends javax.swing.JDialog {
         painelFormulario.add(painelCampos, gridBagConstraints);
 
         painelItens.setLayout(new java.awt.GridLayout(1, 0, 10, 0));
+
+        painelRolavelTabelaItens.setPreferredSize(new java.awt.Dimension(452, 200));
 
         tabelaItens.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {

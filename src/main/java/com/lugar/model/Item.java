@@ -12,14 +12,21 @@ public class Item {
 
     private int id;
     private double valorTotal;
-    private int quantidade;
     private Produto produto;
+    private int quantidade;
 
     public Item(Produto produto) {
         this.id = -1;
         this.quantidade = produto.getCarrinho();
         this.valorTotal = produto.getValor() * this.quantidade;
         this.produto = produto;
+    }
+
+    public Item(int id, double valorTotal, Produto produto, int quantidade) {
+        this.id = id;
+        this.valorTotal = valorTotal;
+        this.produto = produto;
+        this.quantidade = quantidade;
     }
 
     public int getId() {

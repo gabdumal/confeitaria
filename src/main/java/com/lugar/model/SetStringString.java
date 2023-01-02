@@ -26,4 +26,9 @@ public class SetStringString {
         return texto;
     }
 
+    @Override
+    public String toString() {
+        return this.texto;
+    }
+
 }

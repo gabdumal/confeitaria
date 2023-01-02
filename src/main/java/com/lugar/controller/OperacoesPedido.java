@@ -5,9 +5,11 @@
 package com.lugar.controller;
 
 import com.lugar.confeitaria.Util;
+import com.lugar.model.Caracteristica;
 import com.lugar.model.Item;
 import com.lugar.model.Pedido;
 import com.lugar.model.Produto;
+import com.lugar.model.ProdutoPersonalizado;
 import com.lugar.model.ProdutoPronto;
 import com.lugar.model.Transacao;
 import com.lugar.model.exceptions.ExcecaoNovoEstoqueInvalido;
@@ -60,12 +62,62 @@ public class OperacoesPedido implements OperacoesConexao<Pedido> {
 
     @Override
     public Pedido busca(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        String sql = "SELECT Transacao.id, Transacao.diaHora, Transacao.ehPedido, Pedido.estado, Pedido.dataEntrega, Pedido.comentario, \n"
+                + "Item.id AS idItem, Item.idProduto, Item.quantidade, Item.valorTotal \n"
+                + "FROM Transacao INNER JOIN Pedido ON Transacao.id = Pedido.id\n"
+                + "INNER JOIN Item ON transacao.id = Item.idPedido\n"
+                + "WHERE Transacao.id = 2\n"
+                + "ORDER BY Transacao.id, Item.id;";
 
+        Connection conn = null;
+        Pedido pedido = null;
+
+        try {
+            conn = Conexao.abreConexao();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+
+            // Cria Pedido
+            LocalDateTime diaHora = null;
+            String estado = null;
+            LocalDateTime dataEntrega = null;
+            String comentario = null;
+            boolean primeiro = true;
+            List<Item> listaItens = new ArrayList<Item>();
+            OperacoesProduto operacoesProduto = new OperacoesProduto();
+
+            while (rs.next()) {
+                if (primeiro) {
+                    diaHora = LocalDateTime.parse(rs.getString("diaHora"));
+                    estado = rs.getString("estado");
+                    dataEntrega = LocalDateTime.parse(rs.getString("dataEntrega"));
+                    comentario = rs.getString("comentario");
+                    primeiro = false;
+                }
+
+                int idItem = rs.getInt("idItem");
+                int idProduto = rs.getInt("idProduto");;
+                int quantidade = rs.getInt("quantidade");;
+                double valorTotal = rs.getDouble("valorTotal");
+                Produto produto = operacoesProduto.busca(idProduto);
+                Item item = new Item(idItem, valorTotal, produto, quantidade);
+                listaItens.add(item);
+            }
+
+            if (!primeiro) {
+                pedido = new Pedido(id, diaHora, estado, dataEntrega, comentario, listaItens);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            Conexao.fechaConexao(conn);
+        }
+        return pedido;
     }
 
     @Override
-    public int insere(Pedido pedido) {
+    public int insere(Pedido pedido
+    ) {
         String sqlTransacao = "INSERT INTO Transacao(valor, diaHora, descricao, ehPedido) VALUES(?, ?, ?, 1);";
         String sqlPedido = "INSERT INTO Pedido(id, estado, dataEntrega, comentario) VALUES(?, ?, ?, ?);";
 
