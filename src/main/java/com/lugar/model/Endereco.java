@@ -6,7 +6,7 @@ package com.lugar.model;
 
 /**
  *
- * @author rodrigosoares
+ * @author lugar
  */
 public class Endereco {
 

@@ -5,7 +5,6 @@
 package com.lugar.view;
 
 import com.lugar.confeitaria.Util;
-import com.lugar.controller.Conexao;
 import com.lugar.controller.OperacoesCliente;
 import com.lugar.model.Cliente;
 import com.lugar.model.Endereco;

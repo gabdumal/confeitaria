@@ -4,7 +4,6 @@
  */
 package com.lugar.view.funcionario;
 
-import com.lugar.controller.Conexao;
 import com.lugar.controller.OperacoesTransacao;
 import com.lugar.model.Transacao;
 import javax.swing.JOptionPane;
@@ -95,7 +94,7 @@ public class CadastroTransacao extends javax.swing.JDialog {
         gridBagConstraints.ipadx = 30;
         painelCampos.add(textoValor, gridBagConstraints);
 
-        campoValor.setModel(new javax.swing.SpinnerNumberModel(0.0d, 0.0d, null, 1.0d));
+        campoValor.setModel(new javax.swing.SpinnerNumberModel(0.0d, null, null, 1.0d));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -129,7 +128,7 @@ public class CadastroTransacao extends javax.swing.JDialog {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.ipadx = 104;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         getContentPane().add(painelFormulario, gridBagConstraints);

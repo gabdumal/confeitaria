@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author lucas
+ * @author lugar
  */
 public class OperacoesEstoque implements OperacoesConexao {
 

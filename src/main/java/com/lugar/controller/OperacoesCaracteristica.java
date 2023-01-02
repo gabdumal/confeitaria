@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author lucas
+ * @author lugar
  */
 public class OperacoesCaracteristica implements OperacoesConexao<List<Caracteristica>> {
 

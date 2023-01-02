@@ -17,23 +17,39 @@ public class Pedido extends Transacao {
     private LocalDateTime dataEntrega;
     private String comentario;
     private List<Item> listaItens;
+    private boolean instanciaSimplificada;
+
+    public Pedido(int id, double valor, LocalDateTime diaHora, String descricao) {
+        super(id, valor, diaHora, descricao, true);
+        this.instanciaSimplificada = true;
+    }
 
     public Pedido(int id, String estado, LocalDateTime dataEntrega,
             String comentario, List<Item> listaItens) {
-        super(id, Pedido.calculaValorTotal(listaItens), LocalDateTime.now(), "Pedido");
+        this(id, LocalDateTime.now(), estado, dataEntrega, comentario, listaItens);
+    }
+
+    public Pedido(int id, LocalDateTime diaHora, String estado, LocalDateTime dataEntrega,
+            String comentario, List<Item> listaItens) {
+        super(id, Pedido.calculaValorTotal(listaItens), diaHora, "Pedido", true);
         this.estado = estado;
         this.dataEntrega = dataEntrega;
         this.comentario = comentario;
         this.listaItens = listaItens;
+        this.instanciaSimplificada = false;
     }
 
     @Override
     public double getValor() {
-        double valorTotal = 0;
-        for (Item item : listaItens) {
-            valorTotal += item.getValorTotal();
+        if (this.instanciaSimplificada) {
+            return ((Transacao) this).getValor();
+        } else {
+            double valorTotal = 0;
+            for (Item item : listaItens) {
+                valorTotal += item.getValorTotal();
+            }
+            return valorTotal;
         }
-        return valorTotal;
     }
 
     public String getEstado() {

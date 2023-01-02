@@ -6,6 +6,7 @@ package com.lugar.controller;
 
 import com.lugar.confeitaria.Util;
 import static com.lugar.controller.Conexao.determinaValorErro;
+import com.lugar.model.Pedido;
 import com.lugar.model.Transacao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,21 +27,24 @@ public class OperacoesTransacao implements OperacoesConexao<Transacao> {
 
     @Override
     public List<Transacao> buscaTodos() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public Transacao busca(int id) {
-        String sql = "SELECT valor, descricao, diaHora FROM Transacao WHERE id=" + id + ";";
+        String sql = "SELECT id, valor, diaHora, descricao, ehPedido FROM Transacao;";
         Connection conn = null;
-        Transacao transacaoAntiga = null;
+        List<Transacao> listaTransacoes = new ArrayList<Transacao>();
         try {
             conn = Conexao.abreConexao();
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
+            while (rs.next()) {
                 LocalDateTime dataHora = LocalDateTime.parse(rs.getString("diaHora"));
-                transacaoAntiga = new Transacao(id, rs.getInt("valor"), dataHora, rs.getString("descricao"));
+                Transacao transacao = new Transacao(
+                        rs.getInt("id"),
+                        rs.getDouble("valor"),
+                        dataHora,
+                        rs.getString("descricao"),
+                        (rs.getInt("ehPedido") == 1)
+                );
+                listaTransacoes.add(transacao);
+
             }
         } catch (SQLException ex) {
             Logger.getLogger(Conexao.class
@@ -47,7 +52,37 @@ public class OperacoesTransacao implements OperacoesConexao<Transacao> {
         } finally {
             Conexao.fechaConexao(conn);
         }
-        return transacaoAntiga;
+        return listaTransacoes;
+    }
+
+    @Override
+    public Transacao busca(int id) {
+        String sql = "SELECT Transacao.valor, Transacao.descricao, Transacao.diaHora, Transacao.ehPedido FROM Transacao WHERE Transacao.id = " + id + ";";
+        Connection conn = null;
+        Transacao transacao = null;
+        try {
+            conn = Conexao.abreConexao();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            if (rs.next()) {
+                LocalDateTime dataHora = LocalDateTime.parse(rs.getString("diaHora"));
+                if (rs.getInt("ehPedido") == 1) {
+                    transacao = new Pedido(id, rs.getDouble("valor"),
+                            dataHora, rs.getString("descricao"));
+                } else {
+                    transacao = new Transacao(id, rs.getDouble("valor"),
+                            dataHora, rs.getString("descricao"),
+                            (rs.getInt("ehPedido") == 1)
+                    );
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexao.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            Conexao.fechaConexao(conn);
+        }
+        return transacao;
     }
 
     @Override
@@ -74,13 +109,47 @@ public class OperacoesTransacao implements OperacoesConexao<Transacao> {
     }
 
     @Override
-    public int atualiza(Transacao objeto) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public int atualiza(Transacao transacao) {
+        String sqlTransacao = "UPDATE Transacao SET valor = ?, descricao = ? WHERE id = ?;";
+        Connection conn = null;
+        int valorRetorno = Util.RETORNO_SUCESSO;
+        try {
+            conn = Conexao.abreConexao();
+            PreparedStatement pstmt = conn.prepareStatement(sqlTransacao);
+            pstmt.setDouble(1, transacao.getValor());
+            pstmt.setString(2, transacao.getDescricao());
+            pstmt.setInt(3, transacao.getId());
+            pstmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexao.class
+                    .getName())
+                    .log(Level.SEVERE, null, ex);
+            valorRetorno = Conexao.determinaValorErro(ex.getMessage());
+        } finally {
+            Conexao.fechaConexao(conn);
+        }
+        return valorRetorno;
     }
 
     @Override
     public int deleta(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        String sql = "DELETE FROM Transacao WHERE id = ?;";
+        Connection conn = null;
+        int valorRetorno = Util.RETORNO_SUCESSO;
+        try {
+            conn = Conexao.abreConexao();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexao.class
+                    .getName())
+                    .log(Level.SEVERE, null, ex);
+            valorRetorno = Conexao.determinaValorErro(ex.getMessage());
+        } finally {
+            Conexao.fechaConexao(conn);
+        }
+        return valorRetorno;
     }
 
 }

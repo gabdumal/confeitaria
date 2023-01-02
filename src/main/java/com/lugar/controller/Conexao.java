@@ -8,7 +8,6 @@ import com.lugar.confeitaria.Util;
 import com.lugar.model.Caracteristica;
 import com.lugar.model.ProdutoPronto;
 import com.lugar.model.ProdutoPersonalizado;
-import com.lugar.model.Transacao;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -19,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.time.LocalDateTime;
 import org.sqlite.SQLiteConfig;
 
 /**
@@ -116,6 +114,7 @@ public class Conexao {
                     + "	\"valor\"	REAL NOT NULL,\n"
                     + "	\"diaHora\"	TEXT NOT NULL,\n"
                     + "	\"descricao\"	TEXT NOT NULL,\n"
+                    + "	\"ehPedido\"	INTEGER NOT NULL DEFAULT 0 CHECK(\"ehPedido\" IN (0, 1)),\n"
                     + "	PRIMARY KEY(\"id\")\n"
                     + ");";
             stmt.addBatch(sql);
@@ -555,73 +554,4 @@ public class Conexao {
         return valorRetorno;
     }
 
-    public static int deletaTransacao(int idTransacao) {
-        String sql = "DELETE FROM Transacao WHERE id = ?;";
-        Connection conn = null;
-        int valorRetorno = Util.RETORNO_SUCESSO;
-        try {
-            conn = Conexao.abreConexao();
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, idTransacao);
-            pstmt.executeUpdate();
-        } catch (SQLException ex) {
-            Logger.getLogger(Conexao.class
-                    .getName())
-                    .log(Level.SEVERE, null, ex);
-            valorRetorno = Conexao.determinaValorErro(ex.getMessage());
-        } finally {
-            Conexao.fechaConexao(conn);
-        }
-        return valorRetorno;
-    }
-
-    public static int atualizaTransacao(int id, double valor, String descricao) {
-        String sqlTransacao = "UPDATE Transacao SET valor = ?, descricao = ? WHERE id = ?;";
-        Connection conn = null;
-        int valorRetorno = Util.RETORNO_SUCESSO;
-        try {
-            conn = Conexao.abreConexao();
-            PreparedStatement pstmt = conn.prepareStatement(sqlTransacao);
-            pstmt.setDouble(1, valor);
-            pstmt.setString(2, descricao);
-            pstmt.setInt(3, id);
-            pstmt.executeUpdate();
-        } catch (SQLException ex) {
-            Logger.getLogger(Conexao.class
-                    .getName())
-                    .log(Level.SEVERE, null, ex);
-            valorRetorno = Conexao.determinaValorErro(ex.getMessage());
-        } finally {
-            Conexao.fechaConexao(conn);
-        }
-        return valorRetorno;
-    }
-
-    public static List<Transacao> buscaTodasTransacoes() {
-        String sql = "SELECT id, valor, diaHora, descricao FROM Transacao;";
-        Connection conn = null;
-        List<Transacao> listaTransacoes = new ArrayList<Transacao>();
-        try {
-            conn = Conexao.abreConexao();
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                LocalDateTime dataHora = LocalDateTime.parse(rs.getString("diaHora"));
-                Transacao transacao = new Transacao(
-                        rs.getInt("id"),
-                        rs.getDouble("valor"),
-                        dataHora,
-                        rs.getString("descricao"));
-                listaTransacoes.add(transacao);
-
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(Conexao.class
-                    .getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            Conexao.fechaConexao(conn);
-        }
-        return listaTransacoes;
-
-    }
 }

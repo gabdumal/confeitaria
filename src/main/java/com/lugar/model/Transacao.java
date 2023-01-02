@@ -17,8 +17,13 @@ public class Transacao {
     private double valor;
     private LocalDateTime diaHora;
     private String descricao;
+    private boolean ehPedido;
 
     public Transacao(int id, double valor, LocalDateTime diaHora, String descricao) {
+        this(id, valor, diaHora, descricao, false);
+    }
+
+    public Transacao(int id, double valor, LocalDateTime diaHora, String descricao, boolean ehPedido) {
         this.id = id;
         this.valor = valor;
         this.diaHora = diaHora;
@@ -60,9 +65,7 @@ public class Transacao {
     }
 
     public void setValor(double valor) {
-        if (valor >= 0) {
-            this.valor = valor;
-        }
+        this.valor = valor;
     }
 
     public void setDiaHora(LocalDateTime diaHora) {

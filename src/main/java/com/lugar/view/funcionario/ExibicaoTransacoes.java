@@ -4,7 +4,7 @@
  */
 package com.lugar.view.funcionario;
 
-import com.lugar.controller.Conexao;
+import com.lugar.controller.OperacoesTransacao;
 import com.lugar.model.Transacao;
 import com.lugar.model.data.TransacoesTableModel;
 import java.awt.Point;
@@ -22,12 +22,13 @@ public class ExibicaoTransacoes extends javax.swing.JDialog {
     private java.awt.Frame pai;
     private List<Transacao> listaTransacoes;
     private TransacoesTableModel modeloTabela;
+    private OperacoesTransacao operacoesTransacao;
 
     public ExibicaoTransacoes(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         this.pai = parent;
-
-        this.listaTransacoes = Conexao.buscaTodasTransacoes();
+        this.operacoesTransacao = new OperacoesTransacao();
+        this.listaTransacoes = this.operacoesTransacao.buscaTodos();
         this.modeloTabela = new TransacoesTableModel(this.listaTransacoes);
         initComponents();
 
@@ -37,7 +38,7 @@ public class ExibicaoTransacoes extends javax.swing.JDialog {
                 JTable tabela = (JTable) mouseEvent.getSource();
                 Point ponto = mouseEvent.getPoint();
                 int linha = tabela.rowAtPoint(ponto);
-                int coluna = tabela.columnAtPoint(ponto);
+//                int coluna = tabela.columnAtPoint(ponto);
                 // Clique duplo
                 if (mouseEvent.getClickCount() == 2 && tabela.getSelectedRow() != -1) {
                     chamaTelaEdicao((int) modeloTabela.getValueAt(linha, 0));
@@ -59,14 +60,16 @@ public class ExibicaoTransacoes extends javax.swing.JDialog {
     }
 
     private void atualizaModeloTabela() {
-        this.listaTransacoes = Conexao.buscaTodasTransacoes();
+        this.listaTransacoes = this.operacoesTransacao.buscaTodos();
         this.modeloTabela = new TransacoesTableModel(listaTransacoes);
     }
 
     private void chamaTelaEdicao(int id) {
         EdicaoTransacao tela = new EdicaoTransacao(pai, true, id);
-        tela.setVisible(true);
-        this.atualizaTabela();
+        if (!tela.isPedido()) {
+            tela.setVisible(true);
+            this.atualizaTabela();
+        }
     }
 
     /**

@@ -4,11 +4,11 @@
  */
 package com.lugar.view.funcionario;
 
-import com.lugar.controller.Conexao;
 import javax.swing.JOptionPane;
 import com.lugar.model.Transacao;
 import com.lugar.confeitaria.Util;
 import com.lugar.controller.OperacoesTransacao;
+import com.lugar.model.Pedido;
 
 /**
  *
@@ -16,9 +16,11 @@ import com.lugar.controller.OperacoesTransacao;
  */
 public class EdicaoTransacao extends javax.swing.JDialog {
 
-    int id;
-    Transacao estadoAnterior;
-    java.awt.Frame pai;
+    private int id;
+    private Transacao estadoAnterior;
+    private java.awt.Frame pai;
+    private OperacoesTransacao operacoesTransacao;
+    private boolean ehPedido;
 
     public EdicaoTransacao(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -29,12 +31,21 @@ public class EdicaoTransacao extends javax.swing.JDialog {
         super(parent, modal);
         this.id = id;
         this.pai = parent;
-        OperacoesTransacao novaTransacao = new OperacoesTransacao();
-        Transacao transacao = novaTransacao.busca(id);
+        this.operacoesTransacao = new OperacoesTransacao();
+        Transacao transacao = operacoesTransacao.busca(id);
+        if (transacao instanceof Pedido) {
+            JOptionPane.showMessageDialog(this.pai, "Não é possível editar um pedido realizado por um cliente.", "Operação inválida", JOptionPane.WARNING_MESSAGE);
+            this.ehPedido = true;
+            return;
+        }
         this.estadoAnterior = transacao;
         initComponents();
         campoValor.setValue(transacao.getValor());
         campoDescricao.setText(transacao.getDescricao());
+    }
+
+    public boolean isPedido() {
+        return ehPedido;
     }
 
     private void deletaTransacao() {
@@ -43,7 +54,7 @@ public class EdicaoTransacao extends javax.swing.JDialog {
                 "Deleção de transação", JOptionPane.YES_NO_OPTION,
                 JOptionPane.WARNING_MESSAGE) == 0;
         if (confirmacao) {
-            int resultado = Conexao.deletaTransacao(this.id);
+            int resultado = this.operacoesTransacao.deleta(this.id);
             if (resultado == Util.RETORNO_SUCESSO) {
                 JOptionPane.showMessageDialog(this.pai, "Deleção realizada com Sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();
@@ -61,7 +72,8 @@ public class EdicaoTransacao extends javax.swing.JDialog {
             boolean confirmacao = JOptionPane.showConfirmDialog(null, "Deseja confirmar a edição dessa transação?", "Edição de transação", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == 0;
             if (confirmacao) {
                 int resultado = Util.RETORNO_SUCESSO;
-                resultado = Conexao.atualizaTransacao(this.id, valor, descricao);
+                Transacao novaTransacao = new Transacao(this.id, valor, null, descricao);
+                resultado = this.operacoesTransacao.atualiza(novaTransacao);
                 if (resultado == Util.RETORNO_SUCESSO) {
                     JOptionPane.showMessageDialog(this.pai, "Edição realizada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                     this.dispose();
@@ -143,7 +155,7 @@ public class EdicaoTransacao extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCampos.add(textoValor, gridBagConstraints);
 
-        campoValor.setModel(new javax.swing.SpinnerNumberModel(0.0d, 0.0d, null, 1.0d));
+        campoValor.setModel(new javax.swing.SpinnerNumberModel(0.0d, null, null, 1.0d));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;

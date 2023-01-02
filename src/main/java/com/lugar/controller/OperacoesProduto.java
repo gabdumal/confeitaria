@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author lucas
+ * @author lugar
  */
 public class OperacoesProduto implements OperacoesConexao<Produto> {
 

@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 /**
  *
- * @author rodrigosoares
+ * @author lugar
  */
 public class TransacoesTableModel extends AbstractTableModel {
 

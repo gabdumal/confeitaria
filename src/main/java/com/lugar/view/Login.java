@@ -4,7 +4,6 @@
  */
 package com.lugar.view;
 
-import com.lugar.controller.OperacoesConexao;
 import com.lugar.controller.OperacoesUsuario;
 import com.lugar.model.Usuario;
 import java.util.List;
