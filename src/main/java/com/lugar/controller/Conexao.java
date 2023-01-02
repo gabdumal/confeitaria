@@ -6,11 +6,6 @@ package com.lugar.controller;
 
 import com.lugar.confeitaria.Util;
 import com.lugar.model.Caracteristica;
-import com.lugar.model.Cliente;
-import com.lugar.model.Forma;
-import com.lugar.model.Usuario;
-import com.lugar.model.Produto;
-import com.lugar.model.Endereco;
 import com.lugar.model.ProdutoPronto;
 import com.lugar.model.ProdutoPersonalizado;
 import com.lugar.model.Transacao;
@@ -215,6 +210,7 @@ public class Conexao {
                     + "	\"quantidade\"	INTEGER NOT NULL,\n"
                     + "	\"idProduto\"	INTEGER NOT NULL,\n"
                     + "	\"idPedido\"	INTEGER NOT NULL,\n"
+                    + "	FOREIGN KEY(\"idProduto\") REFERENCES \"Produto\"(\"id\"),\n"
                     + "	FOREIGN KEY(\"idPedido\") REFERENCES \"Pedido\"(\"id\") ON DELETE CASCADE,\n"
                     + "	PRIMARY KEY(\"id\" AUTOINCREMENT)\n"
                     + ");";

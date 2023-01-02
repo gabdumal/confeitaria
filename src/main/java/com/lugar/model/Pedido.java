@@ -13,12 +13,12 @@ import java.util.List;
  */
 public class Pedido extends Transacao {
 
-    private char estado; //F: Finalizado; E: Pronto para entrega; S: Solicitado
+    private String estado; //F: Finalizado; E: Pronto para entrega; S: Solicitado
     private LocalDateTime dataEntrega;
     private String comentario;
     private List<Item> listaItens;
 
-    public Pedido(int id, char estado, LocalDateTime dataEntrega,
+    public Pedido(int id, String estado, LocalDateTime dataEntrega,
             String comentario, List<Item> listaItens) {
         super(id, Pedido.calculaValorTotal(listaItens), LocalDateTime.now(), "Pedido");
         this.estado = estado;
@@ -34,6 +34,22 @@ public class Pedido extends Transacao {
             valorTotal += item.getValorTotal();
         }
         return valorTotal;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public LocalDateTime getDataEntrega() {
+        return dataEntrega;
+    }
+
+    public String getDataEntregaString() {
+        return dataEntrega.toString();
+    }
+
+    public String getComentario() {
+        return comentario;
     }
 
     public List<Item> getListaItens() {

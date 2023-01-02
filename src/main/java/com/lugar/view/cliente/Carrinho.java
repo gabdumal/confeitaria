@@ -4,6 +4,8 @@
  */
 package com.lugar.view.cliente;
 
+import com.lugar.confeitaria.Util;
+import com.lugar.controller.OperacoesPedido;
 import com.lugar.controller.OperacoesProduto;
 import com.lugar.model.Item;
 import com.lugar.model.Pedido;
@@ -14,10 +16,10 @@ import com.lugar.model.data.ProdutosTableModel;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 
 /**
@@ -113,17 +115,7 @@ public class Carrinho extends javax.swing.JDialog {
         }
 
         double valorTotal = 0;
-//        this.listaProdutos = new ArrayList<Produto>();
-//        for (int id : listaProdutosCarrinho.keySet()) {
-//            OperacoesProduto novoProduto = new OperacoesProduto();
-//            Produto produto = novoProduto.busca(id);
-//            int quantidadeCarrinho = listaProdutosCarrinho.get(id);
-//            if (produto instanceof ProdutoPersonalizado
-//                    || (produto instanceof ProdutoPronto && quantidadeCarrinho > 0)) {
-//                produto.setCarrinho(quantidadeCarrinho);
-//                valorTotal += quantidadeCarrinho * produto.getValor();
-//            }
-//        }
+
         for (Produto produto : listaProdutos) {
             valorTotal += produto.getValor() * produto.getCarrinho();
         }
@@ -140,10 +132,19 @@ public class Carrinho extends javax.swing.JDialog {
                     listaItens.add(item);
                 }
             }
-            Pedido pedido = new Pedido(-1, 'S', confirmacaoPedido.getDataHota(),
+            Pedido pedido = new Pedido(-1, "S", confirmacaoPedido.getDataHota(),
                     confirmacaoPedido.getComentario(), listaItens);
+            OperacoesPedido operacoesPedido = new OperacoesPedido();
+            int idPedido = operacoesPedido.insere(pedido);
 
-            this.dispose();
+            if (idPedido >= Util.RETORNO_SUCESSO) {
+                JOptionPane.showMessageDialog(this.pai, "Pedido realizado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                this.listaProdutosCarrinho.clear();
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this.pai, "Não foi possível realizar o pedido! Tente novamente mais tarde.", "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+
         }
     }
 
