@@ -34,18 +34,19 @@ public class Pedido extends Transacao {
     }
 
     public Pedido(int id, String estado, LocalDateTime dataEntrega,
-            String comentario, List<Item> listaItens) {
-        this(id, LocalDateTime.now(), estado, dataEntrega, comentario, listaItens);
+            String comentario, List<Item> listaItens, int idCliente) {
+        this(id, LocalDateTime.now(), estado, dataEntrega, comentario, listaItens, idCliente);
     }
 
     public Pedido(int id, LocalDateTime diaHora, String estado, LocalDateTime dataEntrega,
-            String comentario, List<Item> listaItens) {
+            String comentario, List<Item> listaItens, int idCliente) {
         super(id, Pedido.calculaValorTotal(listaItens), diaHora, "Pedido", true);
         this.estado = estado;
         this.dataEntrega = dataEntrega;
         this.comentario = comentario;
         this.listaItens = listaItens;
         this.instanciaSimplificada = false;
+        this.idCliente = idCliente;
     }
 
     @Override
@@ -93,6 +94,10 @@ public class Pedido extends Transacao {
 
     public List<Item> getListaItens() {
         return listaItens;
+    }
+
+    public int getIdCliente() {
+        return idCliente;
     }
 
     private static double calculaValorTotal(List<Item> listaItens) {

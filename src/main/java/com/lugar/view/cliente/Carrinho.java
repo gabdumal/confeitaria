@@ -28,7 +28,7 @@ import javax.swing.JTable;
  */
 public class Carrinho extends javax.swing.JDialog {
 
-    private int idUsuario;
+    private int idCliente;
     private List<Produto> listaProdutos;
     private ProdutosTableModel modeloTabela;
     private Map<Integer, Integer> listaProdutosCarrinho;
@@ -40,9 +40,9 @@ public class Carrinho extends javax.swing.JDialog {
         initComponents();
     }
 
-    public Carrinho(java.awt.Frame parent, boolean modal, Map<Integer, Integer> listaProdutosCarrinho) {
+    public Carrinho(java.awt.Frame parent, boolean modal, int idCliente, Map<Integer, Integer> listaProdutosCarrinho) {
         super(parent, modal);
-
+        this.idCliente = idCliente;
         this.listaProdutosCarrinho = listaProdutosCarrinho;
         this.montaListaProdutos();
 
@@ -133,7 +133,7 @@ public class Carrinho extends javax.swing.JDialog {
                 }
             }
             Pedido pedido = new Pedido(-1, "S", confirmacaoPedido.getDataHota(),
-                    confirmacaoPedido.getComentario(), listaItens);
+                    confirmacaoPedido.getComentario(), listaItens, idCliente);
             OperacoesPedido operacoesPedido = new OperacoesPedido();
             int idPedido = operacoesPedido.insere(pedido);
 

@@ -134,7 +134,7 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
     }
 
     private void chamaTelaCarrinho() {
-        Carrinho carrinho = new Carrinho(this, true, listaProdutosCarrinho);
+        Carrinho carrinho = new Carrinho(this, true, usuario.getId(), listaProdutosCarrinho);
         carrinho.setVisible(true);
         this.listaProdutosCarrinho = carrinho.getListaProdutosCarrinho();
         this.atualizaTabela();

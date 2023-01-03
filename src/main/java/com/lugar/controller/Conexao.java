@@ -198,6 +198,8 @@ public class Conexao {
                     + "	\"estado\"	TEXT NOT NULL,\n"
                     + "	\"dataEntrega\"	TEXT NOT NULL,\n"
                     + "	\"comentario\"	TEXT,\n"
+                    + "	\"idCliente\"	INTEGER NOT NULL,\n"
+                    + "	FOREIGN KEY(\"idCliente\") REFERENCES \"Usuario\"(\"id\"),\n"
                     + "	FOREIGN KEY(\"id\") REFERENCES \"Transacao\"(\"id\") ON DELETE CASCADE,\n"
                     + "	PRIMARY KEY(\"id\")\n"
                     + ");";

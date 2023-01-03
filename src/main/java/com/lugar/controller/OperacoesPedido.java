@@ -59,7 +59,7 @@ public class OperacoesPedido implements OperacoesConexao<Pedido> {
 
     @Override
     public Pedido busca(int id) {
-        String sql = "SELECT Transacao.id, Transacao.diaHora, Transacao.ehPedido, Pedido.estado, Pedido.dataEntrega, Pedido.comentario, \n"
+        String sql = "SELECT Transacao.id, Transacao.diaHora, Transacao.ehPedido, Pedido.estado, Pedido.dataEntrega, Pedido.comentario, Pedido.idCliente, \n"
                 + "Item.id AS idItem, Item.idProduto, Item.quantidade, Item.valorTotal \n"
                 + "FROM Transacao INNER JOIN Pedido ON Transacao.id = Pedido.id\n"
                 + "INNER JOIN Item ON transacao.id = Item.idPedido\n"
@@ -81,6 +81,7 @@ public class OperacoesPedido implements OperacoesConexao<Pedido> {
             String comentario = null;
             boolean primeiro = true;
             List<Item> listaItens = new ArrayList<Item>();
+            int idCliente = 0;
             OperacoesProduto operacoesProduto = new OperacoesProduto();
 
             while (rs.next()) {
@@ -89,11 +90,12 @@ public class OperacoesPedido implements OperacoesConexao<Pedido> {
                     estado = rs.getString("estado");
                     dataEntrega = LocalDateTime.parse(rs.getString("dataEntrega"));
                     comentario = rs.getString("comentario");
+                    idCliente = rs.getInt("idCliente");
                     primeiro = false;
                 }
 
                 int idItem = rs.getInt("idItem");
-                int idProduto = rs.getInt("idProduto");;
+                int idProduto = rs.getInt("idProduto");
                 int quantidade = rs.getInt("quantidade");;
                 double valorTotal = rs.getDouble("valorTotal");
                 Produto produto = operacoesProduto.busca(idProduto);
@@ -102,7 +104,7 @@ public class OperacoesPedido implements OperacoesConexao<Pedido> {
             }
 
             if (!primeiro) {
-                pedido = new Pedido(id, diaHora, estado, dataEntrega, comentario, listaItens);
+                pedido = new Pedido(id, diaHora, estado, dataEntrega, comentario, listaItens, idCliente);
             }
         } catch (SQLException ex) {
             Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
@@ -113,10 +115,9 @@ public class OperacoesPedido implements OperacoesConexao<Pedido> {
     }
 
     @Override
-    public int insere(Pedido pedido
-    ) {
+    public int insere(Pedido pedido) {
         String sqlTransacao = "INSERT INTO Transacao(valor, diaHora, descricao, ehPedido) VALUES(?, ?, ?, 1);";
-        String sqlPedido = "INSERT INTO Pedido(id, estado, dataEntrega, comentario) VALUES(?, ?, ?, ?);";
+        String sqlPedido = "INSERT INTO Pedido(id, estado, dataEntrega, comentario, idCliente) VALUES(?, ?, ?, ?, ?);";
 
         Connection conn = null;
         int idTransacao = Util.RETORNO_SUCESSO;
@@ -144,6 +145,7 @@ public class OperacoesPedido implements OperacoesConexao<Pedido> {
                 pstmtPedido.setString(2, pedido.getEstado());
                 pstmtPedido.setString(3, pedido.getDataEntregaString());
                 pstmtPedido.setString(4, pedido.getComentario());
+                pstmtPedido.setInt(5, pedido.getIdCliente());
                 linhasInseridas = pstmtPedido.executeUpdate();
 
                 // Reverter operação em caso de erro
