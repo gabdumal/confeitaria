@@ -10,6 +10,7 @@ import com.lugar.controller.OperacoesCaracteristica;
 import com.lugar.model.Caracteristica;
 import com.lugar.model.Forma;
 import com.lugar.model.ProdutoPersonalizado;
+import com.lugar.model.SetStringString;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
@@ -30,6 +31,7 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
     private List<Caracteristica> listaCores;
     private List<Caracteristica> listaCoberturas;
     private List<Caracteristica> listaRecheios;
+    private DefaultComboBoxModel modeloReceita;
     private DefaultComboBoxModel modeloFormas;
     private DefaultComboBoxModel modeloCores;
     private DefaultComboBoxModel modeloCoberturas;
@@ -113,12 +115,17 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
     }
 
     private void carregaComboBoxes() {
+        this.modeloReceita = new DefaultComboBoxModel();
         this.modeloFormas = new DefaultComboBoxModel();
         this.modeloCores = new DefaultComboBoxModel();
         this.modeloCoberturas = new DefaultComboBoxModel();
         this.modeloRecheios1 = new DefaultComboBoxModel();
         this.modeloRecheios2 = new DefaultComboBoxModel();
         this.modeloRecheios3 = new DefaultComboBoxModel();
+        SetStringString receitaBolo = new SetStringString("B", "Bolo");
+        SetStringString receitaTrufa = new SetStringString("T", "Trufa");
+        this.modeloReceita.addElement(receitaBolo);
+        this.modeloReceita.addElement(receitaTrufa);
         OperacoesCaracteristica novaListaDeListas = new OperacoesCaracteristica();
         List<List<Caracteristica>> listaDeListasDeCaracteristicas = novaListaDeListas.buscaTodos();
         this.listaFormas = listaDeListasDeCaracteristicas.get(0);
@@ -142,7 +149,7 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
     }
 
     private void trocaPainel() {
-        if (this.receita.equals("Bolo")) {
+        if (this.receita.equals("B")) {
             this.painelCamposBolo.setVisible(true);
             this.painelCamposTrufa.setVisible(false);
         } else {
@@ -287,7 +294,7 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
         painelTipoQuantidade.add(textoReceita, gridBagConstraints);
 
         comboBoxReceita.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        comboBoxReceita.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Bolo", "Trufa" }));
+        comboBoxReceita.setModel(this.modeloReceita);
         comboBoxReceita.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboBoxReceitaActionPerformed(evt);
@@ -561,7 +568,7 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
     }//GEN-LAST:event_botaoCancelarActionPerformed
 
     private void comboBoxReceitaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxReceitaActionPerformed
-        this.receita = comboBoxReceita.getSelectedItem().toString();
+        this.receita = ((SetStringString) comboBoxReceita.getSelectedItem()).getChave();
         this.trocaPainel();
     }//GEN-LAST:event_comboBoxReceitaActionPerformed
 

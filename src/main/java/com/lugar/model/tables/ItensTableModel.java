@@ -65,11 +65,7 @@ public class ItensTableModel extends AbstractTableModel {
                 return item;
             case COLUNA_NOME:
                 Produto produto = item.getProduto();
-                if (produto instanceof ProdutoPronto) {
-                    return ((ProdutoPronto) produto).getNome();
-                } else {
-                    return ((ProdutoPersonalizado) produto).getRecheio(0);
-                }
+                return produto.getNome();
             case COLUNA_VALOR:
                 return Util.formataDinheiro(item.getValorTotal() / item.getQuantidade());
             case COLUNA_QUANTIDADE:

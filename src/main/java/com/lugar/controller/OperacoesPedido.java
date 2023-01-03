@@ -5,13 +5,10 @@
 package com.lugar.controller;
 
 import com.lugar.confeitaria.Util;
-import com.lugar.model.Caracteristica;
 import com.lugar.model.Item;
 import com.lugar.model.Pedido;
 import com.lugar.model.Produto;
-import com.lugar.model.ProdutoPersonalizado;
 import com.lugar.model.ProdutoPronto;
-import com.lugar.model.Transacao;
 import com.lugar.model.exceptions.ExcecaoNovoEstoqueInvalido;
 import java.sql.Connection;
 import java.sql.PreparedStatement;

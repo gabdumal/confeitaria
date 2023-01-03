@@ -49,4 +49,6 @@ public abstract class Produto {
         this.carrinho = carrinho;
     }
 
+    public abstract String getNome();
+
 }

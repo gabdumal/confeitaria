@@ -38,7 +38,6 @@ public class ExibicaoPedidos extends javax.swing.JDialog {
                 JTable tabela = (JTable) mouseEvent.getSource();
                 Point ponto = mouseEvent.getPoint();
                 int linha = tabela.rowAtPoint(ponto);
-//                int coluna = tabela.columnAtPoint(ponto);
                 // Clique duplo
                 if (mouseEvent.getClickCount() == 2 && tabela.getSelectedRow() != -1) {
                     chamaTelaEdicao((int) modeloTabela.getValueAt(linha, 0));

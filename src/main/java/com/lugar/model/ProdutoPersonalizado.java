@@ -73,6 +73,18 @@ public class ProdutoPersonalizado extends Produto {
         return 0;
     }
 
+    @Override
+    public String getNome() {
+        String nomeFormado = "";
+        if (this.receita.equals("B")) {
+            nomeFormado += "Bolo de ";
+        } else {
+            nomeFormado += "Trufa de ";
+        }
+        nomeFormado += this.getRecheio(0);
+        return nomeFormado;
+    }
+
     public void setForma(Caracteristica forma) {
         this.forma = forma;
     }

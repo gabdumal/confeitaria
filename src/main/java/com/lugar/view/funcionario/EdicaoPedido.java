@@ -58,7 +58,6 @@ public class EdicaoPedido extends javax.swing.JDialog {
                 JTable tabela = (JTable) mouseEvent.getSource();
                 Point ponto = mouseEvent.getPoint();
                 int linha = tabela.rowAtPoint(ponto);
-                System.out.println(linha);
                 // Clique duplo
                 if (mouseEvent.getClickCount() == 2 && tabela.getSelectedRow() != -1) {
                     Item itemClicado = (Item) modeloTabela.getValueAt(linha, 0);
@@ -124,6 +123,8 @@ public class EdicaoPedido extends javax.swing.JDialog {
             VisualizacaoItemProdutoPronto visualizacaoItemProdutoPronto = new VisualizacaoItemProdutoPronto(this.pai, true, itemClicado);
             visualizacaoItemProdutoPronto.setVisible(true);
         } else {
+            VisualizacaoItemProdutoPersonalizado visualizacaoItemProdutoPersonalizado = new VisualizacaoItemProdutoPersonalizado(this.pai, true, itemClicado);
+            visualizacaoItemProdutoPersonalizado.setVisible(true);
         }
     }
 
@@ -158,10 +159,11 @@ public class EdicaoPedido extends javax.swing.JDialog {
         painelRolavelTabelaItens = new javax.swing.JScrollPane();
         tabelaItens = new javax.swing.JTable();
         painelBotoes = new javax.swing.JPanel();
+        botaoVoltar = new javax.swing.JButton();
         botaoEditar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Edição da Transação");
+        setTitle("Edição do Pedido");
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         painelFormulario.setLayout(new java.awt.GridBagLayout());
@@ -331,6 +333,14 @@ public class EdicaoPedido extends javax.swing.JDialog {
 
         painelBotoes.setLayout(new java.awt.GridLayout(1, 0, 10, 0));
 
+        botaoVoltar.setText("Voltar");
+        botaoVoltar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoVoltarActionPerformed(evt);
+            }
+        });
+        painelBotoes.add(botaoVoltar);
+
         botaoEditar.setText("Editar");
         botaoEditar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -359,6 +369,10 @@ public class EdicaoPedido extends javax.swing.JDialog {
         this.editaPedido();
         this.dispose();
     }//GEN-LAST:event_botaoEditarActionPerformed
+
+    private void botaoVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoVoltarActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_botaoVoltarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -406,6 +420,7 @@ public class EdicaoPedido extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea areaTextoComentario;
     private javax.swing.JButton botaoEditar;
+    private javax.swing.JButton botaoVoltar;
     private javax.swing.JComboBox<String> comboBoxEstado;
     private javax.swing.JPanel painelBotoes;
     private javax.swing.JPanel painelCampos;
