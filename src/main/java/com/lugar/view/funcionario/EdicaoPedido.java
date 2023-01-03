@@ -5,9 +5,18 @@
 package com.lugar.view.funcionario;
 
 import com.lugar.controller.OperacoesPedido;
+import com.lugar.model.Item;
 import com.lugar.model.Pedido;
+import com.lugar.model.Produto;
+import com.lugar.model.ProdutoPronto;
 import com.lugar.model.SetStringString;
+import com.lugar.model.tables.ItensTableModel;
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.List;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JTable;
 
 /**
  *
@@ -20,6 +29,8 @@ public class EdicaoPedido extends javax.swing.JDialog {
     private OperacoesPedido operacoesPedido;
     private boolean ehPedido;
     private DefaultComboBoxModel modeloEstado;
+    private ItensTableModel modeloTabela;
+    private List<Item> listaItens;
 
     public EdicaoPedido(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -32,18 +43,51 @@ public class EdicaoPedido extends javax.swing.JDialog {
         this.pai = parent;
         this.operacoesPedido = new OperacoesPedido();
         Pedido pedido = operacoesPedido.busca(id);
+        this.listaItens = pedido.getListaItens();
         this.carregaComboBox();
         initComponents();
+
         textoValorPreenchido.setText(pedido.getValorFormatado());
         textoSolicitadoPreenchido.setText(pedido.getDiaHoraFormatado());
         textoEntregaPreenchido.setText(pedido.getDataEntregaFormatada());
         areaTextoComentario.setText(pedido.getComentario());
+
+        tabelaItens.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent mouseEvent) {
+                JTable tabela = (JTable) mouseEvent.getSource();
+                Point ponto = mouseEvent.getPoint();
+                int linha = tabela.rowAtPoint(ponto);
+                System.out.println(linha);
+                // Clique duplo
+                if (mouseEvent.getClickCount() == 2 && tabela.getSelectedRow() != -1) {
+                    Item itemClicado = (Item) modeloTabela.getValueAt(linha, 0);
+                    chamaTelaVisualizacaoItem(itemClicado);
+                }
+            }
+        });
     }
 
     public boolean isPedido() {
         return ehPedido;
     }
 
+    private ItensTableModel getModeloTabela() {
+        this.atualizaModeloTabela();
+        return this.modeloTabela;
+    }
+
+    // Atualiza dados
+    private void atualizaModeloTabela() {
+        // Atualiza lista de itens
+        this.modeloTabela = new ItensTableModel(this.listaItens);
+    }
+
+//    private void atualizaTabela() {
+//        this.atualizaModeloTabela();
+//        tabelaItens.setModel(this.modeloTabela);
+//        tabelaItens.removeColumn(tabelaItens.getColumnModel().getColumn(0));
+//    }
     private void editaPedido() {
 //        String descricao = campoDescricao.getText();
 //        double valor = (double) campoValor.getValue();
@@ -74,6 +118,15 @@ public class EdicaoPedido extends javax.swing.JDialog {
         this.modeloEstado.addElement(estadoFinalizado);
     }
 
+    private void chamaTelaVisualizacaoItem(Item itemClicado) {
+        Produto produtoClicado = itemClicado.getProduto();
+        if (produtoClicado instanceof ProdutoPronto) {
+            VisualizacaoItemProdutoPronto visualizacaoItemProdutoPronto = new VisualizacaoItemProdutoPronto(this.pai, true, itemClicado);
+            visualizacaoItemProdutoPronto.setVisible(true);
+        } else {
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -98,6 +151,9 @@ public class EdicaoPedido extends javax.swing.JDialog {
         textoComentario = new javax.swing.JLabel();
         painelRolavelComentario = new javax.swing.JScrollPane();
         areaTextoComentario = new javax.swing.JTextArea();
+        painelCliente = new javax.swing.JPanel();
+        textoNome = new javax.swing.JLabel();
+        textoNomePreenchido = new javax.swing.JLabel();
         painelItens = new javax.swing.JPanel();
         painelRolavelTabelaItens = new javax.swing.JScrollPane();
         tabelaItens = new javax.swing.JTable();
@@ -213,6 +269,7 @@ public class EdicaoPedido extends javax.swing.JDialog {
 
         areaTextoComentario.setColumns(20);
         areaTextoComentario.setRows(5);
+        areaTextoComentario.setEnabled(false);
         painelRolavelComentario.setViewportView(areaTextoComentario);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -223,25 +280,44 @@ public class EdicaoPedido extends javax.swing.JDialog {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 10);
         painelFormulario.add(painelCampos, gridBagConstraints);
+
+        painelCliente.setLayout(new java.awt.GridBagLayout());
+
+        textoNome.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        textoNome.setText("Nome:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 30;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        painelCliente.add(textoNome, gridBagConstraints);
+
+        textoNomePreenchido.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        textoNomePreenchido.setText("Maria Silva");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 30;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        painelCliente.add(textoNomePreenchido, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 10, 20, 0);
+        painelFormulario.add(painelCliente, gridBagConstraints);
 
         painelItens.setLayout(new java.awt.GridLayout(1, 0, 10, 0));
 
         painelRolavelTabelaItens.setPreferredSize(new java.awt.Dimension(452, 200));
 
-        tabelaItens.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
+        tabelaItens.setModel(this.getModeloTabela());
+        tabelaItens.removeColumn(tabelaItens.getColumnModel().getColumn(0));
         painelRolavelTabelaItens.setViewportView(tabelaItens);
 
         painelItens.add(painelRolavelTabelaItens);
@@ -333,6 +409,7 @@ public class EdicaoPedido extends javax.swing.JDialog {
     private javax.swing.JComboBox<String> comboBoxEstado;
     private javax.swing.JPanel painelBotoes;
     private javax.swing.JPanel painelCampos;
+    private javax.swing.JPanel painelCliente;
     private javax.swing.JPanel painelFormulario;
     private javax.swing.JPanel painelItens;
     private javax.swing.JScrollPane painelRolavelComentario;
@@ -342,6 +419,8 @@ public class EdicaoPedido extends javax.swing.JDialog {
     private javax.swing.JLabel textoEntrega;
     private javax.swing.JLabel textoEntregaPreenchido;
     private javax.swing.JLabel textoEstado;
+    private javax.swing.JLabel textoNome;
+    private javax.swing.JLabel textoNomePreenchido;
     private javax.swing.JLabel textoSolicitado;
     private javax.swing.JLabel textoSolicitadoPreenchido;
     private javax.swing.JLabel textoValor;

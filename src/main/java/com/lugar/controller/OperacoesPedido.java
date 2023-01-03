@@ -66,7 +66,7 @@ public class OperacoesPedido implements OperacoesConexao<Pedido> {
                 + "Item.id AS idItem, Item.idProduto, Item.quantidade, Item.valorTotal \n"
                 + "FROM Transacao INNER JOIN Pedido ON Transacao.id = Pedido.id\n"
                 + "INNER JOIN Item ON transacao.id = Item.idPedido\n"
-                + "WHERE Transacao.id = 2\n"
+                + "WHERE Transacao.id = " + id + "\n"
                 + "ORDER BY Transacao.id, Item.id;";
 
         Connection conn = null;

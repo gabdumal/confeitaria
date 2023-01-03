@@ -18,6 +18,7 @@ public class Pedido extends Transacao {
     private LocalDateTime dataEntrega;
     private String comentario;
     private List<Item> listaItens;
+    private int idCliente;
     private boolean instanciaSimplificada;
 
     public Pedido(int id, double valor, LocalDateTime diaHora, String descricao) {
