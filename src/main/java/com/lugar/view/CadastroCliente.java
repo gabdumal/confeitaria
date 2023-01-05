@@ -325,7 +325,6 @@ public class CadastroCliente extends javax.swing.JDialog {
         String emailForm = campoEmail.getText().trim();
         String telefoneForm = campoTelefone.getText().trim();
         String enderecoForm = campoEndereco.getText().trim(); //MEXER
-        int idEndereço = 1;
         String cartaoForm = campoCartao.getText().trim();
         String identificadorForm = campoIdentificador.getText().trim();
 
@@ -333,10 +332,10 @@ public class CadastroCliente extends javax.swing.JDialog {
             Endereco endereco = new Endereco("120", "ao lado predio azul", "rua dos bobos", "japuiba", "angra", "rj", "12348-00");
 
             OperacoesCliente cliente = new OperacoesCliente();
-            int idCliente = cliente.insere(
-                    new Cliente(0, nomeForm, nomeUsuarioForm, senhaForm, false,
-                            emailForm, telefoneForm, idEndereço, cartaoForm, identificadorForm, endereco)
-            );
+            int idCliente = cliente.insere(new Cliente(-1, nomeForm,
+                    nomeUsuarioForm, senhaForm,
+                    identificadorForm, emailForm,
+                    telefoneForm, endereco, cartaoForm, true));
             if (idCliente >= Util.RETORNO_SUCESSO) {
                 JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!");
                 this.dispose();
@@ -406,8 +405,6 @@ public class CadastroCliente extends javax.swing.JDialog {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(CadastroCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
