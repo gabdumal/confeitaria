@@ -5,14 +5,11 @@
 package com.lugar.controller;
 
 import com.lugar.confeitaria.Util;
-import com.lugar.model.ProdutoPronto;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.sqlite.SQLiteConfig;
@@ -124,30 +121,55 @@ public class Conexao {
                     + "	\"bairro\"	TEXT NOT NULL,\n"
                     + "	\"cidade\"	TEXT NOT NULL,\n"
                     + "	\"uf\"	TEXT NOT NULL,\n"
-                    + "	\"cep\"	TEXT NOT NULL,\n"
+                    + "	\"cep\"	TEXT NOT NULL CHECK(LENGTH(\"cep\") == 7),\n"
                     + "	PRIMARY KEY(\"id\" AUTOINCREMENT)\n"
                     + ");";
             stmt.addBatch(sql);
 
             sql = "CREATE TABLE IF NOT EXISTS \"Usuario\" (\n"
-                    + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
+                    + " \"id\"	INTEGER NOT NULL UNIQUE,\n"
                     + "	\"nome\"	TEXT NOT NULL,\n"
                     + "	\"nomeUsuario\"	TEXT NOT NULL UNIQUE,\n"
                     + "	\"senhaHash\"	TEXT NOT NULL,\n"
-                    + "	\"admin\"	INTEGER NOT NULL DEFAULT 0 CHECK(\"admin\" IN (0, 1)),\n"
+                    + "	\"identificador\"	TEXT NOT NULL,\n"
                     + "	\"email\"	TEXT NOT NULL UNIQUE,\n"
                     + "	\"telefone\"	TEXT NOT NULL,\n"
-                    + "	PRIMARY KEY(\"id\" AUTOINCREMENT)\n"
+                    + "	\"admin\"	INTEGER NOT NULL DEFAULT 0 CHECK(\"admin\" IN (0, 1)),\n"
+                    + " \"idEndereco\"	INTEGER NOT NULL,\n"
+                    + "	PRIMARY KEY(\"id\" AUTOINCREMENT),\n"
+                    + "	FOREIGN KEY(\"idEndereco\") REFERENCES \"Endereco\"(\"id\") ON DELETE CASCADE\n"
                     + ");";
             stmt.addBatch(sql);
 
             sql = "CREATE TABLE IF NOT EXISTS \"Cliente\" (\n"
                     + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
-                    + "	\"idEndereco\"	INTEGER NOT NULL,\n"
                     + "	\"cartao\"	TEXT NOT NULL CHECK(LENGTH(\"cartao\") == 16),\n"
-                    + "	\"identificador\" TEXT NOT NULL,\n"
-                    + "	PRIMARY KEY(\"id\" AUTOINCREMENT),\n"
-                    + "	FOREIGN KEY(\"idEndereco\") REFERENCES \"Endereco\"(\"id\") ON DELETE CASCADE\n"
+                    + "	PRIMARY KEY(\"id\"),\n"
+                    + "	FOREIGN KEY(\"id\") REFERENCES \"Usuario\"(\"id\") ON DELETE CASCADE\n"
+                    + ");";
+            stmt.addBatch(sql);
+
+            sql = "CREATE TABLE IF NOT EXISTS \"PessoaFisica\" (\n"
+                    + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
+                    + "	\"dataNascimento\"	TEXT NOT NULL,\n"
+                    + "	PRIMARY KEY(\"id\"),\n"
+                    + "	FOREIGN KEY(\"id\") REFERENCES \"Cliente\"(\"id\") ON DELETE CASCADE\n"
+                    + ");";
+            stmt.addBatch(sql);
+
+            sql = "CREATE TABLE IF NOT EXISTS \"PessoaFisica\" (\n"
+                    + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
+                    + "	\"dataNascimento\"	TEXT NOT NULL,\n"
+                    + "	PRIMARY KEY(\"id\"),\n"
+                    + "	FOREIGN KEY(\"id\") REFERENCES \"Cliente\"(\"id\") ON DELETE CASCADE\n"
+                    + ");";
+            stmt.addBatch(sql);
+
+            sql = "CREATE TABLE IF NOT EXISTS \"PessoaJuridica\" (\n"
+                    + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
+                    + "	\"razaoSocial\"	TEXT NOT NULL,\n"
+                    + "	PRIMARY KEY(\"id\"),\n"
+                    + "	FOREIGN KEY(\"id\") REFERENCES \"Cliente\"(\"id\") ON DELETE CASCADE\n"
                     + ");";
             stmt.addBatch(sql);
 
@@ -231,9 +253,18 @@ public class Conexao {
                         + "INSERT INTO \"ProdutoPronto\" (\"id\",\"nome\",\"estoque\",\"valor\") VALUES (4,'Bolo de milho simples',1,7.89);\n"
                         + "INSERT INTO \"ProdutoPronto\" (\"id\",\"nome\",\"estoque\",\"valor\") VALUES (5,'Sorvete de manga apimentada',0,3.67);\n"
                         + "INSERT INTO \"ProdutoPersonalizado\" (\"id\",\"detalhe\",\"receita\",\"idForma\",\"idCor\",\"idCobertura\") VALUES (1,'Gostoso','B',2,3,4);\n"
-                        + "INSERT INTO \"Transacao\" (\"id\",\"valor\",\"diaHora\",\"descricao\") VALUES (0,12.0,'2020-08-17T10:11:16.908732','Transação teste');\n"
-                        + "INSERT INTO \"Usuario\" (\"id\",\"nome\",\"nomeUsuario\",\"senhaHash\",\"admin\",\"email\",\"telefone\") VALUES (5,'Cliente Exemplo','cliente','senha',0,'cliente@email.com','32980675454');\n"
-                        + "INSERT INTO \"Usuario\" (\"id\",\"nome\",\"nomeUsuario\",\"senhaHash\",\"admin\",\"email\",\"telefone\") VALUES (6,'Funcionário Exemplo','admin','senha',1,'admin@email.com','32956435476');\n"
+                        + "INSERT INTO \"Transacao\" (\"id\",\"valor\",\"diaHora\",\"descricao\") VALUES (0,12.71,'2020-08-17T10:11:16.908732','Compra de papéis');\n"
+                        + "INSERT INTO \"Endereco\" (\"id\",\"numero\",\"complemento\",\"logradouro\",\"bairro\",\"cidade\",\"uf\",\"cep\") VALUES (1,'0','','Rua dos bobos','Vale Místico','Lírica do Norte','MG','3789287');\n"
+                        + "INSERT INTO \"Endereco\" (\"id\",\"numero\",\"complemento\",\"logradouro\",\"bairro\",\"cidade\",\"uf\",\"cep\") VALUES (2,'34','APT 506','Avenida Brasil','Centro','Mar de Espanha','MG','3897235');\n"
+                        + "INSERT INTO \"Endereco\" (\"id\",\"numero\",\"complemento\",\"logradouro\",\"bairro\",\"cidade\",\"uf\",\"cep\") VALUES ('3','S/N','','Rua das Indústrias','Distrito Industrial','Juiz de Fora','MG','3809725');\n"
+                        + "INSERT INTO \"Usuario\" (\"id\",\"nome\",\"nomeUsuario\",\"senhaHash\",\"identificador\",\"admin\",\"email\",\"telefone\",\"idEndereco\") VALUES (1,'Cliente PF Exemplo','cliente','senha','01234567890',0,'cliente@email.com','32980675454',1);\n"
+                        + "INSERT INTO \"Usuario\" (\"id\",\"nome\",\"nomeUsuario\",\"senhaHash\",\"identificador\",\"admin\",\"email\",\"telefone\",\"idEndereco\") VALUES (2,'Papelaria O Escritório','juridico','senha','09468264870001',0,'contato@papelaria.com','3233988734',3);\n"
+                        + "INSERT INTO \"Usuario\" (\"id\",\"nome\",\"nomeUsuario\",\"senhaHash\",\"identificador\",\"admin\",\"email\",\"telefone\",\"idEndereco\") VALUES (3,'Funcionário Exemplo','admin','senha','09876543210',1,'admin@email.com','32956435476',2);\n"
+                        + "INSERT INTO \"Cliente\" (\"id\",\"cartao\") VALUES (1,'7846746387576273');\n"
+                        + "INSERT INTO \"Cliente\" (\"id\",\"cartao\") VALUES (2,'8946736409768881');\n"
+                        + "INSERT INTO \"PessoaFisica\" (\"id\",\"dataNascimento\") VALUES (1,'1996-08-17T00:00:00.000000');\n"
+                        + "INSERT INTO \"PessoaJuridica\" (\"id\",\"razaoSocial\") VALUES (2,'Empresa de Papéis LTDA');"
+                        + "INSERT INTO \"Funcionario\" (\"id\",\"matricula\",\"funcao\") VALUES (3,'201789034','Caixa');\n"
                         + "INSERT INTO \"Caracteristica\" (\"id\",\"tipo\",\"nome\",\"valorGrama\") VALUES (1,'R','Creme de morango',0.32);\n"
                         + "INSERT INTO \"Caracteristica\" (\"id\",\"tipo\",\"nome\",\"valorGrama\") VALUES (2,'F','Redonda 20cm',0.0625);\n"
                         + "INSERT INTO \"Caracteristica\" (\"id\",\"tipo\",\"nome\",\"valorGrama\") VALUES (3,'C','Azul',0);\n"

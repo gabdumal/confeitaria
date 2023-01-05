@@ -4,16 +4,17 @@
  */
 package com.lugar.model;
 
+import java.time.LocalDateTime;
+
 /**
  *
  * @author lugar
  */
-public class Cliente extends Usuario {
+public class PessoaFisica extends Cliente {
 
-    private String cartao;
-    private boolean fisica;
+    private LocalDateTime dataNascimento;
 
-    public Cliente(
+    public PessoaFisica(
             int idUsuario,
             String nome,
             String nomeUsuario,
@@ -23,16 +24,11 @@ public class Cliente extends Usuario {
             String telefone,
             Endereco endereco,
             String cartao,
-            boolean fisica
+            LocalDateTime dataNascimento
     ) {
         super(idUsuario, nome, nomeUsuario, senhaHash, identificador, email,
-                telefone, false, endereco);
-        this.cartao = cartao;
-        this.fisica = fisica;
-    }
-
-    public String getCartao() {
-        return cartao;
+                telefone, endereco, cartao, true);
+        this.dataNascimento = dataNascimento;
     }
 
 }

@@ -8,12 +8,11 @@ package com.lugar.model;
  *
  * @author lugar
  */
-public class Cliente extends Usuario {
+public class PessoaJuridica extends Cliente {
 
-    private String cartao;
-    private boolean fisica;
+    private String nomeFantasia;
 
-    public Cliente(
+    public PessoaJuridica(
             int idUsuario,
             String nome,
             String nomeUsuario,
@@ -23,16 +22,11 @@ public class Cliente extends Usuario {
             String telefone,
             Endereco endereco,
             String cartao,
-            boolean fisica
+            String nomeFantasia
     ) {
         super(idUsuario, nome, nomeUsuario, senhaHash, identificador, email,
-                telefone, false, endereco);
-        this.cartao = cartao;
-        this.fisica = fisica;
-    }
-
-    public String getCartao() {
-        return cartao;
+                telefone, endereco, cartao, false);
+        this.nomeFantasia = nomeFantasia;
     }
 
 }
