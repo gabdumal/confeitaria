@@ -80,7 +80,6 @@ public class CadastroTransacao extends javax.swing.JDialog {
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.ipady = 20;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCampos.add(campoDescricao, gridBagConstraints);
@@ -92,6 +91,7 @@ public class CadastroTransacao extends javax.swing.JDialog {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.ipadx = 30;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCampos.add(textoValor, gridBagConstraints);
 
         campoValor.setModel(new javax.swing.SpinnerNumberModel(0.0d, null, null, 1.0d));
@@ -100,6 +100,7 @@ public class CadastroTransacao extends javax.swing.JDialog {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCampos.add(campoValor, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();

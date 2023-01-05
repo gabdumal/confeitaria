@@ -43,7 +43,7 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
     public CriacaoProdutoPersonalizado(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         this.idProduto = -1;
-        this.receita = "B";
+        this.receita = Util.RECEITA_BOLO;
         this.pai = parent;
         this.editado = false;
         this.carregaComboBoxes();
@@ -55,7 +55,7 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
     public CriacaoProdutoPersonalizado(java.awt.Frame parent, boolean modal, ProdutoPersonalizado produto) {
         super(parent, modal);
         this.idProduto = produto.getId();
-        this.receita = "B";
+        this.receita = Util.RECEITA_BOLO;
         this.pai = parent;
         this.editado = false;
         this.carregaComboBoxes();
@@ -122,8 +122,8 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
         this.modeloRecheios1 = new DefaultComboBoxModel();
         this.modeloRecheios2 = new DefaultComboBoxModel();
         this.modeloRecheios3 = new DefaultComboBoxModel();
-        SetStringString receitaBolo = new SetStringString("B", "Bolo");
-        SetStringString receitaTrufa = new SetStringString("T", "Trufa");
+        SetStringString receitaBolo = new SetStringString(Util.RECEITA_BOLO, "Bolo");
+        SetStringString receitaTrufa = new SetStringString(Util.RECEITA_TRUFA, "Trufa");
         this.modeloReceita.addElement(receitaBolo);
         this.modeloReceita.addElement(receitaTrufa);
         OperacoesCaracteristica novaListaDeListas = new OperacoesCaracteristica();
@@ -149,7 +149,7 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
     }
 
     private void trocaPainel() {
-        if (this.receita.equals("B")) {
+        if (this.receita.equals(Util.RECEITA_BOLO)) {
             this.painelCamposBolo.setVisible(true);
             this.painelCamposTrufa.setVisible(false);
         } else {
@@ -227,8 +227,8 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
         painelCamposTrufa = new javax.swing.JPanel();
         textoRecheioTrufa = new javax.swing.JLabel();
         comboBoxRecheioTrufa = new javax.swing.JComboBox<>();
-        textoCoberturaTrufa = new javax.swing.JLabel();
-        comboBoxCoberturaTrufa = new javax.swing.JComboBox<>();
+        textoCorTrufa = new javax.swing.JLabel();
+        comboBoxCorTrufa = new javax.swing.JComboBox<>();
         textoDetalheTrufa = new javax.swing.JLabel();
         painelAreaTextoDetalheTrufa = new javax.swing.JScrollPane();
         areaTextoDetalheTrufa = new javax.swing.JTextPane();
@@ -351,23 +351,23 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 5);
         painelCamposTrufa.add(comboBoxRecheioTrufa, gridBagConstraints);
 
-        textoCoberturaTrufa.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        textoCoberturaTrufa.setText("Cobertura:");
+        textoCorTrufa.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        textoCorTrufa.setText("Cor:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.ipadx = 30;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
-        painelCamposTrufa.add(textoCoberturaTrufa, gridBagConstraints);
+        painelCamposTrufa.add(textoCorTrufa, gridBagConstraints);
 
-        comboBoxCoberturaTrufa.setModel(this.modeloCoberturas);
+        comboBoxCorTrufa.setModel(this.modeloCores);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
-        painelCamposTrufa.add(comboBoxCoberturaTrufa, gridBagConstraints);
+        painelCamposTrufa.add(comboBoxCorTrufa, gridBagConstraints);
 
         textoDetalheTrufa.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         textoDetalheTrufa.setText("Detalhe:");
@@ -379,7 +379,7 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
         painelCamposTrufa.add(textoDetalheTrufa, gridBagConstraints);
 
-        areaTextoDetalheTrufa.setText("\n\n");
+        painelAreaTextoDetalheTrufa.setPreferredSize(new java.awt.Dimension(64, 66));
         painelAreaTextoDetalheTrufa.setViewportView(areaTextoDetalheTrufa);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -507,7 +507,8 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
         painelCamposBolo.add(textoDetalheBolo, gridBagConstraints);
 
-        areaTextoDetalheBolo.setText("\n\n");
+        areaTextoDetalheBolo.setMinimumSize(new java.awt.Dimension(62, 66));
+        areaTextoDetalheBolo.setPreferredSize(new java.awt.Dimension(62, 66));
         painelAreaTextoDetalheBolo.setViewportView(areaTextoDetalheBolo);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -626,8 +627,8 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
     private javax.swing.JButton botaoEnviar;
     private javax.swing.JSpinner campoQuantidade;
     private javax.swing.JComboBox<String> comboBoxCoberturaBolo;
-    private javax.swing.JComboBox<String> comboBoxCoberturaTrufa;
     private javax.swing.JComboBox<String> comboBoxCorBolo;
+    private javax.swing.JComboBox<String> comboBoxCorTrufa;
     private javax.swing.JComboBox<String> comboBoxFormaBolo;
     private javax.swing.JComboBox<String> comboBoxReceita;
     private javax.swing.JComboBox<String> comboBoxRecheioBolo1;
@@ -644,8 +645,8 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
     private javax.swing.JPanel painelInformacoesProduto;
     private javax.swing.JPanel painelTipoQuantidade;
     private javax.swing.JLabel textoCoberturaBolo;
-    private javax.swing.JLabel textoCoberturaTrufa;
     private javax.swing.JLabel textoCorBolo;
+    private javax.swing.JLabel textoCorTrufa;
     private javax.swing.JLabel textoDetalheBolo;
     private javax.swing.JLabel textoDetalheTrufa;
     private javax.swing.JLabel textoFormaBolo;

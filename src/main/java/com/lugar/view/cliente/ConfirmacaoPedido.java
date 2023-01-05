@@ -219,7 +219,10 @@ public class ConfirmacaoPedido extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
         painelCampos.add(textoComentario, gridBagConstraints);
 
-        areaTextoComentario.setText("\n\n");
+        painelAreaTextoComentario.setToolTipText("");
+
+        areaTextoComentario.setMinimumSize(new java.awt.Dimension(62, 66));
+        areaTextoComentario.setPreferredSize(new java.awt.Dimension(62, 66));
         painelAreaTextoComentario.setViewportView(areaTextoComentario);
 
         gridBagConstraints = new java.awt.GridBagConstraints();

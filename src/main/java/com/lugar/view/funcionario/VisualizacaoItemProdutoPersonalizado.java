@@ -6,10 +6,8 @@ package com.lugar.view.funcionario;
 
 import com.lugar.confeitaria.Util;
 import com.lugar.model.Caracteristica;
-import com.lugar.model.Forma;
 import com.lugar.model.Item;
 import com.lugar.model.ProdutoPersonalizado;
-import com.lugar.model.ProdutoPronto;
 import java.util.List;
 
 /**
@@ -17,14 +15,14 @@ import java.util.List;
  * @author lugar
  */
 public class VisualizacaoItemProdutoPersonalizado extends javax.swing.JDialog {
-    
+
     private java.awt.Frame pai;
-    
+
     public VisualizacaoItemProdutoPersonalizado(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
     }
-    
+
     public VisualizacaoItemProdutoPersonalizado(java.awt.Frame parent, boolean modal, Item item) {
         super(parent, modal);
         this.pai = parent;
@@ -34,7 +32,7 @@ public class VisualizacaoItemProdutoPersonalizado extends javax.swing.JDialog {
         textoValorPreenchido.setText(Util.formataDinheiro(item.getValorTotal() / (double) item.getQuantidade()));
         textoQuantidadePreenchido.setText(String.valueOf(item.getQuantidade()));
         textoValorTotalPreenchido.setText(Util.formataDinheiro(item.getValorTotal()));
-        if (produtoPersonalizado.getReceita().equals("B")) {
+        if (produtoPersonalizado.getReceita().equals(Util.RECEITA_BOLO)) {
             this.painelCamposBolo.setVisible(true);
             this.painelCamposTrufa.setVisible(false);
             this.trocaExibicaoRecheios(produtoPersonalizado.getRecheios());
@@ -46,11 +44,11 @@ public class VisualizacaoItemProdutoPersonalizado extends javax.swing.JDialog {
             this.painelCamposBolo.setVisible(false);
             this.painelCamposTrufa.setVisible(true);
             textoRecheioTrufaPreenchido.setText(produtoPersonalizado.getRecheio(0).getNome());
-            textoCoberturaTrufaPreenchido.setText(produtoPersonalizado.getCobertura().getNome());
+            textoCorTrufaPreenchido.setText(produtoPersonalizado.getCor().getNome());
             areaTextoDetalheTrufa.setText(produtoPersonalizado.getDetalhe());
         }
     }
-    
+
     private void trocaExibicaoRecheios(List<Caracteristica> recheios) {
         this.textoRecheioBolo2Preenchido.setVisible(false);
         this.textoRecheioBolo3Preenchido.setVisible(false);
@@ -103,8 +101,8 @@ public class VisualizacaoItemProdutoPersonalizado extends javax.swing.JDialog {
         painelCamposTrufa = new javax.swing.JPanel();
         textoRecheioTrufa = new javax.swing.JLabel();
         textoRecheioTrufaPreenchido = new javax.swing.JLabel();
-        textoCoberturaTrufa = new javax.swing.JLabel();
-        textoCoberturaTrufaPreenchido = new javax.swing.JLabel();
+        textoCorTrufa = new javax.swing.JLabel();
+        textoCorTrufaPreenchido = new javax.swing.JLabel();
         textoDetalheTrufa = new javax.swing.JLabel();
         painelAreaTextoDetalheTrufa = new javax.swing.JScrollPane();
         areaTextoDetalheTrufa = new javax.swing.JTextPane();
@@ -304,8 +302,9 @@ public class VisualizacaoItemProdutoPersonalizado extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
         painelCamposBolo.add(textoDetalheBolo, gridBagConstraints);
 
-        areaTextoDetalheBolo.setText("\n\n");
         areaTextoDetalheBolo.setEnabled(false);
+        areaTextoDetalheBolo.setMinimumSize(new java.awt.Dimension(62, 66));
+        areaTextoDetalheBolo.setPreferredSize(new java.awt.Dimension(62, 66));
         painelAreaTextoDetalheBolo.setViewportView(areaTextoDetalheBolo);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -365,25 +364,25 @@ public class VisualizacaoItemProdutoPersonalizado extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 0);
         painelCamposTrufa.add(textoRecheioTrufaPreenchido, gridBagConstraints);
 
-        textoCoberturaTrufa.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        textoCoberturaTrufa.setText("Cobertura:");
+        textoCorTrufa.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        textoCorTrufa.setText("Cor:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.ipadx = 30;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
-        painelCamposTrufa.add(textoCoberturaTrufa, gridBagConstraints);
+        painelCamposTrufa.add(textoCorTrufa, gridBagConstraints);
 
-        textoCoberturaTrufaPreenchido.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        textoCoberturaTrufaPreenchido.setText("Chocolate branco");
+        textoCorTrufaPreenchido.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        textoCorTrufaPreenchido.setText("Chocolate branco");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.ipadx = 30;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
-        painelCamposTrufa.add(textoCoberturaTrufaPreenchido, gridBagConstraints);
+        painelCamposTrufa.add(textoCorTrufaPreenchido, gridBagConstraints);
 
         textoDetalheTrufa.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         textoDetalheTrufa.setText("Detalhe:");
@@ -395,8 +394,9 @@ public class VisualizacaoItemProdutoPersonalizado extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
         painelCamposTrufa.add(textoDetalheTrufa, gridBagConstraints);
 
-        areaTextoDetalheTrufa.setText("\n\n");
         areaTextoDetalheTrufa.setEnabled(false);
+        areaTextoDetalheTrufa.setMinimumSize(new java.awt.Dimension(62, 66));
+        areaTextoDetalheTrufa.setPreferredSize(new java.awt.Dimension(62, 66));
         painelAreaTextoDetalheTrufa.setViewportView(areaTextoDetalheTrufa);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -503,10 +503,10 @@ public class VisualizacaoItemProdutoPersonalizado extends javax.swing.JDialog {
     private javax.swing.JPanel painelFormulario;
     private javax.swing.JLabel textoCoberturaBolo;
     private javax.swing.JLabel textoCoberturaBoloPreenchido;
-    private javax.swing.JLabel textoCoberturaTrufa;
-    private javax.swing.JLabel textoCoberturaTrufaPreenchido;
     private javax.swing.JLabel textoCorBolo;
     private javax.swing.JLabel textoCorBoloPreenchido;
+    private javax.swing.JLabel textoCorTrufa;
+    private javax.swing.JLabel textoCorTrufaPreenchido;
     private javax.swing.JLabel textoDetalheBolo;
     private javax.swing.JLabel textoDetalheTrufa;
     private javax.swing.JLabel textoFormaBolo;
