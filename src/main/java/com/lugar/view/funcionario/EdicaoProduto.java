@@ -20,9 +20,10 @@ public class EdicaoProduto extends javax.swing.JDialog {
     private static final int MUDANCA_APENAS_ESTOQUE = 1;
     private static final int MUDANCA_NOME_OU_VALOR = 2;
 
-    int id;
-    ProdutoPronto estadoAnterior;
-    java.awt.Frame pai;
+    private int id;
+    private ProdutoPronto estadoAnterior;
+    private java.awt.Frame pai;
+    private OperacoesProdutoPronto operacoesProdutoPronto;
 
     public EdicaoProduto(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -34,6 +35,7 @@ public class EdicaoProduto extends javax.swing.JDialog {
         super(parent, modal);
         this.id = id;
         this.pai = parent;
+        this.operacoesProdutoPronto = new OperacoesProdutoPronto();
         OperacoesProdutoPronto novoProdutoPronto = new OperacoesProdutoPronto();
         ProdutoPronto produto = novoProdutoPronto.busca(id);
         this.estadoAnterior = produto;
@@ -71,10 +73,10 @@ public class EdicaoProduto extends javax.swing.JDialog {
             if (confirmacao) {
                 int resultado = Util.RETORNO_SUCESSO;
                 if (validacao == MUDANCA_APENAS_ESTOQUE) {
-                    resultado = Conexao.atualizaEstoqueProdutoPronto(id, estoqueForm);
+                    resultado = this.operacoesProdutoPronto.atualizaEstoque(id, estoqueForm);
                 } else {
                     ProdutoPronto produtoEditado = new ProdutoPronto(id, nomeForm, valorForm, estoqueForm);
-                    resultado = Conexao.atualizaProdutoPronto(produtoEditado);
+                    resultado = this.operacoesProdutoPronto.atualiza(produtoEditado);
                 }
                 if (resultado == Util.RETORNO_SUCESSO) {
                     JOptionPane.showMessageDialog(this.pai, "Edição realizada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
@@ -95,7 +97,7 @@ public class EdicaoProduto extends javax.swing.JDialog {
                 JOptionPane.WARNING_MESSAGE) == 0;
 
         if (confirmacao) {
-            int resultado = Conexao.deletaProduto(this.id);
+            int resultado = this.operacoesProdutoPronto.deleta(this.id);
             if (resultado == Util.RETORNO_SUCESSO) {
                 JOptionPane.showMessageDialog(this.pai, "Deleção realizada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();

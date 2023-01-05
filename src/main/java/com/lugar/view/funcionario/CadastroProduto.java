@@ -6,6 +6,8 @@ package com.lugar.view.funcionario;
 
 import com.lugar.confeitaria.Util;
 import com.lugar.controller.Conexao;
+import com.lugar.controller.OperacoesProdutoPronto;
+import com.lugar.model.ProdutoPronto;
 import javax.swing.JOptionPane;
 
 /**
@@ -14,11 +16,13 @@ import javax.swing.JOptionPane;
  */
 public class CadastroProduto extends javax.swing.JDialog {
 
-    java.awt.Frame pai;
+    private java.awt.Frame pai;
+    private OperacoesProdutoPronto operacoesProdutoPronto;
 
     public CadastroProduto(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         this.pai = parent;
+        this.operacoesProdutoPronto = new OperacoesProdutoPronto();
         initComponents();
     }
 
@@ -32,7 +36,8 @@ public class CadastroProduto extends javax.swing.JDialog {
         int estoqueForm = (int) campoEstoque.getValue();
 
         if (validaCampos(nomeForm, valorForm, estoqueForm)) {
-            int idProduto = Conexao.insereProdutoPronto(nomeForm, valorForm, estoqueForm);
+            ProdutoPronto produtoPronto = new ProdutoPronto(-1, nomeForm, valorForm, estoqueForm);
+            int idProduto = this.operacoesProdutoPronto.insere(produtoPronto);
             if (idProduto >= Util.RETORNO_SUCESSO) {
                 JOptionPane.showMessageDialog(this.pai, "Cadastro realizado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();

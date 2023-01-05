@@ -7,6 +7,7 @@ package com.lugar.view.cliente;
 import com.lugar.confeitaria.Util;
 import com.lugar.controller.Conexao;
 import com.lugar.controller.OperacoesCaracteristica;
+import com.lugar.controller.OperacoesProdutoPersonalizado;
 import com.lugar.model.Caracteristica;
 import com.lugar.model.Forma;
 import com.lugar.model.ProdutoPersonalizado;
@@ -39,6 +40,7 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
     private DefaultComboBoxModel modeloRecheios2;
     private DefaultComboBoxModel modeloRecheios3;
     private java.awt.Frame pai;
+    private OperacoesProdutoPersonalizado operacoesProdutoPersonalizado;
 
     public CriacaoProdutoPersonalizado(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -46,6 +48,7 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
         this.receita = Util.RECEITA_BOLO;
         this.pai = parent;
         this.editado = false;
+        this.operacoesProdutoPersonalizado = new OperacoesProdutoPersonalizado();
         this.carregaComboBoxes();
         initComponents();
         this.trocaPainel();
@@ -58,6 +61,7 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
         this.receita = Util.RECEITA_BOLO;
         this.pai = parent;
         this.editado = false;
+        this.operacoesProdutoPersonalizado = new OperacoesProdutoPersonalizado();
         this.carregaComboBoxes();
         initComponents();
         this.campoQuantidade.setValue(produto.getCarrinho());
@@ -192,7 +196,7 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
                             detalheForm, formaForm, corForm,
                             coberturaForm, listaRecheiosForm);
 
-            this.idProduto = Conexao.insereProdutoPersonalizado(produtoPersonalizado);
+            this.idProduto = operacoesProdutoPersonalizado.insere(produtoPersonalizado);
             this.quantidade = (int) this.campoQuantidade.getValue();
         }
 
