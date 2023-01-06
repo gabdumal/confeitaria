@@ -44,19 +44,35 @@ public class CadastroCliente extends javax.swing.JDialog {
         campoEmail = new javax.swing.JFormattedTextField();
         textoTelefone = new javax.swing.JLabel();
         campoTelefone = new javax.swing.JFormattedTextField();
-        campoEndereco = new javax.swing.JFormattedTextField();
-        textoEndereco = new javax.swing.JLabel();
         textoIdentificador = new javax.swing.JLabel();
         textoCartaoCredito = new javax.swing.JLabel();
         campoCartao = new javax.swing.JFormattedTextField();
         campoIdentificador = new javax.swing.JFormattedTextField();
+        painelCamposEndereco = new javax.swing.JPanel();
+        campoUF = new javax.swing.JComboBox<>();
+        textoLogradouro = new javax.swing.JLabel();
+        campoLogradouro = new javax.swing.JFormattedTextField();
+        textoUf = new javax.swing.JLabel();
+        textoBairro = new javax.swing.JLabel();
+        campoBairro = new javax.swing.JFormattedTextField();
+        textoNumero = new javax.swing.JLabel();
+        campoCidade = new javax.swing.JFormattedTextField();
+        textoCidade = new javax.swing.JLabel();
+        campoNumero = new javax.swing.JSpinner();
+        textoCep = new javax.swing.JLabel();
+        campoCep = new javax.swing.JFormattedTextField();
+        textoComplemento = new javax.swing.JLabel();
+        campoComplemento = new javax.swing.JFormattedTextField();
         painelBotoes1 = new javax.swing.JPanel();
         botaoCadastrar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Cadastro de Produto");
+        setTitle("Cadastro de Cliente");
+        setMinimumSize(new java.awt.Dimension(500, 450));
+        setPreferredSize(new java.awt.Dimension(500, 540));
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
+        painelFormulario.setMinimumSize(new java.awt.Dimension(480, 520));
         painelFormulario.setLayout(new java.awt.GridBagLayout());
 
         titulo.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -65,9 +81,12 @@ public class CadastroCliente extends javax.swing.JDialog {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
         painelFormulario.add(titulo, gridBagConstraints);
 
+        painelCampos.setMinimumSize(new java.awt.Dimension(500, 430));
+        painelCampos.setOpaque(false);
+        painelCampos.setPreferredSize(new java.awt.Dimension(500, 450));
         painelCampos.setLayout(new java.awt.GridBagLayout());
 
         textoNome.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -105,6 +124,7 @@ public class CadastroCliente extends javax.swing.JDialog {
         painelCampos.add(textoSenha, gridBagConstraints);
 
         campoSenha.setText("senha");
+        campoSenha.setMinimumSize(new java.awt.Dimension(150, 24));
         campoSenha.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 campoSenhaActionPerformed(evt);
@@ -189,30 +209,6 @@ public class CadastroCliente extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCampos.add(campoTelefone, gridBagConstraints);
 
-        campoEndereco.setText("rua das mansoes");
-        campoEndereco.setPreferredSize(new java.awt.Dimension(200, 22));
-        campoEndereco.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                campoEnderecoActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
-        painelCampos.add(campoEndereco, gridBagConstraints);
-
-        textoEndereco.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        textoEndereco.setText("Endereço");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.ipadx = 30;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
-        painelCampos.add(textoEndereco, gridBagConstraints);
-
         textoIdentificador.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         textoIdentificador.setText("CPF / CNPJ:");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -259,10 +255,145 @@ public class CadastroCliente extends javax.swing.JDialog {
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         painelCampos.add(campoIdentificador, gridBagConstraints);
 
+        painelCamposEndereco.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Endereço"));
+        painelCamposEndereco.setLayout(new java.awt.GridBagLayout());
+
+        campoUF.setMinimumSize(new java.awt.Dimension(100, 24));
+        campoUF.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                campoUFActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        painelCamposEndereco.add(campoUF, gridBagConstraints);
+
+        textoLogradouro.setText("Logradouro");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 30;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        painelCamposEndereco.add(textoLogradouro, gridBagConstraints);
+
+        campoLogradouro.setPreferredSize(new java.awt.Dimension(170, 22));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 5;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        painelCamposEndereco.add(campoLogradouro, gridBagConstraints);
+
+        textoUf.setText("UF");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 30;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        painelCamposEndereco.add(textoUf, gridBagConstraints);
+
+        textoBairro.setText("Bairro");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 0);
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 30;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        painelCamposEndereco.add(textoBairro, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        painelCamposEndereco.add(campoBairro, gridBagConstraints);
+
+        textoNumero.setText("Número");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        painelCamposEndereco.add(textoNumero, gridBagConstraints);
+
+        campoCidade.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                campoCidadeActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 30;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        painelCamposEndereco.add(campoCidade, gridBagConstraints);
+
+        textoCidade.setText("Cidade");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 30;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        painelCamposEndereco.add(textoCidade, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        painelCamposEndereco.add(campoNumero, gridBagConstraints);
+
+        textoCep.setText("CEP");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 30;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        painelCamposEndereco.add(textoCep, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        painelCamposEndereco.add(campoCep, gridBagConstraints);
+
+        textoComplemento.setText("Complemento");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 30;
+        painelCamposEndereco.add(textoComplemento, gridBagConstraints);
+
+        campoComplemento.setMinimumSize(new java.awt.Dimension(100, 24));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        painelCamposEndereco.add(campoComplemento, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(0, 10, 5, 10);
+        painelCampos.add(painelCamposEndereco, gridBagConstraints);
+        painelCamposEndereco.getAccessibleContext().setAccessibleName("Endereço");
+        painelCamposEndereco.getAccessibleContext().setAccessibleDescription("");
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
         painelFormulario.add(painelCampos, gridBagConstraints);
 
         painelBotoes1.setLayout(new java.awt.GridLayout(1, 0, 10, 0));
@@ -281,6 +412,7 @@ public class CadastroCliente extends javax.swing.JDialog {
         painelFormulario.add(painelBotoes1, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         getContentPane().add(painelFormulario, gridBagConstraints);
 
@@ -353,10 +485,6 @@ public class CadastroCliente extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_campoNomeActionPerformed
 
-    private void campoEnderecoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoEnderecoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_campoEnderecoActionPerformed
-
     private void campoSenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoSenhaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_campoSenhaActionPerformed
@@ -380,6 +508,14 @@ public class CadastroCliente extends javax.swing.JDialog {
     private void campoCartaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoCartaoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_campoCartaoActionPerformed
+
+    private void campoCidadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoCidadeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_campoCidadeActionPerformed
+
+    private void campoUFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoUFActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_campoUFActionPerformed
 
     /**
      * @param args the command line arguments
@@ -428,25 +564,38 @@ public class CadastroCliente extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botaoCadastrar;
+    private javax.swing.JFormattedTextField campoBairro;
     private javax.swing.JFormattedTextField campoCartao;
+    private javax.swing.JFormattedTextField campoCep;
+    private javax.swing.JFormattedTextField campoCidade;
+    private javax.swing.JFormattedTextField campoComplemento;
     private javax.swing.JFormattedTextField campoEmail;
-    private javax.swing.JFormattedTextField campoEndereco;
     private javax.swing.JFormattedTextField campoIdentificador;
+    private javax.swing.JFormattedTextField campoLogradouro;
     private javax.swing.JFormattedTextField campoNome;
     private javax.swing.JFormattedTextField campoNomeUsuario;
+    private javax.swing.JSpinner campoNumero;
     private javax.swing.JPasswordField campoSenha;
     private javax.swing.JFormattedTextField campoTelefone;
+    private javax.swing.JComboBox<String> campoUF;
     private javax.swing.JPanel painelBotoes1;
     private javax.swing.JPanel painelCampos;
+    private javax.swing.JPanel painelCamposEndereco;
     private javax.swing.JPanel painelFormulario;
+    private javax.swing.JLabel textoBairro;
     private javax.swing.JLabel textoCartaoCredito;
+    private javax.swing.JLabel textoCep;
+    private javax.swing.JLabel textoCidade;
+    private javax.swing.JLabel textoComplemento;
     private javax.swing.JLabel textoEmail;
-    private javax.swing.JLabel textoEndereco;
     private javax.swing.JLabel textoIdentificador;
+    private javax.swing.JLabel textoLogradouro;
     private javax.swing.JLabel textoNome;
     private javax.swing.JLabel textoNomeUsuario;
+    private javax.swing.JLabel textoNumero;
     private javax.swing.JLabel textoSenha;
     private javax.swing.JLabel textoTelefone;
+    private javax.swing.JLabel textoUf;
     private javax.swing.JLabel titulo;
     // End of variables declaration//GEN-END:variables
 }
