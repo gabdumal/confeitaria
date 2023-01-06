@@ -77,12 +77,12 @@ public class CadastroCliente extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Cadastro de Cliente");
-        setMinimumSize(new java.awt.Dimension(500, 570));
-        setPreferredSize(new java.awt.Dimension(500, 570));
+        setMinimumSize(new java.awt.Dimension(500, 605));
+        setPreferredSize(new java.awt.Dimension(500, 605));
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
-        painelFormulario.setMinimumSize(new java.awt.Dimension(500, 540));
-        painelFormulario.setPreferredSize(new java.awt.Dimension(510, 540));
+        painelFormulario.setMinimumSize(new java.awt.Dimension(550, 600));
+        painelFormulario.setPreferredSize(new java.awt.Dimension(550, 600));
         painelFormulario.setLayout(new java.awt.GridBagLayout());
 
         titulo.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -94,9 +94,9 @@ public class CadastroCliente extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
         painelFormulario.add(titulo, gridBagConstraints);
 
-        painelCampos.setMinimumSize(new java.awt.Dimension(500, 490));
+        painelCampos.setMinimumSize(new java.awt.Dimension(500, 510));
         painelCampos.setOpaque(false);
-        painelCampos.setPreferredSize(new java.awt.Dimension(500, 450));
+        painelCampos.setPreferredSize(new java.awt.Dimension(500, 470));
         painelCampos.setRequestFocusEnabled(false);
         painelCampos.setLayout(new java.awt.GridBagLayout());
 
@@ -442,12 +442,14 @@ public class CadastroCliente extends javax.swing.JDialog {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 10;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCamposEspecificos.add(textoRazaoSocial, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCamposEspecificos.add(campoRazaoSocial, gridBagConstraints);
 
         botoesTipoPessoa.add(botaoPessoaJuridica);
@@ -467,12 +469,14 @@ public class CadastroCliente extends javax.swing.JDialog {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 10;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCamposEspecificos.add(textoDataDeNascimento, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCamposEspecificos.add(campoDataDeNascimento, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -499,6 +503,7 @@ public class CadastroCliente extends javax.swing.JDialog {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
+        gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
         painelFormulario.add(painelBotoes1, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
