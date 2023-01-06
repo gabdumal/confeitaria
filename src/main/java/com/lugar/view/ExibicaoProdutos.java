@@ -33,8 +33,9 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
 
     // Geral
     private Usuario usuario;
-    List<ProdutoPronto> listaProdutos;
+    private List<ProdutoPronto> listaProdutos;
     private ProdutosProntosTableModel modeloTabela;
+    private OperacoesProdutoPronto operacoesProdutoPronto;
 
     // Cliente
     private Map<Integer, Integer> listaProdutosCarrinho; // idProduto - Quantidade no carrinho
@@ -45,6 +46,7 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
 
     public ExibicaoProdutos(Usuario usuario) {
         this.usuario = usuario;
+        this.operacoesProdutoPronto = new OperacoesProdutoPronto();
 
         if (!usuario.isAdmin()) {
             this.listaProdutosCarrinho = new HashMap<Integer, Integer>();
@@ -90,8 +92,8 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
     }
 
     private void atualizaModeloTabela() {
-        this.listaProdutos = Conexao.buscaTodosProdutosProntos(usuario.isAdmin());
-        // Reduz  o estoque pela quantidade no carrinho para o cliente
+        this.listaProdutos = this.operacoesProdutoPronto.buscaTodos(usuario.isAdmin());
+        // Reduz o estoque pela quantidade no carrinho para o cliente
         if (!usuario.isAdmin()) {
             for (ProdutoPronto produto : this.listaProdutos) {
                 int id = produto.getId();

@@ -4,10 +4,12 @@
  */
 package com.lugar.confeitaria;
 
+import com.lugar.model.exceptions.ExcecaoDataInvalida;
 import com.lugar.model.exceptions.ExcecaoDataPassada;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -30,31 +32,39 @@ public class Util {
     public final static String CARACTERISTICA_COR = "C";
     public final static String CARACTERISTICA_COBERTURA = "T";
     public final static String CARACTERISTICA_RECHEIO = "R";
-
+    
     public static String formataDinheiro(double valor) {
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
         String valorFormatado = formatter.format(valor);
         return valorFormatado;
     }
-
+    
     public static String formataDiaHora(LocalDateTime diaHora) {
         DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
         return diaHora.format(formatador);
     }
-
+    
+    public static LocalDate converteData(String data) throws ExcecaoDataInvalida {
+        if (Util.dataValida(data)) {
+            return LocalDate.parse(data, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        } else {
+            throw new ExcecaoDataInvalida();
+        }
+    }
+    
     public static boolean dataValida(String data) {
         String formatString = "dd/MM/yyyy";
         try {
             SimpleDateFormat format = new SimpleDateFormat(formatString);
             format.setLenient(false);
             format.parse(data);
-
+            
         } catch (ParseException | IllegalArgumentException e) {
             return false;
         }
         return true;
     }
-
+    
     public static boolean horaValida(String hora) {
         String formatString = "HH:mm:ss";
         try {
@@ -66,7 +76,7 @@ public class Util {
         }
         return true;
     }
-
+    
     public static boolean dataPassada(String dataEntrega) {
         String formatString = "dd/MM/yyyy";
         try {

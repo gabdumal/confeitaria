@@ -10,6 +10,7 @@ import com.lugar.model.Produto;
 import com.lugar.model.ProdutoPersonalizado;
 import com.lugar.model.ProdutoPronto;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -111,7 +112,24 @@ public class OperacoesProduto implements OperacoesConexao<Produto> {
 
     @Override
     public int deleta(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        String sql = "DELETE FROM Produto WHERE id = ?;";
+        Connection conn = null;
+        int valorRetorno = Util.RETORNO_SUCESSO;
+        try {
+            conn = Conexao.abreConexao();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexao.class
+                    .getName())
+                    .log(Level.SEVERE, null, ex);
+            valorRetorno = Conexao.determinaValorErro(ex.getMessage());
+        } finally {
+            Conexao.fechaConexao(conn);
+        }
+        return valorRetorno;
     }
 
 }

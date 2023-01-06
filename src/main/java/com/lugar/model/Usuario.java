@@ -14,9 +14,11 @@ public class Usuario {
     private String nome;
     private String nomeUsuario;
     private String senhaHash;
-    private boolean admin;
+    private String identificador;
     private String email;
     private String telefone;
+    private boolean admin;
+    private Endereco endereco;
 
     public Usuario(
             int id,
@@ -35,17 +37,18 @@ public class Usuario {
             String nome,
             String nomeUsuario,
             String senhaHash,
-            boolean admin,
+            String identificador,
             String email,
-            String telefone
+            String telefone,
+            boolean admin,
+            Endereco endereco
     ) {
-        this.id = id;
+        this(id, nomeUsuario, senhaHash, admin);
         this.nome = nome;
-        this.nomeUsuario = nomeUsuario;
-        this.senhaHash = senhaHash;
-        this.admin = admin;
+        this.identificador = identificador;
         this.email = email;
         this.telefone = telefone;
+        this.endereco = endereco;
     }
 
     public String getNome() {
@@ -75,4 +78,13 @@ public class Usuario {
     public String getTelefone() {
         return telefone;
     }
+
+    public String getIdentificador() {
+        return identificador;
+    }
+
+    public Endereco getEndereco() {
+        return endereco;
+    }
+
 }

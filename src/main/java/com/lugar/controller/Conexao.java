@@ -5,17 +5,11 @@
 package com.lugar.controller;
 
 import com.lugar.confeitaria.Util;
-import com.lugar.model.Caracteristica;
-import com.lugar.model.ProdutoPronto;
-import com.lugar.model.ProdutoPersonalizado;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.sqlite.SQLiteConfig;
@@ -127,30 +121,55 @@ public class Conexao {
                     + "	\"bairro\"	TEXT NOT NULL,\n"
                     + "	\"cidade\"	TEXT NOT NULL,\n"
                     + "	\"uf\"	TEXT NOT NULL,\n"
-                    + "	\"cep\"	TEXT NOT NULL,\n"
+                    + "	\"cep\"	TEXT NOT NULL CHECK(LENGTH(\"cep\") == 7),\n"
                     + "	PRIMARY KEY(\"id\" AUTOINCREMENT)\n"
                     + ");";
             stmt.addBatch(sql);
 
             sql = "CREATE TABLE IF NOT EXISTS \"Usuario\" (\n"
-                    + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
+                    + " \"id\"	INTEGER NOT NULL UNIQUE,\n"
                     + "	\"nome\"	TEXT NOT NULL,\n"
                     + "	\"nomeUsuario\"	TEXT NOT NULL UNIQUE,\n"
                     + "	\"senhaHash\"	TEXT NOT NULL,\n"
-                    + "	\"admin\"	INTEGER NOT NULL DEFAULT 0 CHECK(\"admin\" IN (0, 1)),\n"
+                    + "	\"identificador\"	TEXT NOT NULL,\n"
                     + "	\"email\"	TEXT NOT NULL UNIQUE,\n"
                     + "	\"telefone\"	TEXT NOT NULL,\n"
-                    + "	PRIMARY KEY(\"id\" AUTOINCREMENT)\n"
+                    + "	\"admin\"	INTEGER NOT NULL DEFAULT 0 CHECK(\"admin\" IN (0, 1)),\n"
+                    + " \"idEndereco\"	INTEGER NOT NULL,\n"
+                    + "	PRIMARY KEY(\"id\" AUTOINCREMENT),\n"
+                    + "	FOREIGN KEY(\"idEndereco\") REFERENCES \"Endereco\"(\"id\") ON DELETE CASCADE\n"
                     + ");";
             stmt.addBatch(sql);
 
             sql = "CREATE TABLE IF NOT EXISTS \"Cliente\" (\n"
                     + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
-                    + "	\"idEndereco\"	INTEGER NOT NULL,\n"
                     + "	\"cartao\"	TEXT NOT NULL CHECK(LENGTH(\"cartao\") == 16),\n"
-                    + "	\"identificador\" TEXT NOT NULL,\n"
-                    + "	PRIMARY KEY(\"id\" AUTOINCREMENT),\n"
-                    + "	FOREIGN KEY(\"idEndereco\") REFERENCES \"Endereco\"(\"id\") ON DELETE CASCADE\n"
+                    + "	PRIMARY KEY(\"id\"),\n"
+                    + "	FOREIGN KEY(\"id\") REFERENCES \"Usuario\"(\"id\") ON DELETE CASCADE\n"
+                    + ");";
+            stmt.addBatch(sql);
+
+            sql = "CREATE TABLE IF NOT EXISTS \"PessoaFisica\" (\n"
+                    + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
+                    + "	\"dataNascimento\"	TEXT NOT NULL,\n"
+                    + "	PRIMARY KEY(\"id\"),\n"
+                    + "	FOREIGN KEY(\"id\") REFERENCES \"Cliente\"(\"id\") ON DELETE CASCADE\n"
+                    + ");";
+            stmt.addBatch(sql);
+
+            sql = "CREATE TABLE IF NOT EXISTS \"PessoaFisica\" (\n"
+                    + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
+                    + "	\"dataNascimento\"	TEXT NOT NULL,\n"
+                    + "	PRIMARY KEY(\"id\"),\n"
+                    + "	FOREIGN KEY(\"id\") REFERENCES \"Cliente\"(\"id\") ON DELETE CASCADE\n"
+                    + ");";
+            stmt.addBatch(sql);
+
+            sql = "CREATE TABLE IF NOT EXISTS \"PessoaJuridica\" (\n"
+                    + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
+                    + "	\"razaoSocial\"	TEXT NOT NULL,\n"
+                    + "	PRIMARY KEY(\"id\"),\n"
+                    + "	FOREIGN KEY(\"id\") REFERENCES \"Cliente\"(\"id\") ON DELETE CASCADE\n"
                     + ");";
             stmt.addBatch(sql);
 
@@ -230,20 +249,32 @@ public class Conexao {
                         + "INSERT INTO \"Produto\" (\"id\",\"tipo\") VALUES (3,0);\n"
                         + "INSERT INTO \"Produto\" (\"id\",\"tipo\") VALUES (4,0);\n"
                         + "INSERT INTO \"Produto\" (\"id\",\"tipo\") VALUES (5,0);\n"
-                        + "INSERT INTO \"ProdutoPronto\" (\"id\",\"nome\",\"estoque\",\"valor\") VALUES (3,'Brownie',8,6.95);\n"
-                        + "INSERT INTO \"ProdutoPronto\" (\"id\",\"nome\",\"estoque\",\"valor\") VALUES (4,'Bolo de milho simples',1,7.89);\n"
+                        + "INSERT INTO \"ProdutoPronto\" (\"id\",\"nome\",\"estoque\",\"valor\") VALUES (3,'Brownie',3,6.95);\n"
+                        + "INSERT INTO \"ProdutoPronto\" (\"id\",\"nome\",\"estoque\",\"valor\") VALUES (4,'Bolo de milho simples',0,7.89);\n"
                         + "INSERT INTO \"ProdutoPronto\" (\"id\",\"nome\",\"estoque\",\"valor\") VALUES (5,'Sorvete de manga apimentada',0,3.67);\n"
-                        + "INSERT INTO \"ProdutoPersonalizado\" (\"id\",\"detalhe\",\"receita\",\"idForma\",\"idCor\",\"idCobertura\") VALUES (1,'Gostoso','B',2,3,4);\n"
-                        + "INSERT INTO \"Transacao\" (\"id\",\"valor\",\"diaHora\",\"descricao\") VALUES (0,12.0,'2020-08-17T10:11:16.908732','Transação teste');\n"
-                        + "INSERT INTO \"Usuario\" (\"id\",\"nome\",\"nomeUsuario\",\"senhaHash\",\"admin\",\"email\",\"telefone\") VALUES (5,'Cliente Exemplo','cliente','senha',0,'cliente@email.com','32980675454');\n"
-                        + "INSERT INTO \"Usuario\" (\"id\",\"nome\",\"nomeUsuario\",\"senhaHash\",\"admin\",\"email\",\"telefone\") VALUES (6,'Funcionário Exemplo','admin','senha',1,'admin@email.com','32956435476');\n"
+                        + "INSERT INTO \"ProdutoPersonalizado\" (\"id\",\"detalhe\",\"receita\",\"idCobertura\",\"idCor\",\"idForma\") VALUES (1,'Gostoso','B',4,3,2);\n"
+                        + "INSERT INTO \"Transacao\" (\"id\",\"valor\",\"diaHora\",\"descricao\",\"ehPedido\") VALUES (0,12.0,'2020-08-17T10:11:16.908732','Transação teste',0);\n"
+                        + "INSERT INTO \"Transacao\" (\"id\",\"valor\",\"diaHora\",\"descricao\",\"ehPedido\") VALUES (1,42.64,'2023-01-05T17:07:14.672255400','Pedido',1);\n"
+                        + "INSERT INTO \"Endereco\" (\"id\",\"numero\",\"complemento\",\"logradouro\",\"bairro\",\"cidade\",\"uf\",\"cep\") VALUES (1,'0','','Rua dos bobos','Vale Místico','Lírica do Norte','MG','3789287');\n"
+                        + "INSERT INTO \"Endereco\" (\"id\",\"numero\",\"complemento\",\"logradouro\",\"bairro\",\"cidade\",\"uf\",\"cep\") VALUES (2,'34','APT 506','Avenida Brasil','Centro','Mar de Espanha','MG','3897235');\n"
+                        + "INSERT INTO \"Endereco\" (\"id\",\"numero\",\"complemento\",\"logradouro\",\"bairro\",\"cidade\",\"uf\",\"cep\") VALUES (3,'S/N','','Rua das Indústrias','Distrito Industrial','Juiz de Fora','MG','3809725');\n"
+                        + "INSERT INTO \"Usuario\" (\"id\",\"nome\",\"nomeUsuario\",\"senhaHash\",\"identificador\",\"email\",\"telefone\",\"admin\",\"idEndereco\") VALUES (1,'Cliente PF Exemplo','cliente','senha','01234567890','cliente@email.com','32980675454',0,1);\n"
+                        + "INSERT INTO \"Usuario\" (\"id\",\"nome\",\"nomeUsuario\",\"senhaHash\",\"identificador\",\"email\",\"telefone\",\"admin\",\"idEndereco\") VALUES (2,'Papelaria O Escritório','juridico','senha','09468264870001','contato@papelaria.com','3233988734',0,3);\n"
+                        + "INSERT INTO \"Usuario\" (\"id\",\"nome\",\"nomeUsuario\",\"senhaHash\",\"identificador\",\"email\",\"telefone\",\"admin\",\"idEndereco\") VALUES (3,'Funcionário Exemplo','admin','senha','09876543210','admin@email.com','32956435476',1,2);\n"
+                        + "INSERT INTO \"Cliente\" (\"id\",\"cartao\") VALUES (1,'7846746387576273');\n"
+                        + "INSERT INTO \"Cliente\" (\"id\",\"cartao\") VALUES (2,'8946736409768881');\n"
+                        + "INSERT INTO \"PessoaFisica\" (\"id\",\"dataNascimento\") VALUES (1,'1996-08-17T00:00:00.000000');\n"
+                        + "INSERT INTO \"PessoaJuridica\" (\"id\",\"razaoSocial\") VALUES (2,'Empresa de Papéis LTDA');\n"
                         + "INSERT INTO \"Caracteristica\" (\"id\",\"tipo\",\"nome\",\"valorGrama\") VALUES (1,'R','Creme de morango',0.32);\n"
                         + "INSERT INTO \"Caracteristica\" (\"id\",\"tipo\",\"nome\",\"valorGrama\") VALUES (2,'F','Redonda 20cm',0.0625);\n"
-                        + "INSERT INTO \"Caracteristica\" (\"id\",\"tipo\",\"nome\",\"valorGrama\") VALUES (3,'C','Azul',0);\n"
+                        + "INSERT INTO \"Caracteristica\" (\"id\",\"tipo\",\"nome\",\"valorGrama\") VALUES (3,'C','Azul',0.0);\n"
                         + "INSERT INTO \"Caracteristica\" (\"id\",\"tipo\",\"nome\",\"valorGrama\") VALUES (4,'T','Glacê de limão',0.023);\n"
                         + "INSERT INTO \"Caracteristica\" (\"id\",\"tipo\",\"nome\",\"valorGrama\") VALUES (5,'R','Ganache meio amargo',0.57);\n"
                         + "INSERT INTO \"Forma\" (\"id\",\"recheios\",\"gramaRecheio\",\"gramaCobertura\",\"gramaMassa\") VALUES (2,1,100,150,800);\n"
-                        + "INSERT INTO \"ProdutoPersonalizado_Recheio\" (\"idProdutoPersonalizado\",\"idRecheio\") VALUES (1,5);\n";
+                        + "INSERT INTO \"ProdutoPersonalizado_Recheio\" (\"id\",\"idProdutoPersonalizado\",\"idRecheio\") VALUES (1,1,5);\n"
+                        + "INSERT INTO \"Pedido\" (\"id\",\"estado\",\"dataEntrega\",\"comentario\",\"idCliente\") VALUES (1,'S','2023-01-09T19:00','Em uma caixa grande, por favor.',1);\n"
+                        + "INSERT INTO \"Item\" (\"id\",\"valorTotal\",\"quantidade\",\"idProduto\",\"idPedido\") VALUES (1,34.75,5,3,1);\n"
+                        + "INSERT INTO \"Item\" (\"id\",\"valorTotal\",\"quantidade\",\"idProduto\",\"idPedido\") VALUES (2,7.89,1,4,1);";
 
                 String[] updates = sql.split("\n");
                 for (String update : updates) {
@@ -264,296 +295,4 @@ public class Conexao {
             Conexao.fechaConexao(conn);
         }
     }
-
-    // a partir daqui uma interface para cada subclasse
-    public static List<ProdutoPronto> buscaTodosProdutosProntos(boolean ehAdmin) {
-        String sql = "SELECT Produto.id, ProdutoPronto.nome, ProdutoPronto.valor,"
-                + " ProdutoPronto.estoque FROM Produto"
-                + " INNER JOIN ProdutoPronto ON Produto.id = ProdutoPronto.id"
-                + " WHERE tipo = 0";
-        sql += ehAdmin ? ";" : " AND estoque > 0;";
-        Connection conn = null;
-        List<ProdutoPronto> listaProdutos = new ArrayList<ProdutoPronto>();
-        try {
-            conn = Conexao.abreConexao();
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-
-            while (rs.next()) {
-                ProdutoPronto produto = new ProdutoPronto(
-                        rs.getInt("id"),
-                        rs.getString("nome"),
-                        rs.getDouble("valor"),
-                        rs.getInt("estoque"));
-                listaProdutos.add(produto);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(Conexao.class
-                    .getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            Conexao.fechaConexao(conn);
-            return listaProdutos;
-        }
-    }
-
-    public static int insereProdutoPronto(String nome, double valor, int estoque) {
-        String sqlProduto = "INSERT INTO Produto(tipo) VALUES(0);";
-        String sqlProdutoPronto = "INSERT INTO ProdutoPronto(id, nome, estoque, valor) VALUES(?, ?, ?, ?);";
-        Connection conn = null;
-        int idProduto = Util.RETORNO_ERRO_INDETERMINADO;
-        try {
-            conn = Conexao.abreConexao();
-            conn.setAutoCommit(false);
-
-            PreparedStatement pstmtProduto = conn.prepareStatement(sqlProduto, Statement.RETURN_GENERATED_KEYS);
-            int linhaInserida = pstmtProduto.executeUpdate();
-
-            // Reverter operação em caso de erro
-            if (linhaInserida != 1) {
-                conn.rollback();
-            } else {
-                ResultSet rs = pstmtProduto.getGeneratedKeys();
-                if (rs.next()) {
-                    idProduto = rs.getInt(1);
-                }
-                PreparedStatement pstmtProdutoPronto = conn.prepareStatement(sqlProdutoPronto,
-                        Statement.RETURN_GENERATED_KEYS);
-                pstmtProdutoPronto.setInt(1, idProduto);
-                pstmtProdutoPronto.setString(2, nome);
-                pstmtProdutoPronto.setInt(3, estoque);
-                pstmtProdutoPronto.setDouble(4, valor);
-                pstmtProdutoPronto.executeUpdate();
-                conn.commit();
-            }
-            conn.setAutoCommit(true);
-        } catch (SQLException ex) {
-            try {
-                // Reverter operação em caso de erro
-                if (conn != null) {
-                    conn.rollback();
-                }
-            } catch (SQLException ex2) {
-                Logger.getLogger(Conexao.class
-                        .getName())
-                        .log(Level.SEVERE, null, ex2);
-            }
-            Logger.getLogger(Conexao.class
-                    .getName())
-                    .log(Level.SEVERE, null, ex);
-            idProduto = determinaValorErro(ex.getMessage());
-        } finally {
-            Conexao.fechaConexao(conn);
-            return idProduto;
-        }
-    }
-
-    public static int insereProdutoPersonalizado(ProdutoPersonalizado produtoPersonalizado) {
-        String sqlBuscaPrincipal = "SELECT DISTINCT Produto.id, Caracteristica.nome as recheio\n"
-                + "FROM Produto\n"
-                + "INNER JOIN ProdutoPersonalizado ON Produto.id = ProdutoPersonalizado.id\n"
-                + "INNER JOIN ProdutoPersonalizado_Recheio ON ProdutoPersonalizado_Recheio.idProdutoPersonalizado = ProdutoPersonalizado.id\n"
-                + "INNER JOIN Caracteristica\n"
-                + "ON  Caracteristica.id = ProdutoPersonalizado_Recheio.idRecheio\n"
-                + "AND ProdutoPersonalizado.idCobertura = (SELECT DISTINCT id FROM Caracteristica WHERE Caracteristica.tipo=\"T\" AND Caracteristica.nome = ? LIMIT 1)\n"
-                + "AND ProdutoPersonalizado.idCor = (SELECT DISTINCT id FROM Caracteristica WHERE Caracteristica.tipo=\"C\" AND Caracteristica.nome = ? LIMIT 1)\n"
-                + "AND ProdutoPersonalizado.idForma = (SELECT DISTINCT id FROM Caracteristica WHERE Caracteristica.tipo=\"F\" AND Caracteristica.nome = ? LIMIT 1)\n"
-                + "WHERE detalhe= ? AND Caracteristica.tipo=\"R\" ORDER BY Produto.id;";
-        Connection conn = null;
-        int idProduto = Util.RETORNO_ERRO_INDETERMINADO;
-        try {
-
-            double valorCalculado = 100;
-            // Se já existe, retorna ID. Senão, cria novo e retorna ID
-            conn = Conexao.abreConexao();
-            conn.setAutoCommit(false);
-            PreparedStatement pstmtBuscaPrincipal = conn.prepareStatement(sqlBuscaPrincipal);
-            pstmtBuscaPrincipal.setString(1, produtoPersonalizado.getCobertura().getNome());
-            pstmtBuscaPrincipal.setString(2, produtoPersonalizado.getCor().getNome());
-            pstmtBuscaPrincipal.setString(3, produtoPersonalizado.getForma().getNome());
-            pstmtBuscaPrincipal.setString(4, produtoPersonalizado.getDetalhe());
-            ResultSet rsBuscaPrincipal = pstmtBuscaPrincipal.executeQuery();
-
-            boolean mudanca = false;
-            int tamanhoRecheiosPreenchidos = 0;
-            List<Caracteristica> recheiosPreenchidos = null;
-            recheiosPreenchidos = produtoPersonalizado.getRecheios();
-            tamanhoRecheiosPreenchidos = recheiosPreenchidos.size();
-
-            if (rsBuscaPrincipal.next()) {
-                idProduto = rsBuscaPrincipal.getInt("id");
-                boolean[] recheiosBatem = new boolean[tamanhoRecheiosPreenchidos];
-                int contador = 0;
-                do {
-                    for (int i = 0; i < tamanhoRecheiosPreenchidos; i++) {
-                        String recheioBanco = rsBuscaPrincipal.getString("recheio");
-                        if (recheioBanco.equals(recheiosPreenchidos.get(i).getNome())) {
-                            recheiosBatem[i] = true;
-                        }
-                    }
-                    contador++;
-                } while (rsBuscaPrincipal.next());
-                if (contador == tamanhoRecheiosPreenchidos) {
-                    for (boolean b : recheiosBatem) {
-                        if (!b) {
-                            mudanca = true;
-                        }
-                    }
-                } else {
-                    mudanca = true;
-                }
-            } else {
-                mudanca = true;
-            }
-
-            if (!mudanca) {
-                return idProduto;
-            } else {
-                String sqlProduto = "INSERT INTO Produto(tipo) VALUES(1);";
-                String sqlProdutoPersonalizado = "INSERT INTO ProdutoPersonalizado(id, detalhe, receita, idCobertura, idCor, idForma) VALUES(?, ?, ?, ?, ?, ?);";
-
-                PreparedStatement pstmtProduto = conn.prepareStatement(sqlProduto, Statement.RETURN_GENERATED_KEYS);
-                int linhaInserida = pstmtProduto.executeUpdate();
-
-                // Reverter operação em caso de erro
-                if (linhaInserida != 1) {
-                    conn.rollback();
-                } else {
-                    ResultSet rs = pstmtProduto.getGeneratedKeys();
-                    if (rs.next()) {
-                        idProduto = rs.getInt(1);
-                    }
-
-                    PreparedStatement pstmtProdutoPersonalizado = conn.prepareStatement(sqlProdutoPersonalizado,
-                            Statement.RETURN_GENERATED_KEYS);
-                    pstmtProdutoPersonalizado.setInt(1, idProduto);
-                    pstmtProdutoPersonalizado.setString(2, produtoPersonalizado.getDetalhe());
-                    pstmtProdutoPersonalizado.setString(3, produtoPersonalizado.getReceita());
-                    pstmtProdutoPersonalizado.setInt(4, produtoPersonalizado.getCobertura().getId());
-                    pstmtProdutoPersonalizado.setInt(5, produtoPersonalizado.getCor().getId());
-                    pstmtProdutoPersonalizado.setInt(6, produtoPersonalizado.getForma().getId());
-                    linhaInserida = pstmtProdutoPersonalizado.executeUpdate();
-
-                    // Reverter operação em caso de erro
-                    if (linhaInserida != 1) {
-                        conn.rollback();
-                    } else {
-                        String sqlRecheio = "INSERT INTO ProdutoPersonalizado_Recheio(idProdutoPersonalizado, idRecheio) VALUES";
-                        for (int i = 0; i < tamanhoRecheiosPreenchidos; i++) {
-                            sqlRecheio = sqlRecheio.concat("(" + idProduto + ",  ?), ");
-                        }
-                        sqlRecheio = sqlRecheio.substring(0, sqlRecheio.length() - 2).concat(";");
-
-                        PreparedStatement pstmtRecheio = conn.prepareStatement(sqlRecheio);
-                        int i = 1;
-                        for (Caracteristica recheio : recheiosPreenchidos) {
-                            pstmtRecheio.setInt(i, recheio.getId());
-                            i++;
-                        }
-
-                        pstmtRecheio.executeUpdate();
-                        conn.commit();
-                    }
-                }
-            }
-            conn.setAutoCommit(true);
-        } catch (SQLException ex) {
-            try {
-                // Reverter operação em caso de erro
-                if (conn != null) {
-                    conn.rollback();
-                }
-            } catch (SQLException ex2) {
-                Logger.getLogger(Conexao.class
-                        .getName())
-                        .log(Level.SEVERE, null, ex2);
-            }
-            Logger.getLogger(Conexao.class
-                    .getName())
-                    .log(Level.SEVERE, null, ex);
-            idProduto = determinaValorErro(ex.getMessage());
-        } finally {
-            Conexao.fechaConexao(conn);
-            return idProduto;
-        }
-    }
-
-    public static int atualizaProdutoPronto(ProdutoPronto produto) {
-
-        String sqlProdutoPronto = "UPDATE ProdutoPronto SET nome = ?, estoque = ?, valor = ? WHERE id = ?;";
-        Connection conn = null;
-        int valorRetorno = Util.RETORNO_SUCESSO;
-        try {
-            conn = Conexao.abreConexao();
-            conn.setAutoCommit(false);
-
-            PreparedStatement pstmtProdutoPronto = conn.prepareStatement(sqlProdutoPronto);
-            pstmtProdutoPronto.setString(1, produto.getNome());
-            pstmtProdutoPronto.setInt(2, produto.getEstoque());
-            pstmtProdutoPronto.setDouble(3, produto.getValor());
-            pstmtProdutoPronto.setInt(4, produto.getId());
-            int linhaAtualizada = pstmtProdutoPronto.executeUpdate();
-
-            // Reverter operação em caso de erro
-            if (linhaAtualizada != 1) {
-                conn.rollback();
-            } else {
-                conn.commit();
-            }
-            conn.setAutoCommit(true);
-        } catch (SQLException ex) {
-            Logger.getLogger(Conexao.class
-                    .getName())
-                    .log(Level.SEVERE, null, ex);
-            valorRetorno = Conexao.determinaValorErro(ex.getMessage());
-        } finally {
-            Conexao.fechaConexao(conn);
-        }
-
-        return valorRetorno;
-
-    }
-
-    public static int atualizaEstoqueProdutoPronto(int id, int estoque) {
-        String sql = "UPDATE ProdutoPronto SET estoque = ? WHERE id = ?;";
-        Connection conn = null;
-        int valorRetorno = Util.RETORNO_SUCESSO;
-        try {
-            conn = Conexao.abreConexao();
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, estoque);
-            pstmt.setInt(2, id);
-            pstmt.executeUpdate();
-
-        } catch (SQLException ex) {
-            Logger.getLogger(Conexao.class
-                    .getName())
-                    .log(Level.SEVERE, null, ex);
-            valorRetorno = Conexao.determinaValorErro(ex.getMessage());
-        } finally {
-            Conexao.fechaConexao(conn);
-            return valorRetorno;
-        }
-    }
-
-    public static int deletaProduto(int idProduto) {
-        String sql = "DELETE FROM Produto WHERE id = ?;";
-        Connection conn = null;
-        int valorRetorno = Util.RETORNO_SUCESSO;
-        try {
-            conn = Conexao.abreConexao();
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, idProduto);
-            pstmt.executeUpdate();
-
-        } catch (SQLException ex) {
-            Logger.getLogger(Conexao.class
-                    .getName())
-                    .log(Level.SEVERE, null, ex);
-            valorRetorno = Conexao.determinaValorErro(ex.getMessage());
-        } finally {
-            Conexao.fechaConexao(conn);
-        }
-        return valorRetorno;
-    }
-
 }

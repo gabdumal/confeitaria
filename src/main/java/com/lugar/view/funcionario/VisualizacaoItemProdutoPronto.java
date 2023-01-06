@@ -82,8 +82,7 @@ public class VisualizacaoItemProdutoPronto extends javax.swing.JDialog {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.ipadx = 30;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 10);
         painelCampos.add(textoNome, gridBagConstraints);
 
         textoNomePreenchido.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -92,8 +91,7 @@ public class VisualizacaoItemProdutoPronto extends javax.swing.JDialog {
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.ipadx = 30;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 10, 5, 0);
         painelCampos.add(textoNomePreenchido, gridBagConstraints);
 
         textoValor.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -102,8 +100,7 @@ public class VisualizacaoItemProdutoPronto extends javax.swing.JDialog {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.ipadx = 30;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 10);
         painelCampos.add(textoValor, gridBagConstraints);
 
         textoValorPreenchido.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -112,8 +109,7 @@ public class VisualizacaoItemProdutoPronto extends javax.swing.JDialog {
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.ipadx = 30;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 10, 5, 0);
         painelCampos.add(textoValorPreenchido, gridBagConstraints);
 
         textoQuantidade.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -122,8 +118,7 @@ public class VisualizacaoItemProdutoPronto extends javax.swing.JDialog {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.ipadx = 30;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 10);
         painelCampos.add(textoQuantidade, gridBagConstraints);
 
         textoQuantidadePreenchido.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -132,8 +127,7 @@ public class VisualizacaoItemProdutoPronto extends javax.swing.JDialog {
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.ipadx = 30;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 10, 5, 0);
         painelCampos.add(textoQuantidadePreenchido, gridBagConstraints);
 
         textoValorTotal.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -142,8 +136,7 @@ public class VisualizacaoItemProdutoPronto extends javax.swing.JDialog {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.ipadx = 30;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 10);
         painelCampos.add(textoValorTotal, gridBagConstraints);
 
         textoValorTotalPreenchido.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -152,8 +145,7 @@ public class VisualizacaoItemProdutoPronto extends javax.swing.JDialog {
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.ipadx = 30;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 10, 5, 0);
         painelCampos.add(textoValorTotalPreenchido, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
