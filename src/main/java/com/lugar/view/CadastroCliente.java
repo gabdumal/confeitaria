@@ -84,9 +84,10 @@ public class CadastroCliente extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
         painelFormulario.add(titulo, gridBagConstraints);
 
-        painelCampos.setMinimumSize(new java.awt.Dimension(500, 430));
+        painelCampos.setMinimumSize(new java.awt.Dimension(500, 415));
         painelCampos.setOpaque(false);
-        painelCampos.setPreferredSize(new java.awt.Dimension(500, 450));
+        painelCampos.setPreferredSize(new java.awt.Dimension(500, 415));
+        painelCampos.setRequestFocusEnabled(false);
         painelCampos.setLayout(new java.awt.GridBagLayout());
 
         textoNome.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -259,6 +260,7 @@ public class CadastroCliente extends javax.swing.JDialog {
         painelCamposEndereco.setLayout(new java.awt.GridBagLayout());
 
         campoUF.setMinimumSize(new java.awt.Dimension(100, 24));
+        campoUF.setPreferredSize(new java.awt.Dimension(170, 22));
         campoUF.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 campoUFActionPerformed(evt);
@@ -307,6 +309,8 @@ public class CadastroCliente extends javax.swing.JDialog {
         gridBagConstraints.ipadx = 30;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCamposEndereco.add(textoBairro, gridBagConstraints);
+
+        campoBairro.setPreferredSize(new java.awt.Dimension(170, 22));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -322,6 +326,7 @@ public class CadastroCliente extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCamposEndereco.add(textoNumero, gridBagConstraints);
 
+        campoCidade.setPreferredSize(new java.awt.Dimension(170, 22));
         campoCidade.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 campoCidadeActionPerformed(evt);
@@ -343,6 +348,8 @@ public class CadastroCliente extends javax.swing.JDialog {
         gridBagConstraints.ipadx = 30;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCamposEndereco.add(textoCidade, gridBagConstraints);
+
+        campoNumero.setPreferredSize(new java.awt.Dimension(170, 22));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
@@ -358,6 +365,8 @@ public class CadastroCliente extends javax.swing.JDialog {
         gridBagConstraints.ipadx = 30;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCamposEndereco.add(textoCep, gridBagConstraints);
+
+        campoCep.setPreferredSize(new java.awt.Dimension(170, 22));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 5;
@@ -371,13 +380,16 @@ public class CadastroCliente extends javax.swing.JDialog {
         gridBagConstraints.gridy = 6;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.ipadx = 30;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCamposEndereco.add(textoComplemento, gridBagConstraints);
 
         campoComplemento.setMinimumSize(new java.awt.Dimension(100, 24));
+        campoComplemento.setPreferredSize(new java.awt.Dimension(170, 22));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 6;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCamposEndereco.add(campoComplemento, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
