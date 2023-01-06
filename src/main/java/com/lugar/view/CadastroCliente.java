@@ -8,6 +8,8 @@ import com.lugar.confeitaria.Util;
 import com.lugar.controller.OperacoesCliente;
 import com.lugar.model.Cliente;
 import com.lugar.model.Endereco;
+import com.lugar.model.SetStringString;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 
 /**
@@ -15,10 +17,13 @@ import javax.swing.JOptionPane;
  * @author lugar
  */
 public class CadastroCliente extends javax.swing.JDialog {
-
+    
+    private DefaultComboBoxModel modeloUf;
+    
     public CadastroCliente(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        carregaComboBoxUf();
         escondeCampoCLassificacao();
     }
 
@@ -269,6 +274,7 @@ public class CadastroCliente extends javax.swing.JDialog {
         painelCamposEndereco.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Endereço"));
         painelCamposEndereco.setLayout(new java.awt.GridBagLayout());
 
+        campoUF.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO" }));
         campoUF.setMinimumSize(new java.awt.Dimension(100, 24));
         campoUF.setPreferredSize(new java.awt.Dimension(170, 22));
         campoUF.addActionListener(new java.awt.event.ActionListener() {
@@ -545,28 +551,35 @@ public class CadastroCliente extends javax.swing.JDialog {
             return 0;
         }
     }
-
+    
     private void escondeCampoCLassificacao() {
         textoRazaoSocial.setVisible(false);
         campoRazaoSocial.setVisible(false);
         textoDataDeNascimento.setVisible(false);
         campoDataDeNascimento.setVisible(false);
     }
-
+    
     private void exibeCampoRazaoSocial() {
         campoDataDeNascimento.setVisible(false);
         textoDataDeNascimento.setVisible(false);
         campoRazaoSocial.setVisible(true);
         textoRazaoSocial.setVisible(true);
     }
-
+    
     private void exibeCampoDataNascimento() {
         campoDataDeNascimento.setVisible(true);
         textoDataDeNascimento.setVisible(true);
         campoRazaoSocial.setVisible(false);
         textoRazaoSocial.setVisible(false);
     }
-
+    
+    private void carregaComboBoxUf() {
+        this.modeloUf = new DefaultComboBoxModel();
+        String estadoRj = "RJ";
+//        SetStringString receitaTrufa = new SetStringString(Util.RECEITA_TRUFA, "Trufa");
+        this.modeloUf.addElement(estadoRj);
+    }
+    
     private void botaoCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCadastrarActionPerformed
         String nomeForm = campoNome.getText().trim();
         String nomeUsuarioForm = campoNomeUsuario.getText().trim();
@@ -576,10 +589,10 @@ public class CadastroCliente extends javax.swing.JDialog {
         String enderecoForm = "dasd"; //MEXER
         String cartaoForm = campoCartao.getText().trim();
         String identificadorForm = campoIdentificador.getText().trim();
-
+        
         if (validaCadastro(nomeForm, nomeUsuarioForm, senhaForm, emailForm, telefoneForm, enderecoForm, cartaoForm, identificadorForm) == 0) {
             Endereco endereco = new Endereco("120", "ao lado predio azul", "rua dos bobos", "japuiba", "angra", "rj", "12348-00");
-
+            
             OperacoesCliente cliente = new OperacoesCliente();
             int idCliente = cliente.insere(new Cliente(-1, nomeForm,
                     nomeUsuarioForm, senhaForm,
@@ -594,57 +607,57 @@ public class CadastroCliente extends javax.swing.JDialog {
                 JOptionPane.showMessageDialog(null, "Não foi possível realizar o cadastro! Tente novamente mais tarde.");
             }
         }
-
+        
     }//GEN-LAST:event_botaoCadastrarActionPerformed
-
+    
     private void campoNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoNomeActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_campoNomeActionPerformed
-
+    
     private void campoSenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoSenhaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_campoSenhaActionPerformed
-
+    
     private void campoNomeUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoNomeUsuarioActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_campoNomeUsuarioActionPerformed
-
+    
     private void campoEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoEmailActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_campoEmailActionPerformed
-
+    
     private void campoIdentificadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoIdentificadorActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_campoIdentificadorActionPerformed
-
+    
     private void campoTelefoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoTelefoneActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_campoTelefoneActionPerformed
-
+    
     private void campoCartaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoCartaoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_campoCartaoActionPerformed
-
+    
     private void campoCidadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoCidadeActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_campoCidadeActionPerformed
-
+    
     private void campoUFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoUFActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_campoUFActionPerformed
-
+    
     private void botaoPessoaFisicaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_botaoPessoaFisicaMouseClicked
-
+        
     }//GEN-LAST:event_botaoPessoaFisicaMouseClicked
-
+    
     private void botaoPessoaFisicaStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_botaoPessoaFisicaStateChanged
-
+        
     }//GEN-LAST:event_botaoPessoaFisicaStateChanged
-
+    
     private void botaoPessoaFisicaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoPessoaFisicaActionPerformed
         exibeCampoDataNascimento();
     }//GEN-LAST:event_botaoPessoaFisicaActionPerformed
-
+    
     private void botaoPessoaJuridicaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoPessoaJuridicaActionPerformed
         exibeCampoRazaoSocial();
     }//GEN-LAST:event_botaoPessoaJuridicaActionPerformed
