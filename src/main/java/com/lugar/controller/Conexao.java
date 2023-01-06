@@ -144,6 +144,7 @@ public class Conexao {
             sql = "CREATE TABLE IF NOT EXISTS \"Cliente\" (\n"
                     + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
                     + "	\"cartao\"	TEXT NOT NULL CHECK(LENGTH(\"cartao\") == 16),\n"
+                    + "	\"fisica\"	INTEGER NOT NULL DEFAULT 1 CHECK(\"fisica\" IN (0, 1)),\n"
                     + "	PRIMARY KEY(\"id\"),\n"
                     + "	FOREIGN KEY(\"id\") REFERENCES \"Usuario\"(\"id\") ON DELETE CASCADE\n"
                     + ");";
@@ -261,8 +262,8 @@ public class Conexao {
                         + "INSERT INTO \"Usuario\" (\"id\",\"nome\",\"nomeUsuario\",\"senhaHash\",\"identificador\",\"email\",\"telefone\",\"admin\",\"idEndereco\") VALUES (1,'Cliente PF Exemplo','cliente','senha','01234567890','cliente@email.com','32980675454',0,1);\n"
                         + "INSERT INTO \"Usuario\" (\"id\",\"nome\",\"nomeUsuario\",\"senhaHash\",\"identificador\",\"email\",\"telefone\",\"admin\",\"idEndereco\") VALUES (2,'Papelaria O Escritório','juridico','senha','09468264870001','contato@papelaria.com','3233988734',0,3);\n"
                         + "INSERT INTO \"Usuario\" (\"id\",\"nome\",\"nomeUsuario\",\"senhaHash\",\"identificador\",\"email\",\"telefone\",\"admin\",\"idEndereco\") VALUES (3,'Funcionário Exemplo','admin','senha','09876543210','admin@email.com','32956435476',1,2);\n"
-                        + "INSERT INTO \"Cliente\" (\"id\",\"cartao\") VALUES (1,'7846746387576273');\n"
-                        + "INSERT INTO \"Cliente\" (\"id\",\"cartao\") VALUES (2,'8946736409768881');\n"
+                        + "INSERT INTO \"Cliente\" (\"id\",\"cartao\",\"fisica\") VALUES (1,'7846746387576273',1);\n"
+                        + "INSERT INTO \"Cliente\" (\"id\",\"cartao\",\"fisica\") VALUES (2,'8946736409768881',0);\n"
                         + "INSERT INTO \"PessoaFisica\" (\"id\",\"dataNascimento\") VALUES (1,'1996-08-17T00:00:00.000000');\n"
                         + "INSERT INTO \"PessoaJuridica\" (\"id\",\"razaoSocial\") VALUES (2,'Empresa de Papéis LTDA');\n"
                         + "INSERT INTO \"Caracteristica\" (\"id\",\"tipo\",\"nome\",\"valorGrama\") VALUES (1,'R','Creme de morango',0.32);\n"

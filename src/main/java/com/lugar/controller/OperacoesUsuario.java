@@ -4,6 +4,9 @@
  */
 package com.lugar.controller;
 
+import com.lugar.model.Funcionario;
+import com.lugar.model.PessoaFisica;
+import com.lugar.model.PessoaJuridica;
 import com.lugar.model.Usuario;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -30,17 +33,28 @@ public class OperacoesUsuario implements OperacoesConexao<Usuario> {
             if (conn == null) {
                 return listaUsuarios;
             }
-            String sql = "SELECT id, nomeUsuario, senhaHash, admin FROM Usuario;";
+            String sql = "SELECT Usuario.id, Usuario.nomeUsuario, Usuario.senhaHash, Usuario.admin, Cliente.fisica FROM Usuario LEFT JOIN Cliente ON Usuario.id = Cliente.id;";
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
-                Usuario usuario = new Usuario(
-                        rs.getInt("id"),
-                        rs.getString("nomeUsuario"),
-                        rs.getString("senhaHash"),
-                        rs.getInt("admin") == 1);
+                Usuario usuario;
+                if (rs.getInt("admin") == 1) {
+                    usuario = new Funcionario(
+                            rs.getInt("id"),
+                            rs.getString("nomeUsuario"),
+                            rs.getString("senhaHash"));
+                } else if (rs.getInt("fisica") == 0) {
+                    usuario = new PessoaJuridica(
+                            rs.getInt("id"),
+                            rs.getString("nomeUsuario"),
+                            rs.getString("senhaHash"));
+                } else {
+                    usuario = new PessoaFisica(
+                            rs.getInt("id"),
+                            rs.getString("nomeUsuario"),
+                            rs.getString("senhaHash"));
+                }
                 listaUsuarios.add(usuario);
-
             }
         } catch (SQLException ex) {
             Logger.getLogger(Conexao.class
@@ -51,24 +65,27 @@ public class OperacoesUsuario implements OperacoesConexao<Usuario> {
         return listaUsuarios;
     }
 
-
     @Override
-    public int deleta(int id) {
+    public int deleta(int id
+    ) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public int insere(Usuario objeto) {
+    public int insere(Usuario objeto
+    ) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public int atualiza(Usuario objeto) {
+    public int atualiza(Usuario objeto
+    ) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public Usuario busca(int id) {
+    public Usuario busca(int id
+    ) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

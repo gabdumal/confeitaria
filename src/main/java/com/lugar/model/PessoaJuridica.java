@@ -4,6 +4,9 @@
  */
 package com.lugar.model;
 
+import com.lugar.confeitaria.Util;
+import java.text.ParseException;
+
 /**
  *
  * @author lugar
@@ -11,6 +14,10 @@ package com.lugar.model;
 public class PessoaJuridica extends Cliente {
 
     private String razaoSocial;
+
+    public PessoaJuridica(int idUsuario, String nomeUsuario, String senhaHash) {
+        super(idUsuario, nomeUsuario, senhaHash, false);
+    }
 
     public PessoaJuridica(
             int idUsuario,
@@ -31,6 +38,15 @@ public class PessoaJuridica extends Cliente {
 
     public String getRazaoSocial() {
         return razaoSocial;
+    }
+
+    @Override
+    public String getIdentificadorFormatado() {
+        try {
+            return Util.formataString(this.getIdentificador(), "##.###.###/####-##");
+        } catch (ParseException ex) {
+            return this.getIdentificador();
+        }
     }
 
 }

@@ -4,6 +4,11 @@
  */
 package com.lugar.model;
 
+import com.lugar.confeitaria.Util;
+import java.text.ParseException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author lugar
@@ -59,6 +64,20 @@ public class Endereco {
 
     public String getCep() {
         return cep;
+    }
+
+    public String getCepFormatado() {
+        try {
+            return Util.formataString(this.cep, "#####-###");
+        } catch (ParseException ex) {
+            return this.cep;
+        }
+    }
+
+    public String getEnderecoFormatado() {
+        return this.logradouro + ", " + this.numero + " " + this.complemento
+                + " - " + this.bairro + ", " + this.cidade + " - " + this.uf
+                + ", " + this.getCepFormatado();
     }
 
 }

@@ -8,7 +8,7 @@ package com.lugar.model;
  *
  * @author lugar
  */
-public class Usuario {
+public abstract class Usuario {
 
     private int id;
     private String nome;
@@ -82,6 +82,8 @@ public class Usuario {
     public String getIdentificador() {
         return identificador;
     }
+
+    public abstract String getIdentificadorFormatado();
 
     public Endereco getEndereco() {
         return endereco;

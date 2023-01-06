@@ -5,6 +5,7 @@
 package com.lugar.view.funcionario;
 
 import com.lugar.controller.OperacoesPedido;
+import com.lugar.model.Cliente;
 import com.lugar.model.Item;
 import com.lugar.model.Pedido;
 import com.lugar.model.Produto;
@@ -47,10 +48,13 @@ public class EdicaoPedido extends javax.swing.JDialog {
         this.carregaComboBox();
         initComponents();
 
+        Cliente cliente = pedido.getCliente();
+
         textoValorPreenchido.setText(pedido.getValorFormatado());
         textoSolicitadoPreenchido.setText(pedido.getDiaHoraFormatado());
         textoEntregaPreenchido.setText(pedido.getDataEntregaFormatada());
         areaTextoComentario.setText(pedido.getComentario());
+        textoIdentificadorPreenchido.setText(cliente.getIdentificador());
 
         tabelaItens.addMouseListener(new MouseAdapter() {
             @Override
@@ -155,6 +159,15 @@ public class EdicaoPedido extends javax.swing.JDialog {
         painelCliente = new javax.swing.JPanel();
         textoNome = new javax.swing.JLabel();
         textoNomePreenchido = new javax.swing.JLabel();
+        textoEmail = new javax.swing.JLabel();
+        textoEmailPreenchido = new javax.swing.JLabel();
+        textoTelefone = new javax.swing.JLabel();
+        textoTelefonePreenchido = new javax.swing.JLabel();
+        textoEndereco = new javax.swing.JLabel();
+        textoIdentificador = new javax.swing.JLabel();
+        textoIdentificadorPreenchido = new javax.swing.JLabel();
+        painelRolavelEndereco = new javax.swing.JScrollPane();
+        areaTextoEndereco = new javax.swing.JTextArea();
         painelItens = new javax.swing.JPanel();
         painelRolavelTabelaItens = new javax.swing.JScrollPane();
         tabelaItens = new javax.swing.JTable();
@@ -255,7 +268,7 @@ public class EdicaoPedido extends javax.swing.JDialog {
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 5);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCampos.add(comboBoxEstado, gridBagConstraints);
 
         textoComentario.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -267,8 +280,7 @@ public class EdicaoPedido extends javax.swing.JDialog {
         gridBagConstraints.ipadx = 30;
         painelCampos.add(textoComentario, gridBagConstraints);
 
-        painelRolavelComentario.setEnabled(false);
-
+        areaTextoComentario.setEditable(false);
         areaTextoComentario.setColumns(20);
         areaTextoComentario.setRows(5);
         areaTextoComentario.setEnabled(false);
@@ -304,8 +316,91 @@ public class EdicaoPedido extends javax.swing.JDialog {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.ipadx = 30;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
         painelCliente.add(textoNomePreenchido, gridBagConstraints);
+
+        textoEmail.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        textoEmail.setText("E-mail:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 30;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        painelCliente.add(textoEmail, gridBagConstraints);
+
+        textoEmailPreenchido.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        textoEmailPreenchido.setText("maria@email.com");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 30;
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
+        painelCliente.add(textoEmailPreenchido, gridBagConstraints);
+
+        textoTelefone.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        textoTelefone.setText("Telefone:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 30;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        painelCliente.add(textoTelefone, gridBagConstraints);
+
+        textoTelefonePreenchido.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        textoTelefonePreenchido.setText("(32) 98795-9735");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 30;
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
+        painelCliente.add(textoTelefonePreenchido, gridBagConstraints);
+
+        textoEndereco.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        textoEndereco.setText("Endereço:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 30;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        painelCliente.add(textoEndereco, gridBagConstraints);
+
+        textoIdentificador.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        textoIdentificador.setText("Identificador:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 30;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        painelCliente.add(textoIdentificador, gridBagConstraints);
+
+        textoIdentificadorPreenchido.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        textoIdentificadorPreenchido.setText("000.000.000-00");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 30;
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
+        painelCliente.add(textoIdentificadorPreenchido, gridBagConstraints);
+
+        painelRolavelEndereco.setForeground(new java.awt.Color(0, 0, 0));
+
+        areaTextoEndereco.setEditable(false);
+        areaTextoEndereco.setColumns(20);
+        areaTextoEndereco.setRows(5);
+        areaTextoEndereco.setEnabled(false);
+        painelRolavelEndereco.setViewportView(areaTextoEndereco);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 4;
+        painelCliente.add(painelRolavelEndereco, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -419,6 +514,7 @@ public class EdicaoPedido extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea areaTextoComentario;
+    private javax.swing.JTextArea areaTextoEndereco;
     private javax.swing.JButton botaoEditar;
     private javax.swing.JButton botaoVoltar;
     private javax.swing.JComboBox<String> comboBoxEstado;
@@ -428,16 +524,24 @@ public class EdicaoPedido extends javax.swing.JDialog {
     private javax.swing.JPanel painelFormulario;
     private javax.swing.JPanel painelItens;
     private javax.swing.JScrollPane painelRolavelComentario;
+    private javax.swing.JScrollPane painelRolavelEndereco;
     private javax.swing.JScrollPane painelRolavelTabelaItens;
     private javax.swing.JTable tabelaItens;
     private javax.swing.JLabel textoComentario;
+    private javax.swing.JLabel textoEmail;
+    private javax.swing.JLabel textoEmailPreenchido;
+    private javax.swing.JLabel textoEndereco;
     private javax.swing.JLabel textoEntrega;
     private javax.swing.JLabel textoEntregaPreenchido;
     private javax.swing.JLabel textoEstado;
+    private javax.swing.JLabel textoIdentificador;
+    private javax.swing.JLabel textoIdentificadorPreenchido;
     private javax.swing.JLabel textoNome;
     private javax.swing.JLabel textoNomePreenchido;
     private javax.swing.JLabel textoSolicitado;
     private javax.swing.JLabel textoSolicitadoPreenchido;
+    private javax.swing.JLabel textoTelefone;
+    private javax.swing.JLabel textoTelefonePreenchido;
     private javax.swing.JLabel textoValor;
     private javax.swing.JLabel textoValorPreenchido;
     private javax.swing.JLabel titulo;
