@@ -4,6 +4,7 @@
  */
 package com.lugar.confeitaria;
 
+import com.lugar.model.exceptions.ExcecaoDataHoraInvalida;
 import com.lugar.model.exceptions.ExcecaoDataInvalida;
 import com.lugar.model.exceptions.ExcecaoDataPassada;
 import java.text.NumberFormat;
@@ -33,6 +34,9 @@ public class Util {
     public final static String CARACTERISTICA_COR = "C";
     public final static String CARACTERISTICA_COBERTURA = "T";
     public final static String CARACTERISTICA_RECHEIO = "R";
+    public final static String FORMATO_DATA = "dd/MM/yyyy";
+    public final static String FORMATO_HORA = "HH:mm:ss";
+    public final static String FORMATO_DATAHORA = "dd/MM/yyyy HH:mm:ss";
 
     public static String formataDinheiro(double valor) {
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
@@ -41,7 +45,7 @@ public class Util {
     }
 
     public static String formataDiaHora(LocalDateTime diaHora) {
-        DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        DateTimeFormatter formatador = DateTimeFormatter.ofPattern(Util.FORMATO_DATAHORA);
         return diaHora.format(formatador);
     }
 
@@ -52,16 +56,23 @@ public class Util {
 
     public static LocalDate converteData(String data) throws ExcecaoDataInvalida {
         if (Util.dataValida(data)) {
-            return LocalDate.parse(data, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            return LocalDate.parse(data, DateTimeFormatter.ofPattern(Util.FORMATO_DATA));
         } else {
             throw new ExcecaoDataInvalida();
         }
     }
 
+    public static LocalDateTime converteDataHora(String dataHora) throws ExcecaoDataHoraInvalida {
+        if (Util.dataValida(dataHora)) {
+            return LocalDateTime.parse(dataHora, DateTimeFormatter.ofPattern(Util.FORMATO_DATAHORA));
+        } else {
+            throw new ExcecaoDataHoraInvalida();
+        }
+    }
+
     public static boolean dataValida(String data) {
-        String formatString = "dd/MM/yyyy";
         try {
-            SimpleDateFormat format = new SimpleDateFormat(formatString);
+            SimpleDateFormat format = new SimpleDateFormat(Util.FORMATO_DATA);
             format.setLenient(false);
             format.parse(data);
 
@@ -72,11 +83,22 @@ public class Util {
     }
 
     public static boolean horaValida(String hora) {
-        String formatString = "HH:mm:ss";
         try {
-            SimpleDateFormat format = new SimpleDateFormat(formatString);
+            SimpleDateFormat format = new SimpleDateFormat(Util.FORMATO_HORA);
             format.setLenient(false);
             format.parse(hora);
+        } catch (ParseException | IllegalArgumentException e) {
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean dataHoraValida(String dataHora) {
+        try {
+            SimpleDateFormat format = new SimpleDateFormat(Util.FORMATO_DATAHORA);
+            format.setLenient(false);
+            format.parse(dataHora);
+
         } catch (ParseException | IllegalArgumentException e) {
             return false;
         }

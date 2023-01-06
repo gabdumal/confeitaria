@@ -4,6 +4,9 @@
  */
 package com.lugar.model;
 
+import com.lugar.confeitaria.Util;
+import java.text.ParseException;
+
 /**
  *
  * @author lugar
@@ -77,6 +80,22 @@ public abstract class Usuario {
 
     public String getTelefone() {
         return telefone;
+    }
+
+    public String getTelefoneFormatado() {
+        try {
+            String mascara;
+            if (this.telefone.length() == 11) {
+                mascara = "(##) #####-####";
+            } else if (this.telefone.length() == 10) {
+                mascara = "(##) ####-####";
+            } else {
+                return this.telefone;
+            }
+            return Util.formataString(this.telefone, mascara);
+        } catch (ParseException ex) {
+            return this.telefone;
+        }
     }
 
     public String getIdentificador() {

@@ -22,6 +22,24 @@ public class Login extends javax.swing.JFrame {
         initComponents();
     }
 
+    private void fazLogin() {
+        OperacoesUsuario operacoes = new OperacoesUsuario();
+        List<Usuario> listaUsuarios = operacoes.buscaTodos();
+
+        String usuarioForm = campoUsuario.getText();
+        char[] senhaForm = campoSenha.getPassword();
+        for (Usuario usuario : listaUsuarios) {
+            if (usuario.getNomeUsuario().compareTo(usuarioForm) == 0
+                    && usuario.getSenhaHash().compareTo(String.valueOf(senhaForm)) == 0) {
+                ExibicaoProdutos exibicaoProdutos = new ExibicaoProdutos(usuario);
+                this.setVisible(false);
+                exibicaoProdutos.setVisible(true);
+                return;
+            }
+        }
+        JOptionPane.showMessageDialog(null, "Usuário ou senha não correspondem!");
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -144,21 +162,7 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botaoLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoLoginActionPerformed
-        OperacoesUsuario operacoes = new OperacoesUsuario();
-        List<Usuario> listaUsuarios = operacoes.buscaTodos();
-
-        String usuarioForm = campoUsuario.getText();
-        char[] senhaForm = campoSenha.getPassword();
-        for (Usuario usuario : listaUsuarios) {
-            if (usuario.getNomeUsuario().compareTo(usuarioForm) == 0
-                    && usuario.getSenhaHash().compareTo(String.valueOf(senhaForm)) == 0) {
-                ExibicaoProdutos exibicaoProdutos = new ExibicaoProdutos(usuario);
-                this.setVisible(false);
-                exibicaoProdutos.setVisible(true);
-                return;
-            }
-        }
-        JOptionPane.showMessageDialog(null, "Usuário ou senha não correspondem!");
+        this.fazLogin();
     }//GEN-LAST:event_botaoLoginActionPerformed
 
     private void botaoCadastroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCadastroActionPerformed
@@ -181,7 +185,7 @@ public class Login extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {

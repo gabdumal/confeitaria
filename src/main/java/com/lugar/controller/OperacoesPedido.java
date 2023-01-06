@@ -5,6 +5,7 @@
 package com.lugar.controller;
 
 import com.lugar.confeitaria.Util;
+import com.lugar.model.Cliente;
 import com.lugar.model.Item;
 import com.lugar.model.Pedido;
 import com.lugar.model.Produto;
@@ -104,7 +105,9 @@ public class OperacoesPedido implements OperacoesConexao<Pedido> {
             }
 
             if (!primeiro) {
-                pedido = new Pedido(id, diaHora, estado, dataEntrega, comentario, listaItens, idCliente);
+                OperacoesUsuario operacoesUsuario = new OperacoesUsuario();
+                Cliente cliente = (Cliente) operacoesUsuario.busca(idCliente);
+                pedido = new Pedido(id, diaHora, estado, dataEntrega, comentario, listaItens, cliente);
             }
         } catch (SQLException ex) {
             Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
@@ -145,7 +148,7 @@ public class OperacoesPedido implements OperacoesConexao<Pedido> {
                 pstmtPedido.setString(2, pedido.getEstado());
                 pstmtPedido.setString(3, pedido.getDataEntregaString());
                 pstmtPedido.setString(4, pedido.getComentario());
-                pstmtPedido.setInt(5, pedido.getIdCliente());
+                pstmtPedido.setInt(5, pedido.getCliente().getId());
                 linhasInseridas = pstmtPedido.executeUpdate();
 
                 // Reverter operação em caso de erro

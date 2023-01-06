@@ -44,17 +44,23 @@ public class EdicaoPedido extends javax.swing.JDialog {
         this.pai = parent;
         this.operacoesPedido = new OperacoesPedido();
         Pedido pedido = operacoesPedido.busca(id);
+        Cliente cliente = pedido.getCliente();
         this.listaItens = pedido.getListaItens();
         this.carregaComboBox();
         initComponents();
 
-        Cliente cliente = pedido.getCliente();
-
+        // Pedido
         textoValorPreenchido.setText(pedido.getValorFormatado());
         textoSolicitadoPreenchido.setText(pedido.getDiaHoraFormatado());
         textoEntregaPreenchido.setText(pedido.getDataEntregaFormatada());
-        areaTextoComentario.setText(pedido.getComentario());
-        textoIdentificadorPreenchido.setText(cliente.getIdentificador());
+        painelTextoComentario.setText(pedido.getComentario());
+
+        // Cliente
+        textoNomePreenchido.setText(cliente.getNome());
+        textoTelefonePreenchido.setText(cliente.getTelefoneFormatado());
+        textoEmailPreenchido.setText(cliente.getEmail());
+        textoIdentificadorPreenchido.setText(cliente.getIdentificadorFormatado());
+        painelTextoEndereco.setText(cliente.getEndereco().getEnderecoFormatado());
 
         tabelaItens.addMouseListener(new MouseAdapter() {
             @Override
@@ -154,8 +160,8 @@ public class EdicaoPedido extends javax.swing.JDialog {
         textoEstado = new javax.swing.JLabel();
         comboBoxEstado = new javax.swing.JComboBox<>();
         textoComentario = new javax.swing.JLabel();
-        painelRolavelComentario = new javax.swing.JScrollPane();
-        areaTextoComentario = new javax.swing.JTextArea();
+        painelPainelTextoComentario = new javax.swing.JScrollPane();
+        painelTextoComentario = new javax.swing.JTextPane();
         painelCliente = new javax.swing.JPanel();
         textoNome = new javax.swing.JLabel();
         textoNomePreenchido = new javax.swing.JLabel();
@@ -166,8 +172,8 @@ public class EdicaoPedido extends javax.swing.JDialog {
         textoEndereco = new javax.swing.JLabel();
         textoIdentificador = new javax.swing.JLabel();
         textoIdentificadorPreenchido = new javax.swing.JLabel();
-        painelRolavelEndereco = new javax.swing.JScrollPane();
-        areaTextoEndereco = new javax.swing.JTextArea();
+        painelPainelTextoEndereco = new javax.swing.JScrollPane();
+        painelTextoEndereco = new javax.swing.JTextPane();
         painelItens = new javax.swing.JPanel();
         painelRolavelTabelaItens = new javax.swing.JScrollPane();
         tabelaItens = new javax.swing.JTable();
@@ -191,6 +197,7 @@ public class EdicaoPedido extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 0);
         painelFormulario.add(titulo, gridBagConstraints);
 
+        painelCampos.setPreferredSize(new java.awt.Dimension(291, 260));
         painelCampos.setLayout(new java.awt.GridBagLayout());
 
         textoValor.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -280,16 +287,16 @@ public class EdicaoPedido extends javax.swing.JDialog {
         gridBagConstraints.ipadx = 30;
         painelCampos.add(textoComentario, gridBagConstraints);
 
-        areaTextoComentario.setEditable(false);
-        areaTextoComentario.setColumns(20);
-        areaTextoComentario.setRows(5);
-        areaTextoComentario.setEnabled(false);
-        painelRolavelComentario.setViewportView(areaTextoComentario);
+        painelTextoComentario.setEditable(false);
+        painelTextoComentario.setMinimumSize(new java.awt.Dimension(62, 66));
+        painelTextoComentario.setPreferredSize(new java.awt.Dimension(62, 66));
+        painelPainelTextoComentario.setViewportView(painelTextoComentario);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 4;
-        painelCampos.add(painelRolavelComentario, gridBagConstraints);
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        painelCampos.add(painelPainelTextoComentario, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -297,6 +304,7 @@ public class EdicaoPedido extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 10);
         painelFormulario.add(painelCampos, gridBagConstraints);
 
+        painelCliente.setPreferredSize(new java.awt.Dimension(339, 240));
         painelCliente.setLayout(new java.awt.GridBagLayout());
 
         textoNome.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -366,7 +374,6 @@ public class EdicaoPedido extends javax.swing.JDialog {
         gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.ipadx = 30;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCliente.add(textoEndereco, gridBagConstraints);
 
         textoIdentificador.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -389,18 +396,17 @@ public class EdicaoPedido extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
         painelCliente.add(textoIdentificadorPreenchido, gridBagConstraints);
 
-        painelRolavelEndereco.setForeground(new java.awt.Color(0, 0, 0));
-
-        areaTextoEndereco.setEditable(false);
-        areaTextoEndereco.setColumns(20);
-        areaTextoEndereco.setRows(5);
-        areaTextoEndereco.setEnabled(false);
-        painelRolavelEndereco.setViewportView(areaTextoEndereco);
+        painelTextoEndereco.setEditable(false);
+        painelTextoEndereco.setMinimumSize(new java.awt.Dimension(62, 66));
+        painelTextoEndereco.setPreferredSize(new java.awt.Dimension(62, 66));
+        painelPainelTextoEndereco.setViewportView(painelTextoEndereco);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 4;
-        painelCliente.add(painelRolavelEndereco, gridBagConstraints);
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 30;
+        painelCliente.add(painelPainelTextoEndereco, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -411,9 +417,12 @@ public class EdicaoPedido extends javax.swing.JDialog {
 
         painelItens.setLayout(new java.awt.GridLayout(1, 0, 10, 0));
 
+        painelRolavelTabelaItens.setMinimumSize(new java.awt.Dimension(16, 100));
         painelRolavelTabelaItens.setPreferredSize(new java.awt.Dimension(452, 200));
 
         tabelaItens.setModel(this.getModeloTabela());
+        tabelaItens.setMinimumSize(new java.awt.Dimension(0, 66));
+        tabelaItens.setPreferredSize(new java.awt.Dimension(0, 66));
         tabelaItens.removeColumn(tabelaItens.getColumnModel().getColumn(0));
         painelRolavelTabelaItens.setViewportView(tabelaItens);
 
@@ -423,6 +432,7 @@ public class EdicaoPedido extends javax.swing.JDialog {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 0);
         painelFormulario.add(painelItens, gridBagConstraints);
 
@@ -476,7 +486,7 @@ public class EdicaoPedido extends javax.swing.JDialog {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -513,8 +523,6 @@ public class EdicaoPedido extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextArea areaTextoComentario;
-    private javax.swing.JTextArea areaTextoEndereco;
     private javax.swing.JButton botaoEditar;
     private javax.swing.JButton botaoVoltar;
     private javax.swing.JComboBox<String> comboBoxEstado;
@@ -523,9 +531,11 @@ public class EdicaoPedido extends javax.swing.JDialog {
     private javax.swing.JPanel painelCliente;
     private javax.swing.JPanel painelFormulario;
     private javax.swing.JPanel painelItens;
-    private javax.swing.JScrollPane painelRolavelComentario;
-    private javax.swing.JScrollPane painelRolavelEndereco;
+    private javax.swing.JScrollPane painelPainelTextoComentario;
+    private javax.swing.JScrollPane painelPainelTextoEndereco;
     private javax.swing.JScrollPane painelRolavelTabelaItens;
+    private javax.swing.JTextPane painelTextoComentario;
+    private javax.swing.JTextPane painelTextoEndereco;
     private javax.swing.JTable tabelaItens;
     private javax.swing.JLabel textoComentario;
     private javax.swing.JLabel textoEmail;

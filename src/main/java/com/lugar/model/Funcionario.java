@@ -14,14 +14,14 @@ import java.util.logging.Logger;
  * @author lugar
  */
 public class Funcionario extends Usuario {
-    
+
     private String matricula;
     private String funcao;
-    
+
     public Funcionario(int idUsuario, String nomeUsuario, String senhaHash) {
         super(idUsuario, nomeUsuario, senhaHash, true);
     }
-    
+
     public Funcionario(
             int idUsuario,
             String nome,
@@ -30,8 +30,6 @@ public class Funcionario extends Usuario {
             boolean admin,
             String email,
             String telefone,
-            int IdEndereco,
-            String cartao,
             String identificador,
             Endereco endereco,
             String matricula,
@@ -41,7 +39,7 @@ public class Funcionario extends Usuario {
         this.matricula = matricula;
         this.funcao = funcao;
     }
-    
+
     @Override
     public String getIdentificadorFormatado() {
         try {
