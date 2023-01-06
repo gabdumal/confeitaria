@@ -10,7 +10,7 @@ package com.lugar.model;
  */
 public class PessoaJuridica extends Cliente {
 
-    private String nomeFantasia;
+    private String razaoSocial;
 
     public PessoaJuridica(
             int idUsuario,
@@ -22,11 +22,15 @@ public class PessoaJuridica extends Cliente {
             String telefone,
             Endereco endereco,
             String cartao,
-            String nomeFantasia
+            String razaoSocial
     ) {
         super(idUsuario, nome, nomeUsuario, senhaHash, identificador, email,
                 telefone, endereco, cartao, false);
-        this.nomeFantasia = nomeFantasia;
+        this.razaoSocial = razaoSocial;
+    }
+
+    public String getRazaoSocial() {
+        return razaoSocial;
     }
 
 }

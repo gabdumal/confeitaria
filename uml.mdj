@@ -582,13 +582,30 @@
 											"height": 13,
 											"text": "+Attribute1",
 											"horizontalAlignment": 0
+										},
+										{
+											"_type": "UMLAttributeView",
+											"_id": "AAAAAAGFiEQltUdy16U=",
+											"_parent": {
+												"$ref": "AAAAAAGFZQbzFNygTDc="
+											},
+											"model": {
+												"$ref": "AAAAAAGFiEQla0dvdvc="
+											},
+											"font": "Arial;13;0",
+											"left": 101,
+											"top": 272,
+											"width": 123.55078125,
+											"height": 13,
+											"text": "-cep: String",
+											"horizontalAlignment": 0
 										}
 									],
 									"font": "Arial;13;0",
 									"left": 96,
 									"top": 177,
 									"width": 133.55078125,
-									"height": 98
+									"height": 113
 								},
 								{
 									"_type": "UMLOperationCompartmentView",
@@ -601,7 +618,7 @@
 									},
 									"font": "Arial;13;0",
 									"left": 96,
-									"top": 275,
+									"top": 290,
 									"width": 133.55078125,
 									"height": 10
 								},
@@ -1273,7 +1290,7 @@
 											"top": 166,
 											"width": 209.18701171875,
 											"height": 13,
-											"text": "-dataNascimento: LocalDateTime",
+											"text": "-dataNascimento: LocalDate",
 											"horizontalAlignment": 0
 										}
 									],
@@ -7796,6 +7813,16 @@
 							},
 							"name": "Attribute1",
 							"type": ""
+						},
+						{
+							"_type": "UMLAttribute",
+							"_id": "AAAAAAGFiEQla0dvdvc=",
+							"_parent": {
+								"$ref": "AAAAAAGFZQbzE9yYsiw="
+							},
+							"name": "cep",
+							"visibility": "private",
+							"type": "String"
 						}
 					]
 				},
@@ -7983,7 +8010,7 @@
 							},
 							"name": "dataNascimento",
 							"visibility": "private",
-							"type": "LocalDateTime"
+							"type": "LocalDate"
 						}
 					],
 					"operations": [

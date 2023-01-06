@@ -4,7 +4,7 @@
  */
 package com.lugar.model;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 /**
  *
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  */
 public class PessoaFisica extends Cliente {
 
-    private LocalDateTime dataNascimento;
+    private LocalDate dataNascimento;
 
     public PessoaFisica(
             int idUsuario,
@@ -24,11 +24,15 @@ public class PessoaFisica extends Cliente {
             String telefone,
             Endereco endereco,
             String cartao,
-            LocalDateTime dataNascimento
+            LocalDate dataNascimento
     ) {
         super(idUsuario, nome, nomeUsuario, senhaHash, identificador, email,
                 telefone, endereco, cartao, true);
         this.dataNascimento = dataNascimento;
+    }
+
+    public LocalDate getDataNascimento() {
+        return dataNascimento;
     }
 
 }
