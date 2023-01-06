@@ -19,6 +19,7 @@ public class CadastroCliente extends javax.swing.JDialog {
     public CadastroCliente(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        escondeCampoCLassificacao();
     }
 
     /**
@@ -31,6 +32,7 @@ public class CadastroCliente extends javax.swing.JDialog {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
+        botoesTipoPessoa = new javax.swing.ButtonGroup();
         painelFormulario = new javax.swing.JPanel();
         titulo = new javax.swing.JLabel();
         painelCampos = new javax.swing.JPanel();
@@ -63,16 +65,24 @@ public class CadastroCliente extends javax.swing.JDialog {
         campoCep = new javax.swing.JFormattedTextField();
         textoComplemento = new javax.swing.JLabel();
         campoComplemento = new javax.swing.JFormattedTextField();
+        painelCamposEspecificos = new javax.swing.JPanel();
+        botaoPessoaFisica = new javax.swing.JRadioButton();
+        textoRazaoSocial = new javax.swing.JLabel();
+        campoRazaoSocial = new javax.swing.JFormattedTextField();
+        botaoPessoaJuridica = new javax.swing.JRadioButton();
+        textoDataDeNascimento = new javax.swing.JLabel();
+        campoDataDeNascimento = new javax.swing.JFormattedTextField();
         painelBotoes1 = new javax.swing.JPanel();
         botaoCadastrar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Cadastro de Cliente");
-        setMinimumSize(new java.awt.Dimension(500, 450));
-        setPreferredSize(new java.awt.Dimension(500, 540));
+        setMinimumSize(new java.awt.Dimension(500, 570));
+        setPreferredSize(new java.awt.Dimension(500, 570));
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
-        painelFormulario.setMinimumSize(new java.awt.Dimension(480, 520));
+        painelFormulario.setMinimumSize(new java.awt.Dimension(500, 540));
+        painelFormulario.setPreferredSize(new java.awt.Dimension(510, 540));
         painelFormulario.setLayout(new java.awt.GridBagLayout());
 
         titulo.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -84,9 +94,9 @@ public class CadastroCliente extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
         painelFormulario.add(titulo, gridBagConstraints);
 
-        painelCampos.setMinimumSize(new java.awt.Dimension(500, 415));
+        painelCampos.setMinimumSize(new java.awt.Dimension(500, 490));
         painelCampos.setOpaque(false);
-        painelCampos.setPreferredSize(new java.awt.Dimension(500, 415));
+        painelCampos.setPreferredSize(new java.awt.Dimension(500, 450));
         painelCampos.setRequestFocusEnabled(false);
         painelCampos.setLayout(new java.awt.GridBagLayout());
 
@@ -400,8 +410,76 @@ public class CadastroCliente extends javax.swing.JDialog {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(0, 10, 5, 10);
         painelCampos.add(painelCamposEndereco, gridBagConstraints);
-        painelCamposEndereco.getAccessibleContext().setAccessibleName("Endereço");
         painelCamposEndereco.getAccessibleContext().setAccessibleDescription("");
+
+        painelCamposEspecificos.setBorder(javax.swing.BorderFactory.createTitledBorder("Classificação"));
+        painelCamposEspecificos.setLayout(new java.awt.GridBagLayout());
+
+        botoesTipoPessoa.add(botaoPessoaFisica);
+        botaoPessoaFisica.setText("Pessoa Física");
+        botaoPessoaFisica.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                botaoPessoaFisicaStateChanged(evt);
+            }
+        });
+        botaoPessoaFisica.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                botaoPessoaFisicaMouseClicked(evt);
+            }
+        });
+        botaoPessoaFisica.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoPessoaFisicaActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        painelCamposEspecificos.add(botaoPessoaFisica, gridBagConstraints);
+
+        textoRazaoSocial.setText("Razão Social");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        painelCamposEspecificos.add(textoRazaoSocial, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        painelCamposEspecificos.add(campoRazaoSocial, gridBagConstraints);
+
+        botoesTipoPessoa.add(botaoPessoaJuridica);
+        botaoPessoaJuridica.setText("Pessoa Júridica");
+        botaoPessoaJuridica.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoPessoaJuridicaActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        painelCamposEspecificos.add(botaoPessoaJuridica, gridBagConstraints);
+
+        textoDataDeNascimento.setText("Data de Nascimento");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        painelCamposEspecificos.add(textoDataDeNascimento, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        painelCamposEspecificos.add(campoDataDeNascimento, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridwidth = 2;
+        painelCampos.add(painelCamposEspecificos, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -462,13 +540,35 @@ public class CadastroCliente extends javax.swing.JDialog {
             return 0;
         }
     }
+
+    private void escondeCampoCLassificacao() {
+        textoRazaoSocial.setVisible(false);
+        campoRazaoSocial.setVisible(false);
+        textoDataDeNascimento.setVisible(false);
+        campoDataDeNascimento.setVisible(false);
+    }
+
+    private void exibeCampoRazaoSocial() {
+        campoDataDeNascimento.setVisible(false);
+        textoDataDeNascimento.setVisible(false);
+        campoRazaoSocial.setVisible(true);
+        textoRazaoSocial.setVisible(true);
+    }
+
+    private void exibeCampoDataNascimento() {
+        campoDataDeNascimento.setVisible(true);
+        textoDataDeNascimento.setVisible(true);
+        campoRazaoSocial.setVisible(false);
+        textoRazaoSocial.setVisible(false);
+    }
+
     private void botaoCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCadastrarActionPerformed
         String nomeForm = campoNome.getText().trim();
         String nomeUsuarioForm = campoNomeUsuario.getText().trim();
         String senhaForm = String.valueOf(campoSenha.getPassword()).trim();
         String emailForm = campoEmail.getText().trim();
         String telefoneForm = campoTelefone.getText().trim();
-        String enderecoForm = campoEndereco.getText().trim(); //MEXER
+        String enderecoForm = "dasd"; //MEXER
         String cartaoForm = campoCartao.getText().trim();
         String identificadorForm = campoIdentificador.getText().trim();
 
@@ -528,6 +628,22 @@ public class CadastroCliente extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_campoUFActionPerformed
 
+    private void botaoPessoaFisicaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_botaoPessoaFisicaMouseClicked
+
+    }//GEN-LAST:event_botaoPessoaFisicaMouseClicked
+
+    private void botaoPessoaFisicaStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_botaoPessoaFisicaStateChanged
+
+    }//GEN-LAST:event_botaoPessoaFisicaStateChanged
+
+    private void botaoPessoaFisicaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoPessoaFisicaActionPerformed
+        exibeCampoDataNascimento();
+    }//GEN-LAST:event_botaoPessoaFisicaActionPerformed
+
+    private void botaoPessoaJuridicaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoPessoaJuridicaActionPerformed
+        exibeCampoRazaoSocial();
+    }//GEN-LAST:event_botaoPessoaJuridicaActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -573,35 +689,43 @@ public class CadastroCliente extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botaoCadastrar;
+    private javax.swing.JRadioButton botaoPessoaFisica;
+    private javax.swing.JRadioButton botaoPessoaJuridica;
+    private javax.swing.ButtonGroup botoesTipoPessoa;
     private javax.swing.JFormattedTextField campoBairro;
     private javax.swing.JFormattedTextField campoCartao;
     private javax.swing.JFormattedTextField campoCep;
     private javax.swing.JFormattedTextField campoCidade;
     private javax.swing.JFormattedTextField campoComplemento;
+    private javax.swing.JFormattedTextField campoDataDeNascimento;
     private javax.swing.JFormattedTextField campoEmail;
     private javax.swing.JFormattedTextField campoIdentificador;
     private javax.swing.JFormattedTextField campoLogradouro;
     private javax.swing.JFormattedTextField campoNome;
     private javax.swing.JFormattedTextField campoNomeUsuario;
     private javax.swing.JSpinner campoNumero;
+    private javax.swing.JFormattedTextField campoRazaoSocial;
     private javax.swing.JPasswordField campoSenha;
     private javax.swing.JFormattedTextField campoTelefone;
     private javax.swing.JComboBox<String> campoUF;
     private javax.swing.JPanel painelBotoes1;
     private javax.swing.JPanel painelCampos;
     private javax.swing.JPanel painelCamposEndereco;
+    private javax.swing.JPanel painelCamposEspecificos;
     private javax.swing.JPanel painelFormulario;
     private javax.swing.JLabel textoBairro;
     private javax.swing.JLabel textoCartaoCredito;
     private javax.swing.JLabel textoCep;
     private javax.swing.JLabel textoCidade;
     private javax.swing.JLabel textoComplemento;
+    private javax.swing.JLabel textoDataDeNascimento;
     private javax.swing.JLabel textoEmail;
     private javax.swing.JLabel textoIdentificador;
     private javax.swing.JLabel textoLogradouro;
     private javax.swing.JLabel textoNome;
     private javax.swing.JLabel textoNomeUsuario;
     private javax.swing.JLabel textoNumero;
+    private javax.swing.JLabel textoRazaoSocial;
     private javax.swing.JLabel textoSenha;
     private javax.swing.JLabel textoTelefone;
     private javax.swing.JLabel textoUf;
