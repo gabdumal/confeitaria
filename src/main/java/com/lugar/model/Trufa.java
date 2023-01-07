@@ -4,17 +4,29 @@
  */
 package com.lugar.model;
 
+import com.lugar.confeitaria.Util;
+
 /**
  *
- * @author rodrigosoares
+ * @author lugar
  */
 public class Trufa extends ProdutoPersonalizado {
 
     private Caracteristica recheio;
 
-    public Trufa(Caracteristica recheio, int id, String receita, String detalhe, Caracteristica cor) {
-        super(id, receita, detalhe, cor);
+    public Trufa(int id, String detalhe, Caracteristica cor, Caracteristica recheio) {
+        super(id, Util.RECEITA_TRUFA, detalhe, cor);
         this.recheio = recheio;
+    }
+
+    @Override
+    public String getNome() {
+        return "Trufa de " + this.recheio;
+    }
+
+    @Override
+    public double getValor() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     public Caracteristica getRecheio() {
@@ -24,4 +36,5 @@ public class Trufa extends ProdutoPersonalizado {
     public void setRecheio(Caracteristica recheio) {
         this.recheio = recheio;
     }
+
 }

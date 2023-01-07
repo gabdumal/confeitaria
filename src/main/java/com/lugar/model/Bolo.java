@@ -4,11 +4,12 @@
  */
 package com.lugar.model;
 
+import com.lugar.confeitaria.Util;
 import java.util.List;
 
 /**
  *
- * @author rodrigosoares
+ * @author lugar
  */
 public class Bolo extends ProdutoPersonalizado {
 
@@ -16,8 +17,9 @@ public class Bolo extends ProdutoPersonalizado {
     private Caracteristica cobertura;
     private List<Caracteristica> recheios;
 
-    public Bolo(Forma forma, Caracteristica cobertura, List<Caracteristica> recheios, int id, String receita, String detalhe, Caracteristica cor) {
-        super(id, receita, detalhe, cor);
+    public Bolo(int id, String detalhe, Caracteristica cor, Forma forma,
+            Caracteristica cobertura, List<Caracteristica> recheios) {
+        super(id, Util.RECEITA_BOLO, detalhe, cor);
         this.forma = forma;
         this.cobertura = cobertura;
         this.recheios = recheios;
@@ -35,6 +37,20 @@ public class Bolo extends ProdutoPersonalizado {
         return recheios;
     }
 
+    public Caracteristica getRecheio(int indice) {
+        return this.recheios.get(indice);
+    }
+
+    @Override
+    public String getNome() {
+        return "Bolo de " + this.getRecheio(0);
+    }
+
+    @Override
+    public double getValor() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
     public void setForma(Forma forma) {
         this.forma = forma;
     }
@@ -46,4 +62,5 @@ public class Bolo extends ProdutoPersonalizado {
     public void addRecheio(Caracteristica recheio) {
         this.recheios.add(recheio);
     }
+
 }

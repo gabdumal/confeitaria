@@ -4,14 +4,11 @@
  */
 package com.lugar.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  *
  * @author lugar
  */
-public class ProdutoPersonalizado extends Produto {
+public abstract class ProdutoPersonalizado extends Produto {
 
     private String receita;
     private String detalhe;
@@ -40,24 +37,6 @@ public class ProdutoPersonalizado extends Produto {
 
     public String getReceita() {
         return receita;
-    }
-
-    @Override
-    public double getValor() {
-        // to do
-        return 0;
-    }
-
-    @Override
-    public String getNome() {
-        String nomeFormado = "";
-        if (this.receita.equals("B")) {
-            nomeFormado += "Bolo de ";
-        } else {
-            nomeFormado += "Trufa de ";
-        }
-//        nomeFormado += this.getRecheio(0); corrigir
-        return nomeFormado;
     }
 
     public void setCor(Caracteristica cor) {
