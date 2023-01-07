@@ -2,15 +2,18 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
-package com.lugar.view.funcionario;
+package com.lugar.view;
 
 import com.lugar.controller.OperacoesPedido;
 import com.lugar.model.Pedido;
 import com.lugar.model.tables.PedidosTableModel;
+import com.lugar.view.cliente.VisualizacaoPedido;
+import com.lugar.view.funcionario.EdicaoPedido;
 import java.awt.Point;
 import java.util.List;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.JDialog;
 import javax.swing.JTable;
 
 /**
@@ -23,13 +26,20 @@ public class ExibicaoPedidos extends javax.swing.JDialog {
     private List<Pedido> listaPedidos;
     private PedidosTableModel modeloTabela;
     private OperacoesPedido operacoesPedido;
+    private boolean admin;
+    private int idUsuario;
 
     public ExibicaoPedidos(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
+        initComponents();
+    }
+
+    public ExibicaoPedidos(java.awt.Frame parent, boolean modal, boolean admin, int idUsuario) {
+        super(parent, modal);
         this.pai = parent;
+        this.admin = admin;
+        this.idUsuario = idUsuario;
         this.operacoesPedido = new OperacoesPedido();
-        this.listaPedidos = this.operacoesPedido.buscaTodos();
-        this.modeloTabela = new PedidosTableModel(this.listaPedidos);
         initComponents();
 
         tabelaPedidos.addMouseListener(new MouseAdapter() {
@@ -40,7 +50,7 @@ public class ExibicaoPedidos extends javax.swing.JDialog {
                 int linha = tabela.rowAtPoint(ponto);
                 // Clique duplo
                 if (mouseEvent.getClickCount() == 2 && tabela.getSelectedRow() != -1) {
-                    chamaTelaEdicao((int) modeloTabela.getValueAt(linha, 0));
+                    chamaTelaPedido((int) modeloTabela.getValueAt(linha, 0));
                 }
             }
         });
@@ -53,16 +63,28 @@ public class ExibicaoPedidos extends javax.swing.JDialog {
     }
 
     private void atualizaModeloTabela() {
-        this.listaPedidos = this.operacoesPedido.buscaTodos();
+        if (this.admin) {
+            this.listaPedidos = this.operacoesPedido.buscaTodos();
+        } else {
+            this.listaPedidos = this.operacoesPedido.buscaTodos(this.idUsuario);
+        }
         this.modeloTabela = new PedidosTableModel(listaPedidos);
     }
 
-    private void chamaTelaEdicao(int id) {
-        EdicaoPedido tela = new EdicaoPedido(pai, true, id);
-        if (!tela.isPedido()) {
-            tela.setVisible(true);
-            this.atualizaTabela();
+    private void chamaTelaPedido(int id) {
+        JDialog tela;
+        if (this.admin) {
+            tela = new EdicaoPedido(pai, true, id);
+        } else {
+            tela = new VisualizacaoPedido(pai, true, id);
         }
+        tela.setVisible(true);
+        this.atualizaTabela();
+    }
+
+    public PedidosTableModel getModeloTabela() {
+        this.atualizaTabela();
+        return modeloTabela;
     }
 
     /**
@@ -169,10 +191,6 @@ public class ExibicaoPedidos extends javax.swing.JDialog {
                 dialog.setVisible(true);
             }
         });
-    }
-
-    public PedidosTableModel getModeloTabela() {
-        return modeloTabela;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

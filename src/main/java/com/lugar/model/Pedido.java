@@ -18,8 +18,13 @@ public class Pedido extends Transacao {
     private LocalDateTime dataEntrega;
     private String comentario;
     private List<Item> listaItens;
-    private int idCliente;
+    private Cliente cliente;
     private boolean instanciaSimplificada;
+
+    public Pedido(int id, String estado) {
+        super(id, 0, null, "");
+        this.estado = estado;
+    }
 
     public Pedido(int id, double valor, LocalDateTime diaHora, String descricao) {
         super(id, valor, diaHora, descricao, true);
@@ -34,19 +39,19 @@ public class Pedido extends Transacao {
     }
 
     public Pedido(int id, String estado, LocalDateTime dataEntrega,
-            String comentario, List<Item> listaItens, int idCliente) {
-        this(id, LocalDateTime.now(), estado, dataEntrega, comentario, listaItens, idCliente);
+            String comentario, List<Item> listaItens, Cliente cliente) {
+        this(id, LocalDateTime.now(), estado, dataEntrega, comentario, listaItens, cliente);
     }
 
     public Pedido(int id, LocalDateTime diaHora, String estado, LocalDateTime dataEntrega,
-            String comentario, List<Item> listaItens, int idCliente) {
+            String comentario, List<Item> listaItens, Cliente cliente) {
         super(id, Pedido.calculaValorTotal(listaItens), diaHora, "Pedido", true);
         this.estado = estado;
         this.dataEntrega = dataEntrega;
         this.comentario = comentario;
         this.listaItens = listaItens;
         this.instanciaSimplificada = false;
-        this.idCliente = idCliente;
+        this.cliente = cliente;
     }
 
     @Override
@@ -96,8 +101,8 @@ public class Pedido extends Transacao {
         return listaItens;
     }
 
-    public int getIdCliente() {
-        return idCliente;
+    public Cliente getCliente() {
+        return cliente;
     }
 
     private static double calculaValorTotal(List<Item> listaItens) {

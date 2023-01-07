@@ -5,6 +5,7 @@
 package com.lugar.controller;
 
 import com.lugar.confeitaria.Util;
+import com.lugar.model.Cliente;
 import com.lugar.model.Item;
 import com.lugar.model.Pedido;
 import com.lugar.model.Produto;
@@ -30,6 +31,35 @@ public class OperacoesPedido implements OperacoesConexao<Pedido> {
     @Override
     public List<Pedido> buscaTodos() {
         String sql = "SELECT Transacao.id, Transacao.valor, Transacao.diaHora, Transacao.ehPedido, Pedido.estado, Pedido.dataEntrega FROM Transacao INNER JOIN Pedido ON Transacao.id = Pedido.id WHERE Transacao.ehPedido = 1;";
+        Connection conn = null;
+        List<Pedido> listaPedidos = new ArrayList<Pedido>();
+        try {
+            conn = Conexao.abreConexao();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                LocalDateTime diaHora = LocalDateTime.parse(rs.getString("diaHora"));
+                LocalDateTime dataEntrega = LocalDateTime.parse(rs.getString("dataEntrega"));
+                Pedido pedido = new Pedido(
+                        rs.getInt("id"),
+                        rs.getDouble("valor"),
+                        diaHora,
+                        dataEntrega,
+                        rs.getString("estado")
+                );
+                listaPedidos.add(pedido);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexao.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            Conexao.fechaConexao(conn);
+        }
+        return listaPedidos;
+    }
+
+    public List<Pedido> buscaTodos(int idCliente) {
+        String sql = "SELECT Transacao.id, Transacao.valor, Transacao.diaHora, Transacao.ehPedido, Pedido.estado, Pedido.dataEntrega FROM Transacao INNER JOIN Pedido ON Transacao.id = Pedido.id WHERE Transacao.ehPedido = 1 AND Pedido.idCliente = " + idCliente + ";";
         Connection conn = null;
         List<Pedido> listaPedidos = new ArrayList<Pedido>();
         try {
@@ -104,7 +134,9 @@ public class OperacoesPedido implements OperacoesConexao<Pedido> {
             }
 
             if (!primeiro) {
-                pedido = new Pedido(id, diaHora, estado, dataEntrega, comentario, listaItens, idCliente);
+                OperacoesUsuario operacoesUsuario = new OperacoesUsuario();
+                Cliente cliente = (Cliente) operacoesUsuario.busca(idCliente);
+                pedido = new Pedido(id, diaHora, estado, dataEntrega, comentario, listaItens, cliente);
             }
         } catch (SQLException ex) {
             Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
@@ -145,7 +177,7 @@ public class OperacoesPedido implements OperacoesConexao<Pedido> {
                 pstmtPedido.setString(2, pedido.getEstado());
                 pstmtPedido.setString(3, pedido.getDataEntregaString());
                 pstmtPedido.setString(4, pedido.getComentario());
-                pstmtPedido.setInt(5, pedido.getIdCliente());
+                pstmtPedido.setInt(5, pedido.getCliente().getId());
                 linhasInseridas = pstmtPedido.executeUpdate();
 
                 // Reverter operação em caso de erro
@@ -215,14 +247,29 @@ public class OperacoesPedido implements OperacoesConexao<Pedido> {
     }
 
     @Override
-    public int atualiza(Pedido objeto
-    ) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public int atualiza(Pedido pedido) {
+        String sqlPedido = "UPDATE Pedido SET estado = ? WHERE id = ?;";
+        Connection conn = null;
+        int valorRetorno = Util.RETORNO_SUCESSO;
+        try {
+            conn = Conexao.abreConexao();
+            PreparedStatement pstmt = conn.prepareStatement(sqlPedido);
+            pstmt.setString(1, pedido.getEstado());
+            pstmt.setInt(2, pedido.getId());
+            pstmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexao.class
+                    .getName())
+                    .log(Level.SEVERE, null, ex);
+            valorRetorno = Conexao.determinaValorErro(ex.getMessage());
+        } finally {
+            Conexao.fechaConexao(conn);
+        }
+        return valorRetorno;
     }
 
     @Override
-    public int deleta(int id
-    ) {
+    public int deleta(int id) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 

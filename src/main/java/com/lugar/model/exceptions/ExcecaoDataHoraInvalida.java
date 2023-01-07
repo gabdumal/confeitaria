@@ -10,9 +10,9 @@ import com.lugar.confeitaria.Util;
  *
  * @author lugar
  */
-public class ExcecaoDataInvalida extends Exception {
+public class ExcecaoDataHoraInvalida extends Exception {
 
-    public ExcecaoDataInvalida() {
-        super("ERRO: a data informada não segue os padrões " + Util.FORMATO_DATA + "!");
+    public ExcecaoDataHoraInvalida() {
+        super("ERRO: a data informada não segue os padrões " + Util.FORMATO_DATAHORA + "!");
     }
 }

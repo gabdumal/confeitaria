@@ -8,10 +8,15 @@ package com.lugar.model;
  *
  * @author lugar
  */
-public class Cliente extends Usuario {
+public abstract class Cliente extends Usuario {
 
     private String cartao;
     private boolean fisica;
+
+    public Cliente(int idUsuario, String nomeUsuario, String senhaHash, boolean fisica) {
+        super(idUsuario, nomeUsuario, senhaHash, false);
+        this.fisica = fisica;
+    }
 
     public Cliente(
             int idUsuario,

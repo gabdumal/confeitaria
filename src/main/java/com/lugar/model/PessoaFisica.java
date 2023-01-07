@@ -4,6 +4,8 @@
  */
 package com.lugar.model;
 
+import com.lugar.confeitaria.Util;
+import java.text.ParseException;
 import java.time.LocalDate;
 
 /**
@@ -13,6 +15,10 @@ import java.time.LocalDate;
 public class PessoaFisica extends Cliente {
 
     private LocalDate dataNascimento;
+
+    public PessoaFisica(int idUsuario, String nomeUsuario, String senhaHash) {
+        super(idUsuario, nomeUsuario, senhaHash, true);
+    }
 
     public PessoaFisica(
             int idUsuario,
@@ -33,6 +39,15 @@ public class PessoaFisica extends Cliente {
 
     public LocalDate getDataNascimento() {
         return dataNascimento;
+    }
+
+    @Override
+    public String getIdentificadorFormatado() {
+        try {
+            return Util.formataString(this.getIdentificador(), "###.###.###-##");
+        } catch (ParseException ex) {
+            return this.getIdentificador();
+        }
     }
 
 }

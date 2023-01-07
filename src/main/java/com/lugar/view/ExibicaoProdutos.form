@@ -62,17 +62,15 @@
                 <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="if(!usuario.isAdmin()){"/>
               </AuxValues>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="itemMenuListaPedidos">
+            <MenuItem class="javax.swing.JMenuItem" name="itemMenuListaPedidosFuncionario">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Lista"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itemMenuListaPedidosActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itemMenuListaPedidosFuncionarioActionPerformed"/>
               </Events>
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="}"/>
                 <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JMenuItem()"/>
-                <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="if(usuario.isAdmin()){"/>
               </AuxValues>
             </MenuItem>
           </SubComponents>
