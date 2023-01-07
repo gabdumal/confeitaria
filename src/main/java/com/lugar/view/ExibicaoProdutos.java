@@ -22,6 +22,7 @@ import java.awt.event.MouseEvent;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.swing.JFrame;
 import javax.swing.JTable;
 
 /**
@@ -31,6 +32,7 @@ import javax.swing.JTable;
 public class ExibicaoProdutos extends javax.swing.JFrame {
 
     // Geral
+    private JFrame telaLogin;
     private Usuario usuario;
     private List<ProdutoPronto> listaProdutos;
     private ProdutosProntosTableModel modeloTabela;
@@ -42,17 +44,18 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
     public ExibicaoProdutos() {
         initComponents();
     }
-
-    public ExibicaoProdutos(Usuario usuario) {
+    
+    public ExibicaoProdutos(Usuario usuario, JFrame telaLogin) {
         this.usuario = usuario;
+        this.telaLogin = telaLogin;
         this.operacoesProdutoPronto = new OperacoesProdutoPronto();
-
+        
         if (!usuario.isAdmin()) {
             this.listaProdutosCarrinho = new HashMap<Integer, Integer>();
         }
-
+        
         initComponents();
-
+        
         if (usuario.isAdmin()) {
             // Funcionário
             tabelaProdutos.addMouseListener(new MouseAdapter() {
@@ -84,12 +87,12 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
             });
         }
     }
-
+    
     private ProdutosProntosTableModel getModeloTabela() {
         this.atualizaModeloTabela();
         return this.modeloTabela;
     }
-
+    
     private void atualizaModeloTabela() {
         this.listaProdutos = this.operacoesProdutoPronto.buscaTodos(usuario.isAdmin());
         // Reduz o estoque pela quantidade no carrinho para o cliente
@@ -103,7 +106,7 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
         }
         this.modeloTabela = new ProdutosProntosTableModel(this.listaProdutos);
     }
-
+    
     private void atualizaTabela() {
         this.atualizaModeloTabela();
         tabelaProdutos.setModel(this.modeloTabela);
@@ -116,7 +119,7 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
         edicaoProduto.setVisible(true);
         this.atualizaTabela();
     }
-
+    
     private void chamaTelaAdicaoProdutoCarrinho(int id) {
         OperacoesProdutoPronto novoProdutoPronto = new OperacoesProdutoPronto();
         ProdutoPronto produto = novoProdutoPronto.busca(id);
@@ -127,20 +130,20 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
         this.listaProdutosCarrinho.put(id, quantidadeComprada);
         this.atualizaTabela();
     }
-
+    
     private void chamaTelaCadastroProduto() {
         CadastroProduto cadastroProduto = new CadastroProduto(this, true);
         cadastroProduto.setVisible(true);
         this.atualizaTabela();
     }
-
+    
     private void chamaTelaCarrinho() {
         Carrinho carrinho = new Carrinho(this, true, (Cliente) usuario, listaProdutosCarrinho);
         carrinho.setVisible(true);
         this.listaProdutosCarrinho = carrinho.getListaProdutosCarrinho();
         this.atualizaTabela();
     }
-
+    
     private void chamaTelaCriacaoProdutoPersonalizado() {
         CriacaoProdutoPersonalizado criacaoProdutoPersonalizado = new CriacaoProdutoPersonalizado(this, true);
         criacaoProdutoPersonalizado.setVisible(true);
@@ -150,15 +153,20 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
             this.listaProdutosCarrinho.put(idProduto, quantidade);
         }
     }
-
+    
     private void chamaTelaTransacoes() {
         ExibicaoTransacoes tela = new ExibicaoTransacoes(this, true);
         tela.setVisible(true);
     }
-
+    
     private void chamaTelaPedidos() {
         ExibicaoPedidos tela = new ExibicaoPedidos(this, true, usuario.isAdmin(), usuario.getId());
         tela.setVisible(true);
+    }
+    
+    private void fazLogout() {
+        this.dispose();
+        this.telaLogin.setVisible(true);
     }
 
     /**
@@ -180,9 +188,11 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
         itemMenuCriarProdutoPersonalizado = new javax.swing.JMenuItem();
         menuPedidos = new javax.swing.JMenu();
         itemMenuCarrinho = new javax.swing.JMenuItem();
-        itemMenuListaPedidosFuncionario = new javax.swing.JMenuItem();
+        itemMenuListaPedidos = new javax.swing.JMenuItem();
         menuTransacoes = new javax.swing.JMenu();
         itemMenuLista = new javax.swing.JMenuItem();
+        menuPerfil = new javax.swing.JMenu();
+        itemMenuLogout = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Vitrine");
@@ -245,13 +255,13 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
             menuPedidos.add(itemMenuCarrinho);
         }
 
-        itemMenuListaPedidosFuncionario.setText("Lista");
-        itemMenuListaPedidosFuncionario.addActionListener(new java.awt.event.ActionListener() {
+        itemMenuListaPedidos.setText("Lista");
+        itemMenuListaPedidos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                itemMenuListaPedidosFuncionarioActionPerformed(evt);
+                itemMenuListaPedidosActionPerformed(evt);
             }
         });
-        menuPedidos.add(itemMenuListaPedidosFuncionario);
+        menuPedidos.add(itemMenuListaPedidos);
 
         barraMenu.add(menuPedidos);
 
@@ -277,6 +287,25 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
             barraMenu.add(menuTransacoes);
         }
 
+        menuPerfil.setText("Perfil");
+        menuPerfil.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuPerfilActionPerformed(evt);
+            }
+        });
+
+        if(usuario.isAdmin()){
+            itemMenuLogout.setText("Logout");
+            itemMenuLogout.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    itemMenuLogoutActionPerformed(evt);
+                }
+            });
+            menuPerfil.add(itemMenuLogout);
+        }
+
+        barraMenu.add(menuPerfil);
+
         setJMenuBar(barraMenu);
 
         pack();
@@ -285,30 +314,38 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
     private void itemMenuAdicionarProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMenuAdicionarProdutoActionPerformed
         this.chamaTelaCadastroProduto();
     }//GEN-LAST:event_itemMenuAdicionarProdutoActionPerformed
-
+    
     private void itemMenuCarrinhoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMenuCarrinhoActionPerformed
         this.chamaTelaCarrinho();
     }//GEN-LAST:event_itemMenuCarrinhoActionPerformed
-
+    
     private void itemMenuListaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMenuListaActionPerformed
         this.chamaTelaTransacoes();
     }//GEN-LAST:event_itemMenuListaActionPerformed
-
+    
     private void itemMenuCriarProdutoPersonalizadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMenuCriarProdutoPersonalizadoActionPerformed
         this.chamaTelaCriacaoProdutoPersonalizado();
     }//GEN-LAST:event_itemMenuCriarProdutoPersonalizadoActionPerformed
-
+    
     private void menuProdutosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuProdutosActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_menuProdutosActionPerformed
-
+    
     private void menuTransacoesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuTransacoesActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_menuTransacoesActionPerformed
-
-    private void itemMenuListaPedidosFuncionarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMenuListaPedidosFuncionarioActionPerformed
+    
+    private void itemMenuListaPedidosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMenuListaPedidosActionPerformed
         this.chamaTelaPedidos();
-    }//GEN-LAST:event_itemMenuListaPedidosFuncionarioActionPerformed
+    }//GEN-LAST:event_itemMenuListaPedidosActionPerformed
+    
+    private void itemMenuLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMenuLogoutActionPerformed
+        this.fazLogout();
+    }//GEN-LAST:event_itemMenuLogoutActionPerformed
+    
+    private void menuPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPerfilActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menuPerfilActionPerformed
 
     /**
      * @param args the command line arguments
@@ -324,21 +361,21 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
-
+                    
                 }
             }
         } catch (ClassNotFoundException ex) {
             java.util.logging.Logger.getLogger(ExibicaoProdutos.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
+            
         } catch (InstantiationException ex) {
             java.util.logging.Logger.getLogger(ExibicaoProdutos.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
+            
         } catch (IllegalAccessException ex) {
             java.util.logging.Logger.getLogger(ExibicaoProdutos.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
+            
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(ExibicaoProdutos.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
@@ -353,7 +390,7 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
                 new ExibicaoProdutos().setVisible(true);
             }
         });
-
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -362,8 +399,10 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
     private javax.swing.JMenuItem itemMenuCarrinho;
     private javax.swing.JMenuItem itemMenuCriarProdutoPersonalizado;
     private javax.swing.JMenuItem itemMenuLista;
-    private javax.swing.JMenuItem itemMenuListaPedidosFuncionario;
+    private javax.swing.JMenuItem itemMenuListaPedidos;
+    private javax.swing.JMenuItem itemMenuLogout;
     private javax.swing.JMenu menuPedidos;
+    private javax.swing.JMenu menuPerfil;
     private javax.swing.JMenu menuProdutos;
     private javax.swing.JMenu menuTransacoes;
     private javax.swing.JScrollPane painelRolavelTabela;

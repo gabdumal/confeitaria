@@ -28,16 +28,30 @@ public class Login extends javax.swing.JFrame {
 
         String usuarioForm = campoUsuario.getText();
         char[] senhaForm = campoSenha.getPassword();
+        boolean logou = false;
         for (Usuario usuario : listaUsuarios) {
             if (usuario.getNomeUsuario().compareTo(usuarioForm) == 0
                     && usuario.getSenhaHash().compareTo(String.valueOf(senhaForm)) == 0) {
-                ExibicaoProdutos exibicaoProdutos = new ExibicaoProdutos(usuario);
+                logou = true;
+                for (char c : senhaForm) {
+                    c = '\u0000';
+                }
+                ExibicaoProdutos exibicaoProdutos = new ExibicaoProdutos(usuario, this);
                 this.setVisible(false);
                 exibicaoProdutos.setVisible(true);
-                return;
             }
         }
-        JOptionPane.showMessageDialog(null, "Usuário ou senha não correspondem!");
+        if (!logou) {
+            JOptionPane.showMessageDialog(null, "Usuário ou senha não correspondem!");
+        }
+
+        this.campoUsuario.setText("");
+        this.campoSenha.setText("");
+    }
+
+    private void chamaTelaCadastroCliente() {
+        CadastroCliente cadastroCliente = new CadastroCliente(this, true);
+        cadastroCliente.setVisible(true);
     }
 
     /**
@@ -166,8 +180,7 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_botaoLoginActionPerformed
 
     private void botaoCadastroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCadastroActionPerformed
-        CadastroCliente cadastroCliente = new CadastroCliente(this, true);
-        cadastroCliente.setVisible(true);
+        this.chamaTelaCadastroCliente();
     }//GEN-LAST:event_botaoCadastroActionPerformed
 
     private void campoUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoUsuarioActionPerformed
