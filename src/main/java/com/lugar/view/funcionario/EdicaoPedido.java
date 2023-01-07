@@ -300,7 +300,9 @@ public class EdicaoPedido extends javax.swing.JDialog {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 10);
         painelFormulario.add(painelCampos, gridBagConstraints);
 
@@ -410,7 +412,8 @@ public class EdicaoPedido extends javax.swing.JDialog {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
         gridBagConstraints.insets = new java.awt.Insets(0, 10, 20, 0);
         painelFormulario.add(painelCliente, gridBagConstraints);
@@ -422,7 +425,6 @@ public class EdicaoPedido extends javax.swing.JDialog {
 
         tabelaItens.setModel(this.getModeloTabela());
         tabelaItens.setMinimumSize(new java.awt.Dimension(0, 66));
-        tabelaItens.setPreferredSize(new java.awt.Dimension(0, 66));
         tabelaItens.removeColumn(tabelaItens.getColumnModel().getColumn(0));
         painelRolavelTabelaItens.setViewportView(tabelaItens);
 
@@ -430,7 +432,7 @@ public class EdicaoPedido extends javax.swing.JDialog {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 0);
@@ -456,7 +458,7 @@ public class EdicaoPedido extends javax.swing.JDialog {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 2;
         painelFormulario.add(painelBotoes, gridBagConstraints);
 

@@ -49,9 +49,23 @@ public class Util {
         return diaHora.format(formatador);
     }
 
+    private static MaskFormatter criaFormatador(String mascara) {
+        MaskFormatter formatador = null;
+        try {
+            formatador = new MaskFormatter(mascara);
+            formatador.setPlaceholderCharacter('_');
+            formatador.setValueContainsLiteralCharacters(false);
+            formatador.setAllowsInvalid(false);
+            formatador.setOverwriteMode(true);
+        } catch (ParseException ex) {
+            System.err.println("Formatador é inválido: " + ex.getMessage());
+        }
+        return formatador;
+    }
+
     public static String formataString(String texto, String mascara) throws ParseException {
-        MaskFormatter mf = new MaskFormatter(mascara);
-        return mf.valueToString(texto);
+        MaskFormatter formatador = Util.criaFormatador(mascara);
+        return formatador.valueToString(texto);
     }
 
     public static LocalDate converteData(String data) throws ExcecaoDataInvalida {
@@ -75,7 +89,6 @@ public class Util {
             SimpleDateFormat format = new SimpleDateFormat(Util.FORMATO_DATA);
             format.setLenient(false);
             format.parse(data);
-
         } catch (ParseException | IllegalArgumentException e) {
             return false;
         }
