@@ -15,44 +15,19 @@ public class ProdutoPersonalizado extends Produto {
 
     private String receita;
     private String detalhe;
-    private Caracteristica forma;
     private Caracteristica cor;
-    private Caracteristica cobertura;
-    private List<Caracteristica> recheios;
 
     public ProdutoPersonalizado(int id, String receita, String detalhe) {
         super(id);
-        this.recheios = new ArrayList<Caracteristica>();
         this.receita = receita;
         this.detalhe = detalhe;
     }
 
-    public ProdutoPersonalizado(int id, String receita, String detalhe,
-            Caracteristica forma, Caracteristica cor, Caracteristica cobertura,
-            List<Caracteristica> recheios) {
+    public ProdutoPersonalizado(int id, String receita, String detalhe, Caracteristica cor) {
         super(id);
         this.receita = receita;
         this.detalhe = detalhe;
-        this.forma = forma;
         this.cor = cor;
-        this.cobertura = cobertura;
-        this.recheios = recheios;
-    }
-
-    public Caracteristica getForma() {
-        return forma;
-    }
-
-    public Caracteristica getRecheio(int indice) {
-        return recheios.get(indice);
-    }
-
-    public List<Caracteristica> getRecheios() {
-        return recheios;
-    }
-
-    public Caracteristica getCobertura() {
-        return cobertura;
     }
 
     public Caracteristica getCor() {
@@ -69,7 +44,7 @@ public class ProdutoPersonalizado extends Produto {
 
     @Override
     public double getValor() {
-        // todo
+        // to do
         return 0;
     }
 
@@ -81,20 +56,8 @@ public class ProdutoPersonalizado extends Produto {
         } else {
             nomeFormado += "Trufa de ";
         }
-        nomeFormado += this.getRecheio(0);
+//        nomeFormado += this.getRecheio(0); corrigir
         return nomeFormado;
-    }
-
-    public void setForma(Caracteristica forma) {
-        this.forma = forma;
-    }
-
-    public void addRecheio(Caracteristica recheio) {
-        this.recheios.add(recheio);
-    }
-
-    public void setCobertura(Caracteristica cobertura) {
-        this.cobertura = cobertura;
     }
 
     public void setCor(Caracteristica cor) {
