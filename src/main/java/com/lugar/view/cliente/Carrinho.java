@@ -90,9 +90,6 @@ public class Carrinho extends javax.swing.JDialog {
     private void atualizaModeloTabela() {
         // Atualiza lista de produtos
         this.montaListaProdutos();
-//        for (Produto produto : listaProdutos) {
-//            produto.setCarrinho(listaProdutosCarrinho.get(produto.getId()));
-//        }
         this.modeloTabela = new ProdutosTableModel(this.listaProdutos);
     }
 

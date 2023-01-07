@@ -128,7 +128,6 @@ public class ExibicaoPedidos extends javax.swing.JDialog {
         painelTabela.setLayout(new java.awt.BorderLayout());
 
         tabelaPedidos.setModel(this.getModeloTabela());
-        tabelaPedidos.removeColumn(tabelaPedidos.getColumnModel().getColumn(0));
         tabelaPedidos.getTableHeader().setReorderingAllowed(false);
         telaRolavel.setViewportView(tabelaPedidos);
 
