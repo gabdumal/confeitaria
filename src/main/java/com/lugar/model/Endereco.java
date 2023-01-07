@@ -75,9 +75,13 @@ public class Endereco {
     }
 
     public String getEnderecoFormatado() {
-        return this.logradouro + ", " + this.numero + " " + this.complemento
-                + " - " + this.bairro + ", " + this.cidade + " - " + this.uf
+        String formatado = this.logradouro + ", " + this.numero;
+        if (!this.complemento.isBlank()) {
+            formatado += " " + this.complemento;
+        }
+        formatado += " - " + this.bairro + ", " + this.cidade + " - " + this.uf
                 + ", " + this.getCepFormatado();
+        return formatado;
     }
 
 }

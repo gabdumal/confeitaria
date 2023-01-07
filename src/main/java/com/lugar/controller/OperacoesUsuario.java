@@ -4,13 +4,11 @@
  */
 package com.lugar.controller;
 
-import com.lugar.confeitaria.Util;
 import com.lugar.model.Endereco;
 import com.lugar.model.Funcionario;
 import com.lugar.model.PessoaFisica;
 import com.lugar.model.PessoaJuridica;
 import com.lugar.model.Usuario;
-import com.lugar.model.exceptions.ExcecaoDataInvalida;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;

@@ -21,6 +21,11 @@ public class Pedido extends Transacao {
     private Cliente cliente;
     private boolean instanciaSimplificada;
 
+    public Pedido(int id, String estado) {
+        super(id, 0, null, "");
+        this.estado = estado;
+    }
+
     public Pedido(int id, double valor, LocalDateTime diaHora, String descricao) {
         super(id, valor, diaHora, descricao, true);
         this.instanciaSimplificada = true;

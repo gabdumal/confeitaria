@@ -218,14 +218,29 @@ public class OperacoesPedido implements OperacoesConexao<Pedido> {
     }
 
     @Override
-    public int atualiza(Pedido objeto
-    ) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public int atualiza(Pedido pedido) {
+        String sqlPedido = "UPDATE Pedido SET estado = ? WHERE id = ?;";
+        Connection conn = null;
+        int valorRetorno = Util.RETORNO_SUCESSO;
+        try {
+            conn = Conexao.abreConexao();
+            PreparedStatement pstmt = conn.prepareStatement(sqlPedido);
+            pstmt.setString(1, pedido.getEstado());
+            pstmt.setInt(2, pedido.getId());
+            pstmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexao.class
+                    .getName())
+                    .log(Level.SEVERE, null, ex);
+            valorRetorno = Conexao.determinaValorErro(ex.getMessage());
+        } finally {
+            Conexao.fechaConexao(conn);
+        }
+        return valorRetorno;
     }
 
     @Override
-    public int deleta(int id
-    ) {
+    public int deleta(int id) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 

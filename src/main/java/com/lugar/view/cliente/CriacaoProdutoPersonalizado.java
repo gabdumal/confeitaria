@@ -5,7 +5,6 @@
 package com.lugar.view.cliente;
 
 import com.lugar.confeitaria.Util;
-import com.lugar.controller.Conexao;
 import com.lugar.controller.OperacoesCaracteristica;
 import com.lugar.controller.OperacoesProdutoPersonalizado;
 import com.lugar.model.Caracteristica;
