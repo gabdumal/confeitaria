@@ -16,6 +16,7 @@ public class AdicaoProdutoCarrinho extends javax.swing.JDialog {
 
     private int quantidade;
     private int quantidadeMaxima;
+    private boolean editado;
 
     public int getQuantidade() {
         return this.quantidade;
@@ -29,13 +30,11 @@ public class AdicaoProdutoCarrinho extends javax.swing.JDialog {
 
     public AdicaoProdutoCarrinho(java.awt.Frame parent, boolean modal, Produto produto) {
         super(parent, modal);
+        this.editado = false;
         String textoProduto = "";
         if (produto instanceof ProdutoPronto) {
             this.quantidadeMaxima = ((ProdutoPronto) produto).getEstoque();
             textoProduto = ((ProdutoPronto) produto).getNome();
-        } else {
-            this.quantidadeMaxima = Integer.MAX_VALUE;
-            textoProduto = ((ProdutoPersonalizado) produto).getRecheio(0).getNome();
         }
         if (produto.getCarrinho() > 0) {
             this.quantidade = produto.getCarrinho();
@@ -45,6 +44,16 @@ public class AdicaoProdutoCarrinho extends javax.swing.JDialog {
         initComponents();
         this.textoNomeProduto.setText(textoProduto);
         this.textoPrecoProduto.setText(produto.getValorFormatado());
+    }
+
+    public boolean isEditado() {
+        return editado;
+    }
+
+    private void adicionaProduto() {
+        this.quantidade = (int) campoQuantidade.getValue();
+        this.editado = true;
+        this.dispose();
     }
 
     /**
@@ -168,8 +177,7 @@ public class AdicaoProdutoCarrinho extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botaoEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoEnviarActionPerformed
-        this.quantidade = (int) campoQuantidade.getValue();
-        this.dispose();
+        this.adicionaProduto();
     }//GEN-LAST:event_botaoEnviarActionPerformed
 
     private void botaoCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCancelarActionPerformed
