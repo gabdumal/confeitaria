@@ -171,6 +171,11 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
         this.telaLogin.setVisible(true);
     }
 
+    private void chamaTelaEdicaoUsuario() {
+        EdicaoUsuario tela = new EdicaoUsuario(this, true, usuario.getId());
+        tela.setVisible(true);
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -194,6 +199,7 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
         menuTransacoes = new javax.swing.JMenu();
         itemMenuLista = new javax.swing.JMenuItem();
         menuPerfil = new javax.swing.JMenu();
+        itemMenuVisualizar = new javax.swing.JMenuItem();
         itemMenuLogout = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -296,6 +302,14 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
             }
         });
 
+        itemMenuVisualizar.setText("Visualizar");
+        itemMenuVisualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemMenuVisualizarActionPerformed(evt);
+            }
+        });
+        menuPerfil.add(itemMenuVisualizar);
+
         itemMenuLogout.setText("Logout");
         itemMenuLogout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -346,6 +360,10 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
     private void menuPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPerfilActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_menuPerfilActionPerformed
+
+    private void itemMenuVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMenuVisualizarActionPerformed
+        this.chamaTelaEdicaoUsuario();
+    }//GEN-LAST:event_itemMenuVisualizarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -401,6 +419,7 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
     private javax.swing.JMenuItem itemMenuLista;
     private javax.swing.JMenuItem itemMenuListaPedidos;
     private javax.swing.JMenuItem itemMenuLogout;
+    private javax.swing.JMenuItem itemMenuVisualizar;
     private javax.swing.JMenu menuPedidos;
     private javax.swing.JMenu menuPerfil;
     private javax.swing.JMenu menuProdutos;
