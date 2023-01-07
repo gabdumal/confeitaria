@@ -58,6 +58,35 @@ public class OperacoesPedido implements OperacoesConexao<Pedido> {
         return listaPedidos;
     }
 
+    public List<Pedido> buscaTodos(int idCliente) {
+        String sql = "SELECT Transacao.id, Transacao.valor, Transacao.diaHora, Transacao.ehPedido, Pedido.estado, Pedido.dataEntrega FROM Transacao INNER JOIN Pedido ON Transacao.id = Pedido.id WHERE Transacao.ehPedido = 1 AND Pedido.idCliente = " + idCliente + ";";
+        Connection conn = null;
+        List<Pedido> listaPedidos = new ArrayList<Pedido>();
+        try {
+            conn = Conexao.abreConexao();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                LocalDateTime diaHora = LocalDateTime.parse(rs.getString("diaHora"));
+                LocalDateTime dataEntrega = LocalDateTime.parse(rs.getString("dataEntrega"));
+                Pedido pedido = new Pedido(
+                        rs.getInt("id"),
+                        rs.getDouble("valor"),
+                        diaHora,
+                        dataEntrega,
+                        rs.getString("estado")
+                );
+                listaPedidos.add(pedido);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexao.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            Conexao.fechaConexao(conn);
+        }
+        return listaPedidos;
+    }
+
     @Override
     public Pedido busca(int id) {
         String sql = "SELECT Transacao.id, Transacao.diaHora, Transacao.ehPedido, Pedido.estado, Pedido.dataEntrega, Pedido.comentario, Pedido.idCliente, \n"

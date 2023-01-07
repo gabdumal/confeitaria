@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
-package com.lugar.view.funcionario;
+package com.lugar.view;
 
 import com.lugar.confeitaria.Util;
 import com.lugar.model.Item;
@@ -59,7 +59,6 @@ public class VisualizacaoItemProdutoPronto extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Edição da Transação");
-        setPreferredSize(new java.awt.Dimension(360, 300));
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         painelFormulario.setLayout(new java.awt.GridBagLayout());
