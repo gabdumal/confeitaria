@@ -94,12 +94,30 @@ public class Conexao {
             sql = "CREATE TABLE IF NOT EXISTS \"ProdutoPersonalizado\" (\n"
                     + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
                     + "	\"detalhe\"	TEXT,\n"
-                    + "	\"receita\"	TEXT NOT NULL CHECK(receita IN('B','T')),\n"
-                    + "	\"idCobertura\"	INTEGER,\n"
+                    + "	\"receita\"	TEXT NOT NULL CHECK(\"receita\" IN ('B', 'T')),\n"
                     + "	\"idCor\"	INTEGER NOT NULL,\n"
+                    + "	FOREIGN KEY(\"id\") REFERENCES \"Produto\"(\"id\") ON DELETE CASCADE,\n"
+                    + "	PRIMARY KEY(\"id\")"
+                    + ");";
+            stmt.addBatch(sql);
+
+            sql = "CREATE TABLE IF NOT EXISTS \"Bolo\" (\n"
+                    + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
                     + "	\"idForma\"	INTEGER NOT NULL,\n"
-                    + "	PRIMARY KEY(\"id\"),\n"
-                    + "	FOREIGN KEY(\"id\") REFERENCES \"Produto\"(\"id\") ON DELETE CASCADE\n"
+                    + "	\"idCobertura\"	INTEGER NOT NULL,\n"
+                    + "	FOREIGN KEY(\"idCobertura\") REFERENCES \"Caracteristica\"(\"id\"),\n"
+                    + "	FOREIGN KEY(\"id\") REFERENCES \"ProdutoPersonalizado\"(\"id\") ON DELETE CASCADE,\n"
+                    + "	FOREIGN KEY(\"idForma\") REFERENCES \"Forma\"(\"id\"),\n"
+                    + "	PRIMARY KEY(\"id\")\n"
+                    + ");";
+            stmt.addBatch(sql);
+
+            sql = "CREATE TABLE IF NOT EXISTS \"Trufa\" (\n"
+                    + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
+                    + "	\"idRecheio\"	INTEGER NOT NULL,\n"
+                    + "	FOREIGN KEY(\"idRecheio\") REFERENCES \"Caracteristica\"(\"id\"),\n"
+                    + "	FOREIGN KEY(\"id\") REFERENCES \"ProdutoPersonalizado\"(\"id\") ON DELETE CASCADE,\n"
+                    + "	PRIMARY KEY(\"id\")\n"
                     + ");";
             stmt.addBatch(sql);
 
@@ -203,13 +221,13 @@ public class Conexao {
                     + ");";
             stmt.addBatch(sql);
 
-            sql = "CREATE TABLE IF NOT EXISTS \"ProdutoPersonalizado_Recheio\" (\n"
+            sql = "CREATE TABLE IF NOT EXISTS \"Bolo_Recheio\" (\n"
                     + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
-                    + "	\"idProdutoPersonalizado\"	INTEGER NOT NULL,\n"
+                    + "	\"idBolo\"	INTEGER NOT NULL,\n"
                     + "	\"idRecheio\"	INTEGER NOT NULL,\n"
-                    + "	FOREIGN KEY(\"idRecheio\") REFERENCES \"Caracteristica\"(\"id\") ON DELETE CASCADE,\n"
-                    + "	FOREIGN KEY(\"idProdutoPersonalizado\") REFERENCES \"Produto\"(\"id\") ON DELETE CASCADE,\n"
-                    + "	PRIMARY KEY(\"id\" AUTOINCREMENT)\n"
+                    + "	PRIMARY KEY(\"id\" AUTOINCREMENT),\n"
+                    + "	FOREIGN KEY(\"idBolo\") REFERENCES \"Bolo\"(\"id\") ON DELETE CASCADE,\n"
+                    + "	FOREIGN KEY(\"idRecheio\") REFERENCES \"Caracteristica\"(\"id\") ON DELETE CASCADE\n"
                     + ");";
             stmt.addBatch(sql);
 
