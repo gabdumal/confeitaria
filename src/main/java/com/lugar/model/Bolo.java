@@ -54,7 +54,14 @@ public class Bolo extends ProdutoPersonalizado {
 
     @Override
     public double getValor() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        double valorFinal = 0;
+        valorFinal += this.forma.getGramaCobertura() * this.getCobertura().getValorGrama();
+        valorFinal += this.forma.getGramaMassa() * this.getForma().getValorGrama();
+        valorFinal += this.getCor().getValorGrama();
+        for (Caracteristica recheio : recheios) {
+            valorFinal += this.forma.getGramaRecheio() * recheio.getValorGrama();
+        }
+        return valorFinal;
     }
 
     public void setForma(Forma forma) {

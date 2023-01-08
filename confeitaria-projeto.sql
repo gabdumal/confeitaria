@@ -16,10 +16,24 @@ CREATE TABLE IF NOT EXISTS "ProdutoPersonalizado" (
 	"id"	INTEGER NOT NULL UNIQUE,
 	"detalhe"	TEXT,
 	"receita"	TEXT NOT NULL CHECK("receita" IN ('B', 'T')),
-	"idCobertura"	INTEGER,
 	"idCor"	INTEGER NOT NULL,
-	"idForma"	INTEGER NOT NULL,
 	FOREIGN KEY("id") REFERENCES "Produto"("id") ON DELETE CASCADE,
+	PRIMARY KEY("id")
+);
+CREATE TABLE IF NOT EXISTS "Bolo" (
+	"id"	INTEGER NOT NULL UNIQUE,
+	"idForma"	INTEGER NOT NULL,
+	"idCobertura"	INTEGER NOT NULL,
+	FOREIGN KEY("idCobertura") REFERENCES "Caracteristica"("id"),
+	FOREIGN KEY("idForma") REFERENCES "Forma"("id"),
+	FOREIGN KEY("id") REFERENCES "ProdutoPersonalizado"("id") ON DELETE CASCADE,
+	PRIMARY KEY("id")
+);
+CREATE TABLE IF NOT EXISTS "Trufa" (
+	"id"	INTEGER NOT NULL UNIQUE,
+	"idRecheio"	INTEGER NOT NULL,
+	FOREIGN KEY("id") REFERENCES "ProdutoPersonalizado"("id") ON DELETE CASCADE,
+	FOREIGN KEY("idRecheio") REFERENCES "Caracteristica"("id"),
 	PRIMARY KEY("id")
 );
 CREATE TABLE IF NOT EXISTS "Transacao" (
@@ -38,7 +52,7 @@ CREATE TABLE IF NOT EXISTS "Endereco" (
 	"bairro"	TEXT NOT NULL,
 	"cidade"	TEXT NOT NULL,
 	"uf"	TEXT NOT NULL,
-	"cep"	TEXT NOT NULL CHECK(LENGTH("cep") == 7),
+	"cep"	TEXT NOT NULL CHECK(LENGTH("cep") == 8),
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
 CREATE TABLE IF NOT EXISTS "Usuario" (
@@ -57,6 +71,7 @@ CREATE TABLE IF NOT EXISTS "Usuario" (
 CREATE TABLE IF NOT EXISTS "Cliente" (
 	"id"	INTEGER NOT NULL UNIQUE,
 	"cartao"	TEXT NOT NULL CHECK(LENGTH("cartao") == 16),
+	"fisica"	INTEGER NOT NULL DEFAULT 1 CHECK("fisica" IN (0, 1)),
 	FOREIGN KEY("id") REFERENCES "Usuario"("id") ON DELETE CASCADE,
 	PRIMARY KEY("id")
 );
@@ -95,11 +110,11 @@ CREATE TABLE IF NOT EXISTS "Forma" (
 	FOREIGN KEY("id") REFERENCES "Caracteristica"("id") ON DELETE CASCADE,
 	PRIMARY KEY("id")
 );
-CREATE TABLE IF NOT EXISTS "ProdutoPersonalizado_Recheio" (
+CREATE TABLE IF NOT EXISTS "Bolo_Recheio" (
 	"id"	INTEGER NOT NULL UNIQUE,
-	"idProdutoPersonalizado"	INTEGER NOT NULL,
+	"idBolo"	INTEGER NOT NULL,
 	"idRecheio"	INTEGER NOT NULL,
-	FOREIGN KEY("idProdutoPersonalizado") REFERENCES "Produto"("id") ON DELETE CASCADE,
+	FOREIGN KEY("idBolo") REFERENCES "Bolo"("id") ON DELETE CASCADE,
 	FOREIGN KEY("idRecheio") REFERENCES "Caracteristica"("id") ON DELETE CASCADE,
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
@@ -128,29 +143,64 @@ INSERT INTO "Produto" ("id","tipo") VALUES (2,1);
 INSERT INTO "Produto" ("id","tipo") VALUES (3,0);
 INSERT INTO "Produto" ("id","tipo") VALUES (4,0);
 INSERT INTO "Produto" ("id","tipo") VALUES (5,0);
+INSERT INTO "Produto" ("id","tipo") VALUES (6,1);
+INSERT INTO "Produto" ("id","tipo") VALUES (7,1);
+INSERT INTO "Produto" ("id","tipo") VALUES (8,1);
+INSERT INTO "Produto" ("id","tipo") VALUES (9,1);
+INSERT INTO "Produto" ("id","tipo") VALUES (10,1);
+INSERT INTO "Produto" ("id","tipo") VALUES (11,1);
+INSERT INTO "Produto" ("id","tipo") VALUES (12,1);
+INSERT INTO "Produto" ("id","tipo") VALUES (13,1);
 INSERT INTO "ProdutoPronto" ("id","nome","estoque","valor") VALUES (3,'Brownie',3,6.95);
 INSERT INTO "ProdutoPronto" ("id","nome","estoque","valor") VALUES (4,'Bolo de milho simples',0,7.89);
 INSERT INTO "ProdutoPronto" ("id","nome","estoque","valor") VALUES (5,'Sorvete de manga apimentada',0,3.67);
-INSERT INTO "ProdutoPersonalizado" ("id","detalhe","receita","idCobertura","idCor","idForma") VALUES (1,'Gostoso','B',4,3,2);
-INSERT INTO "Transacao" ("id","valor","diaHora","descricao","ehPedido") VALUES (0,12.0,'2020-08-17T10:11:16.908732','Transação teste',0);
+INSERT INTO "ProdutoPersonalizado" ("id","detalhe","receita","idCor") VALUES (1,'Gostoso','B',3);
+INSERT INTO "ProdutoPersonalizado" ("id","detalhe","receita","idCor") VALUES (2,'','T',3);
+INSERT INTO "ProdutoPersonalizado" ("id","detalhe","receita","idCor") VALUES (6,'Banana','B',3);
+INSERT INTO "ProdutoPersonalizado" ("id","detalhe","receita","idCor") VALUES (7,'','B',3);
+INSERT INTO "ProdutoPersonalizado" ("id","detalhe","receita","idCor") VALUES (8,'Banana','B',3);
+INSERT INTO "ProdutoPersonalizado" ("id","detalhe","receita","idCor") VALUES (9,'Banana','B',3);
+INSERT INTO "ProdutoPersonalizado" ("id","detalhe","receita","idCor") VALUES (10,'Banana','B',3);
+INSERT INTO "ProdutoPersonalizado" ("id","detalhe","receita","idCor") VALUES (11,'','B',3);
+INSERT INTO "ProdutoPersonalizado" ("id","detalhe","receita","idCor") VALUES (12,'','B',3);
+INSERT INTO "ProdutoPersonalizado" ("id","detalhe","receita","idCor") VALUES (13,'','T',3);
+INSERT INTO "Bolo" ("id","idForma","idCobertura") VALUES (1,2,4);
+INSERT INTO "Bolo" ("id","idForma","idCobertura") VALUES (6,2,4);
+INSERT INTO "Bolo" ("id","idForma","idCobertura") VALUES (7,2,4);
+INSERT INTO "Bolo" ("id","idForma","idCobertura") VALUES (8,2,4);
+INSERT INTO "Bolo" ("id","idForma","idCobertura") VALUES (9,2,4);
+INSERT INTO "Bolo" ("id","idForma","idCobertura") VALUES (10,2,4);
+INSERT INTO "Bolo" ("id","idForma","idCobertura") VALUES (11,2,4);
+INSERT INTO "Bolo" ("id","idForma","idCobertura") VALUES (12,2,4);
+INSERT INTO "Trufa" ("id","idRecheio") VALUES (2,5);
+INSERT INTO "Trufa" ("id","idRecheio") VALUES (13,5);
+INSERT INTO "Transacao" ("id","valor","diaHora","descricao","ehPedido") VALUES (0,12.1,'2020-08-17T10:11:16.908732','Transação teste',0);
 INSERT INTO "Transacao" ("id","valor","diaHora","descricao","ehPedido") VALUES (1,42.64,'2023-01-05T17:07:14.672255400','Pedido',1);
-INSERT INTO "Endereco" ("id","numero","complemento","logradouro","bairro","cidade","uf","cep") VALUES (1,'0','','Rua dos bobos','Vale Místico','Lírica do Norte','MG','3789287');
-INSERT INTO "Endereco" ("id","numero","complemento","logradouro","bairro","cidade","uf","cep") VALUES (2,'34','APT 506','Avenida Brasil','Centro','Mar de Espanha','MG','3897235');
-INSERT INTO "Endereco" ("id","numero","complemento","logradouro","bairro","cidade","uf","cep") VALUES (3,'S/N','','Rua das Indústrias','Distrito Industrial','Juiz de Fora','MG','3809725');
+INSERT INTO "Endereco" ("id","numero","complemento","logradouro","bairro","cidade","uf","cep") VALUES (1,'0','','Rua dos bobos','Vale Místico','Lírica do Norte','MG','37589287');
+INSERT INTO "Endereco" ("id","numero","complemento","logradouro","bairro","cidade","uf","cep") VALUES (2,'34','APT 506','Avenida Brasil','Centro','Mar de Espanha','MG','38976235');
+INSERT INTO "Endereco" ("id","numero","complemento","logradouro","bairro","cidade","uf","cep") VALUES (3,'S/N','','Rua das Indústrias','Distrito Industrial','Juiz de Fora','MG','38079725');
 INSERT INTO "Usuario" ("id","nome","nomeUsuario","senhaHash","identificador","email","telefone","admin","idEndereco") VALUES (1,'Cliente PF Exemplo','cliente','senha','01234567890','cliente@email.com','32980675454',0,1);
 INSERT INTO "Usuario" ("id","nome","nomeUsuario","senhaHash","identificador","email","telefone","admin","idEndereco") VALUES (2,'Papelaria O Escritório','juridico','senha','09468264870001','contato@papelaria.com','3233988734',0,3);
 INSERT INTO "Usuario" ("id","nome","nomeUsuario","senhaHash","identificador","email","telefone","admin","idEndereco") VALUES (3,'Funcionário Exemplo','admin','senha','09876543210','admin@email.com','32956435476',1,2);
-INSERT INTO "Cliente" ("id","cartao") VALUES (1,'7846746387576273');
-INSERT INTO "Cliente" ("id","cartao") VALUES (2,'8946736409768881');
-INSERT INTO "PessoaFisica" ("id","dataNascimento") VALUES (1,'1996-08-17T00:00:00.000000');
+INSERT INTO "Cliente" ("id","cartao","fisica") VALUES (1,'7846746387576273',1);
+INSERT INTO "Cliente" ("id","cartao","fisica") VALUES (2,'8946736409768881',0);
+INSERT INTO "PessoaFisica" ("id","dataNascimento") VALUES (1,'1996-08-17');
 INSERT INTO "PessoaJuridica" ("id","razaoSocial") VALUES (2,'Empresa de Papéis LTDA');
+INSERT INTO "Funcionario" ("id","matricula","funcao") VALUES (3,'201709675','Caixa');
 INSERT INTO "Caracteristica" ("id","tipo","nome","valorGrama") VALUES (1,'R','Creme de morango',0.32);
 INSERT INTO "Caracteristica" ("id","tipo","nome","valorGrama") VALUES (2,'F','Redonda 20cm',0.0625);
 INSERT INTO "Caracteristica" ("id","tipo","nome","valorGrama") VALUES (3,'C','Azul',0.0);
 INSERT INTO "Caracteristica" ("id","tipo","nome","valorGrama") VALUES (4,'T','Glacê de limão',0.023);
 INSERT INTO "Caracteristica" ("id","tipo","nome","valorGrama") VALUES (5,'R','Ganache meio amargo',0.57);
 INSERT INTO "Forma" ("id","recheios","gramaRecheio","gramaCobertura","gramaMassa") VALUES (2,1,100,150,800);
-INSERT INTO "ProdutoPersonalizado_Recheio" ("id","idProdutoPersonalizado","idRecheio") VALUES (1,1,5);
+INSERT INTO "Bolo_Recheio" ("id","idBolo","idRecheio") VALUES (1,1,5);
+INSERT INTO "Bolo_Recheio" ("id","idBolo","idRecheio") VALUES (2,6,5);
+INSERT INTO "Bolo_Recheio" ("id","idBolo","idRecheio") VALUES (3,7,1);
+INSERT INTO "Bolo_Recheio" ("id","idBolo","idRecheio") VALUES (4,8,1);
+INSERT INTO "Bolo_Recheio" ("id","idBolo","idRecheio") VALUES (5,9,1);
+INSERT INTO "Bolo_Recheio" ("id","idBolo","idRecheio") VALUES (6,10,1);
+INSERT INTO "Bolo_Recheio" ("id","idBolo","idRecheio") VALUES (7,11,5);
+INSERT INTO "Bolo_Recheio" ("id","idBolo","idRecheio") VALUES (8,12,5);
 INSERT INTO "Pedido" ("id","estado","dataEntrega","comentario","idCliente") VALUES (1,'S','2023-01-09T19:00','Em uma caixa grande, por favor.',1);
 INSERT INTO "Item" ("id","valorTotal","quantidade","idProduto","idPedido") VALUES (1,34.75,5,3,1);
 INSERT INTO "Item" ("id","valorTotal","quantidade","idProduto","idPedido") VALUES (2,7.89,1,4,1);

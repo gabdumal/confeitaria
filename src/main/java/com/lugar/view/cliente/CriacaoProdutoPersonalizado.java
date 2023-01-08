@@ -51,6 +51,7 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
         this.editado = false;
         this.carregaComboBoxes();
         initComponents();
+        this.atualizaValor();
         this.trocaPainel();
         this.trocaExibicaoRecheios();
     }
@@ -63,6 +64,7 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
         this.editado = false;
         this.carregaComboBoxes();
         initComponents();
+        this.atualizaValor();
         this.preencheCampos(produto);
         this.trocaExibicaoRecheios();
         this.trocaPainel();
@@ -171,10 +173,27 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
     }
 
     private void criaProdutoPersonalizado() {
-        this.quantidade = (int) this.campoQuantidade.getValue();
         this.idProduto = Util.RETORNO_ERRO_INDETERMINADO;
-        if (this.receita.equals(Util.RECEITA_BOLO)) {
+        ProdutoPersonalizado produto = this.montaProduto();
+        if (produto instanceof Bolo) {
             OperacoesBolo operacoesBolo = new OperacoesBolo();
+            this.idProduto = operacoesBolo.insere((Bolo) produto);
+        } else {
+            OperacoesTrufa operacoesTrufa = new OperacoesTrufa();
+            this.idProduto = operacoesTrufa.insere((Trufa) produto);
+        }
+        if (this.idProduto >= Util.RETORNO_SUCESSO) {
+            JOptionPane.showMessageDialog(this.pai, "Produto adicionado ao carrinho!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            this.editado = true;
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(this.pai, "Não foi possível adicionar o produto ao carrinho! Tente novamente mais tarde.", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private ProdutoPersonalizado montaProduto() {
+        this.quantidade = (int) this.campoQuantidade.getValue();
+        if (this.receita.equals(Util.RECEITA_BOLO)) {
             Caracteristica corForm = (Caracteristica) this.comboBoxCorBolo.getSelectedItem();
             Forma formaForm = (Forma) this.comboBoxFormaBolo.getSelectedItem();
             Caracteristica coberturaForm = (Caracteristica) this.comboBoxCoberturaBolo.getSelectedItem();
@@ -188,25 +207,19 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
                 listaRecheiosForm.add((Caracteristica) this.comboBoxRecheioBolo3.getSelectedItem());
             }
             String detalheForm = this.areaTextoDetalheBolo.getText().trim();
-            Bolo bolo = new Bolo(this.idProduto, detalheForm, corForm, formaForm,
+            return new Bolo(this.idProduto, detalheForm, corForm, formaForm,
                     coberturaForm, listaRecheiosForm);
-            this.idProduto = operacoesBolo.insere(bolo);
         } else {
-            OperacoesTrufa operacoesTrufa = new OperacoesTrufa();
             Caracteristica corForm = (Caracteristica) this.comboBoxCorTrufa.getSelectedItem();
             Caracteristica recheioForm = (Caracteristica) this.comboBoxRecheioTrufa.getSelectedItem();
             String detalheForm = this.areaTextoDetalheTrufa.getText().trim();
-            Trufa trufa = new Trufa(this.idProduto, detalheForm, corForm, recheioForm);
-            this.idProduto = operacoesTrufa.insere(trufa);
+            return new Trufa(this.idProduto, detalheForm, corForm, recheioForm);
         }
+    }
 
-        if (this.idProduto >= Util.RETORNO_SUCESSO) {
-            JOptionPane.showMessageDialog(this.pai, "Produto adicionado ao carrinho!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-            this.editado = true;
-            this.dispose();
-        } else {
-            JOptionPane.showMessageDialog(this.pai, "Não foi possível adicionar o produto ao carrinho! Tente novamente mais tarde.", "Erro", JOptionPane.ERROR_MESSAGE);
-        }
+    private void atualizaValor() {
+        ProdutoPersonalizado produto = this.montaProduto();
+        this.textoPrecoProduto.setText(Util.formataDinheiro(produto.getValor() * this.quantidade));
     }
 
     private void trocaExibicaoRecheios() {
@@ -343,6 +356,11 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
         painelTipoQuantidade.add(textoQuantidade, gridBagConstraints);
 
         campoQuantidade.setModel(new javax.swing.SpinnerNumberModel(1, 1, 99999, 1));
+        campoQuantidade.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                campoQuantidadeStateChanged(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -371,6 +389,11 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
         painelCamposTrufa.add(textoRecheioTrufa, gridBagConstraints);
 
         comboBoxRecheioTrufa.setModel(this.modeloRecheios1);
+        comboBoxRecheioTrufa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboBoxRecheioTrufaActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -389,6 +412,11 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
         painelCamposTrufa.add(textoCorTrufa, gridBagConstraints);
 
         comboBoxCorTrufa.setModel(this.modeloCores);
+        comboBoxCorTrufa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboBoxCorTrufaActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -453,6 +481,11 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
         painelCamposRecheiosBolo.setLayout(new java.awt.GridBagLayout());
 
         comboBoxRecheioBolo1.setModel(this.modeloRecheios1);
+        comboBoxRecheioBolo1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboBoxRecheioBolo1ActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -462,6 +495,11 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
         painelCamposRecheiosBolo.add(comboBoxRecheioBolo1, gridBagConstraints);
 
         comboBoxRecheioBolo2.setModel(this.modeloRecheios2);
+        comboBoxRecheioBolo2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboBoxRecheioBolo2ActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -471,6 +509,11 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
         painelCamposRecheiosBolo.add(comboBoxRecheioBolo2, gridBagConstraints);
 
         comboBoxRecheioBolo3.setModel(this.modeloRecheios3);
+        comboBoxRecheioBolo3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboBoxRecheioBolo3ActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
@@ -499,6 +542,11 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
         painelCamposBolo.add(textoCoberturaBolo, gridBagConstraints);
 
         comboBoxCoberturaBolo.setModel(this.modeloCoberturas);
+        comboBoxCoberturaBolo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboBoxCoberturaBoloActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
@@ -517,6 +565,11 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
         painelCamposBolo.add(textoCorBolo, gridBagConstraints);
 
         comboBoxCorBolo.setModel(this.modeloCores);
+        comboBoxCorBolo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboBoxCorBoloActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
@@ -597,11 +650,45 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
 
     private void comboBoxReceitaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxReceitaActionPerformed
         this.trocaPainel();
+        this.atualizaValor();
     }//GEN-LAST:event_comboBoxReceitaActionPerformed
 
     private void comboBoxFormaBoloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxFormaBoloActionPerformed
+        this.atualizaValor();
         this.trocaExibicaoRecheios();
     }//GEN-LAST:event_comboBoxFormaBoloActionPerformed
+
+    private void comboBoxRecheioBolo1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxRecheioBolo1ActionPerformed
+        this.atualizaValor();
+    }//GEN-LAST:event_comboBoxRecheioBolo1ActionPerformed
+
+    private void comboBoxRecheioBolo2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxRecheioBolo2ActionPerformed
+        this.atualizaValor();
+    }//GEN-LAST:event_comboBoxRecheioBolo2ActionPerformed
+
+    private void comboBoxRecheioBolo3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxRecheioBolo3ActionPerformed
+        this.atualizaValor();
+    }//GEN-LAST:event_comboBoxRecheioBolo3ActionPerformed
+
+    private void comboBoxCoberturaBoloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxCoberturaBoloActionPerformed
+        this.atualizaValor();
+    }//GEN-LAST:event_comboBoxCoberturaBoloActionPerformed
+
+    private void comboBoxCorBoloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxCorBoloActionPerformed
+        this.atualizaValor();
+    }//GEN-LAST:event_comboBoxCorBoloActionPerformed
+
+    private void comboBoxRecheioTrufaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxRecheioTrufaActionPerformed
+        this.atualizaValor();
+    }//GEN-LAST:event_comboBoxRecheioTrufaActionPerformed
+
+    private void comboBoxCorTrufaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxCorTrufaActionPerformed
+        this.atualizaValor();
+    }//GEN-LAST:event_comboBoxCorTrufaActionPerformed
+
+    private void campoQuantidadeStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_campoQuantidadeStateChanged
+        this.atualizaValor();
+    }//GEN-LAST:event_campoQuantidadeStateChanged
 
     /**
      * @param args the command line arguments

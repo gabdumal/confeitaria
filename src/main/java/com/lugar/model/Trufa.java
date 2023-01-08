@@ -30,7 +30,7 @@ public class Trufa extends ProdutoPersonalizado {
 
     @Override
     public double getValor() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return this.getCor().getValorGrama() + this.getRecheio().getValorGrama() * 30;
     }
 
     public Caracteristica getRecheio() {
