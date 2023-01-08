@@ -42,9 +42,8 @@ public class OperacoesCaracteristica implements OperacoesConexao<List<Caracteris
 
             while (rs.next()) {
                 String tipo = rs.getString("tipo");
-                Caracteristica caracteristica = null;
                 if (tipo.equals(Util.CARACTERISTICA_FORMA)) {
-                    caracteristica = new Forma(
+                    Forma forma = new Forma(
                             rs.getInt("id"),
                             rs.getString("tipo"),
                             rs.getString("nome"),
@@ -53,9 +52,9 @@ public class OperacoesCaracteristica implements OperacoesConexao<List<Caracteris
                             rs.getDouble("gramaRecheio"),
                             rs.getDouble("gramaCobertura"),
                             rs.getDouble("gramaMassa"));
-                    listaFormas.add(caracteristica);
+                    listaFormas.add(forma);
                 } else {
-                    caracteristica = new Caracteristica(
+                    Caracteristica caracteristica = new Caracteristica(
                             rs.getInt("id"),
                             rs.getString("tipo"),
                             rs.getString("nome"),

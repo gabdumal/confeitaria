@@ -85,7 +85,7 @@ public class OperacoesProduto implements OperacoesConexao<Produto> {
                                     tipo,
                                     rs.getString("caracteristica"),
                                     rs.getDouble("valorGrama"),
-                                    rs.getInt("recheio"),
+                                    rs.getInt("recheios"),
                                     rs.getDouble("gramaRecheio"),
                                     rs.getDouble("gramaCobertura"),
                                     rs.getDouble("gramaMassa")

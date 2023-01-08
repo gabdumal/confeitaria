@@ -5,6 +5,7 @@
 package com.lugar.model;
 
 import com.lugar.confeitaria.Util;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,6 +20,7 @@ public class Bolo extends ProdutoPersonalizado {
 
     public Bolo(int id, String detalhe) {
         super(id, Util.RECEITA_BOLO, detalhe);
+        this.recheios = new ArrayList<Caracteristica>();
     }
 
     public Bolo(int id, String detalhe, Caracteristica cor, Forma forma,

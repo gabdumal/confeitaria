@@ -5,9 +5,11 @@
 package com.lugar.view;
 
 import com.lugar.confeitaria.Util;
+import com.lugar.model.Bolo;
 import com.lugar.model.Caracteristica;
 import com.lugar.model.Item;
 import com.lugar.model.ProdutoPersonalizado;
+import com.lugar.model.Trufa;
 import java.util.List;
 
 /**
@@ -35,17 +37,17 @@ public class VisualizacaoItemProdutoPersonalizado extends javax.swing.JDialog {
         if (produtoPersonalizado.getReceita().equals(Util.RECEITA_BOLO)) {
             this.painelCamposBolo.setVisible(true);
             this.painelCamposTrufa.setVisible(false);
-            this.trocaExibicaoRecheios(produtoPersonalizado.getRecheios());
-            textoFormaBoloPreenchido.setText(produtoPersonalizado.getForma().getNome());
-            textoCorBoloPreenchido.setText(produtoPersonalizado.getCor().getNome());
-            textoCoberturaBoloPreenchido.setText(produtoPersonalizado.getCobertura().getNome());
-            areaTextoDetalheBolo.setText(produtoPersonalizado.getDetalhe());
+            this.trocaExibicaoRecheios(((Bolo) produtoPersonalizado).getRecheios());
+            textoFormaBoloPreenchido.setText(((Bolo) produtoPersonalizado).getForma().getNome());
+            textoCorBoloPreenchido.setText(((Bolo) produtoPersonalizado).getCor().getNome());
+            textoCoberturaBoloPreenchido.setText(((Bolo) produtoPersonalizado).getCobertura().getNome());
+            areaTextoDetalheBolo.setText(((Bolo) produtoPersonalizado).getDetalhe());
         } else {
             this.painelCamposBolo.setVisible(false);
             this.painelCamposTrufa.setVisible(true);
-            textoRecheioTrufaPreenchido.setText(produtoPersonalizado.getRecheio(0).getNome());
-            textoCorTrufaPreenchido.setText(produtoPersonalizado.getCor().getNome());
-            areaTextoDetalheTrufa.setText(produtoPersonalizado.getDetalhe());
+            textoRecheioTrufaPreenchido.setText(((Trufa) produtoPersonalizado).getRecheio().getNome());
+            textoCorTrufaPreenchido.setText(((Trufa) produtoPersonalizado).getCor().getNome());
+            areaTextoDetalheTrufa.setText(((Trufa) produtoPersonalizado).getDetalhe());
         }
     }
 

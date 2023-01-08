@@ -5,12 +5,15 @@
 package com.lugar.view.cliente;
 
 import com.lugar.confeitaria.Util;
+import com.lugar.controller.OperacoesBolo;
 import com.lugar.controller.OperacoesCaracteristica;
-import com.lugar.controller.OperacoesProdutoPersonalizado;
+import com.lugar.controller.OperacoesTrufa;
+import com.lugar.model.Bolo;
 import com.lugar.model.Caracteristica;
 import com.lugar.model.Forma;
 import com.lugar.model.ProdutoPersonalizado;
 import com.lugar.model.SetStringString;
+import com.lugar.model.Trufa;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
@@ -39,7 +42,6 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
     private DefaultComboBoxModel modeloRecheios2;
     private DefaultComboBoxModel modeloRecheios3;
     private java.awt.Frame pai;
-    private OperacoesProdutoPersonalizado operacoesProdutoPersonalizado;
 
     public CriacaoProdutoPersonalizado(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -47,7 +49,6 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
         this.receita = Util.RECEITA_BOLO;
         this.pai = parent;
         this.editado = false;
-        this.operacoesProdutoPersonalizado = new OperacoesProdutoPersonalizado();
         this.carregaComboBoxes();
         initComponents();
         this.trocaPainel();
@@ -60,47 +61,9 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
         this.receita = Util.RECEITA_BOLO;
         this.pai = parent;
         this.editado = false;
-        this.operacoesProdutoPersonalizado = new OperacoesProdutoPersonalizado();
         this.carregaComboBoxes();
         initComponents();
-        this.campoQuantidade.setValue(produto.getCarrinho());
-        this.areaTextoDetalheBolo.setText(produto.getDetalhe());
-        this.areaTextoDetalheTrufa.setText(produto.getDetalhe());
-        for (Caracteristica forma : listaFormas) {
-            if (forma.getId() == produto.getForma().getId()) {
-                this.comboBoxFormaBolo.setSelectedItem(forma);
-                break;
-            }
-        }
-        for (Caracteristica cobertura : listaCoberturas) {
-            if (cobertura.getId() == produto.getCobertura().getId()) {
-                this.comboBoxFormaBolo.setSelectedItem(cobertura);
-                break;
-            }
-        }
-        for (Caracteristica cor : listaCores) {
-            if (cor.getId() == produto.getCor().getId()) {
-                this.comboBoxFormaBolo.setSelectedItem(cor);
-                break;
-            }
-        }
-        boolean preencheu1 = false, preencheu2 = false;
-        for (Caracteristica recheio : listaRecheios) {
-            if (!preencheu1 && recheio.getId() == produto.getRecheio(0).getId()) {
-                this.comboBoxRecheioBolo1.setSelectedItem(recheio);
-                preencheu1 = true;
-                continue;
-            } else if (!preencheu2 && this.recheios >= 2 && recheio.getId() == produto.getRecheio(1).getId()) {
-                this.comboBoxRecheioBolo1.setSelectedItem(recheio);
-                preencheu2 = true;
-                continue;
-            } else if (this.recheios >= 3 && recheio.getId() == produto.getRecheio(2).getId()) {
-                this.comboBoxRecheioBolo1.setSelectedItem(recheio);
-                break;
-            }
-        }
-
-        this.comboBoxCoberturaBolo.setSelectedItem(produto.getCobertura());
+        this.preencheCampos(produto);
         this.trocaExibicaoRecheios();
         this.trocaPainel();
     }
@@ -135,8 +98,8 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
         this.listaCores = listaDeListasDeCaracteristicas.get(1);
         this.listaCoberturas = listaDeListasDeCaracteristicas.get(2);
         this.listaRecheios = listaDeListasDeCaracteristicas.get(3);
-        for (Caracteristica caracteristica : this.listaFormas) {
-            this.modeloFormas.addElement(caracteristica);
+        for (Caracteristica forma : this.listaFormas) {
+            this.modeloFormas.addElement((Forma) forma);
         }
         for (Caracteristica caracteristica : this.listaCores) {
             this.modeloCores.addElement(caracteristica);
@@ -151,13 +114,98 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
         }
     }
 
-    private void trocaPainel() {
-        if (this.receita.equals(Util.RECEITA_BOLO)) {
-            this.painelCamposBolo.setVisible(true);
-            this.painelCamposTrufa.setVisible(false);
+    private void preencheCampos(ProdutoPersonalizado produto) {
+        this.campoQuantidade.setValue(produto.getCarrinho());
+
+        if (produto instanceof Bolo) {
+            this.areaTextoDetalheBolo.setText(produto.getDetalhe());
+            for (Caracteristica forma : listaFormas) {
+                if (forma.getId() == ((Bolo) produto).getForma().getId()) {
+                    this.comboBoxFormaBolo.setSelectedItem(forma);
+                    break;
+                }
+            }
+            for (Caracteristica cobertura : listaCoberturas) {
+                if (cobertura.getId() == ((Bolo) produto).getCobertura().getId()) {
+                    this.comboBoxFormaBolo.setSelectedItem(cobertura);
+                    break;
+                }
+            }
+            for (Caracteristica cor : listaCores) {
+                if (cor.getId() == produto.getCor().getId()) {
+                    this.comboBoxFormaBolo.setSelectedItem(cor);
+                    break;
+                }
+            }
+            boolean preencheu1 = false, preencheu2 = false;
+            for (Caracteristica recheio : listaRecheios) {
+                if (!preencheu1 && recheio.getId() == ((Bolo) produto).getRecheio(0).getId()) {
+                    this.comboBoxRecheioBolo1.setSelectedItem(recheio);
+                    preencheu1 = true;
+                    continue;
+                } else if (!preencheu2 && this.recheios >= 2 && recheio.getId() == ((Bolo) produto).getRecheio(1).getId()) {
+                    this.comboBoxRecheioBolo1.setSelectedItem(recheio);
+                    preencheu2 = true;
+                    continue;
+                } else if (this.recheios >= 3 && recheio.getId() == ((Bolo) produto).getRecheio(2).getId()) {
+                    this.comboBoxRecheioBolo1.setSelectedItem(recheio);
+                    break;
+                }
+            }
+            this.comboBoxCoberturaBolo.setSelectedItem(((Bolo) produto).getCobertura());
         } else {
-            this.painelCamposBolo.setVisible(false);
-            this.painelCamposTrufa.setVisible(true);
+            this.areaTextoDetalheTrufa.setText(produto.getDetalhe());
+            for (Caracteristica cor : listaCores) {
+                if (cor.getId() == produto.getCor().getId()) {
+                    this.comboBoxFormaBolo.setSelectedItem(cor);
+                    break;
+                }
+            }
+            for (Caracteristica recheio : listaRecheios) {
+                if (recheio.getId() == ((Trufa) produto).getRecheio().getId()) {
+                    this.comboBoxFormaBolo.setSelectedItem(recheio);
+                    break;
+                }
+            }
+        }
+    }
+
+    private void criaProdutoPersonalizado() {
+        this.quantidade = (int) this.campoQuantidade.getValue();
+        this.idProduto = Util.RETORNO_ERRO_INDETERMINADO;
+        if (this.receita.equals(Util.RECEITA_BOLO)) {
+            OperacoesBolo operacoesBolo = new OperacoesBolo();
+            Caracteristica corForm = (Caracteristica) this.comboBoxCorBolo.getSelectedItem();
+            Forma formaForm = (Forma) this.comboBoxFormaBolo.getSelectedItem();
+            Caracteristica coberturaForm = (Caracteristica) this.comboBoxCoberturaBolo.getSelectedItem();
+            Caracteristica recheioForm1 = (Caracteristica) this.comboBoxRecheioBolo1.getSelectedItem();
+            List<Caracteristica> listaRecheiosForm = new ArrayList<Caracteristica>();
+            listaRecheiosForm.add(recheioForm1);
+            if (this.recheios >= 2) {
+                listaRecheiosForm.add((Caracteristica) this.comboBoxRecheioBolo2.getSelectedItem());
+            }
+            if (this.recheios >= 3) {
+                listaRecheiosForm.add((Caracteristica) this.comboBoxRecheioBolo3.getSelectedItem());
+            }
+            String detalheForm = this.areaTextoDetalheBolo.getText().trim();
+            Bolo bolo = new Bolo(this.idProduto, detalheForm, corForm, formaForm,
+                    coberturaForm, listaRecheiosForm);
+            this.idProduto = operacoesBolo.insere(bolo);
+        } else {
+            OperacoesTrufa operacoesTrufa = new OperacoesTrufa();
+            Caracteristica corForm = (Caracteristica) this.comboBoxCorTrufa.getSelectedItem();
+            Caracteristica recheioForm = (Caracteristica) this.comboBoxRecheioTrufa.getSelectedItem();
+            String detalheForm = this.areaTextoDetalheTrufa.getText().trim();
+            Trufa trufa = new Trufa(this.idProduto, detalheForm, corForm, recheioForm);
+            this.idProduto = operacoesTrufa.insere(trufa);
+        }
+
+        if (this.idProduto >= Util.RETORNO_SUCESSO) {
+            JOptionPane.showMessageDialog(this.pai, "Produto adicionado ao carrinho!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            this.editado = true;
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(this.pai, "Não foi possível adicionar o produto ao carrinho! Tente novamente mais tarde.", "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -173,38 +221,14 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
         }
     }
 
-    private void criaProdutoPersonalizado() {
-        Caracteristica corForm = (Caracteristica) this.comboBoxCorBolo.getSelectedItem();
-        Caracteristica recheioForm1 = (Caracteristica) this.comboBoxRecheioBolo1.getSelectedItem();
-
+    private void trocaPainel() {
+        this.receita = ((SetStringString) comboBoxReceita.getSelectedItem()).getChave();
         if (this.receita.equals(Util.RECEITA_BOLO)) {
-            List<Caracteristica> listaRecheiosForm = new ArrayList<Caracteristica>();
-            listaRecheiosForm.add(recheioForm1);
-            Caracteristica formaForm = (Caracteristica) this.comboBoxFormaBolo.getSelectedItem();
-            Caracteristica coberturaForm = (Caracteristica) this.comboBoxCoberturaBolo.getSelectedItem();
-            if (this.recheios >= 2) {
-                listaRecheiosForm.add((Caracteristica) this.comboBoxRecheioBolo2.getSelectedItem());
-            }
-            if (this.recheios >= 3) {
-                listaRecheiosForm.add((Caracteristica) this.comboBoxRecheioBolo3.getSelectedItem());
-            }
-            String detalheForm = this.areaTextoDetalheBolo.getText().trim();
-
-            ProdutoPersonalizado produtoPersonalizado
-                    = new ProdutoPersonalizado(this.idProduto, this.receita,
-                            detalheForm, formaForm, corForm,
-                            coberturaForm, listaRecheiosForm);
-
-            this.idProduto = operacoesProdutoPersonalizado.insere(produtoPersonalizado);
-            this.quantidade = (int) this.campoQuantidade.getValue();
-        }
-
-        if (this.idProduto >= Util.RETORNO_SUCESSO) {
-            JOptionPane.showMessageDialog(this.pai, "Produto adicionado ao carrinho!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-            this.editado = true;
-            this.dispose();
+            this.painelCamposBolo.setVisible(true);
+            this.painelCamposTrufa.setVisible(false);
         } else {
-            JOptionPane.showMessageDialog(this.pai, "Não foi possível adicionar o produto ao carrinho! Tente novamente mais tarde.", "Erro", JOptionPane.ERROR_MESSAGE);
+            this.painelCamposBolo.setVisible(false);
+            this.painelCamposTrufa.setVisible(true);
         }
     }
 
@@ -572,7 +596,6 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
     }//GEN-LAST:event_botaoCancelarActionPerformed
 
     private void comboBoxReceitaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxReceitaActionPerformed
-        this.receita = ((SetStringString) comboBoxReceita.getSelectedItem()).getChave();
         this.trocaPainel();
     }//GEN-LAST:event_comboBoxReceitaActionPerformed
 
