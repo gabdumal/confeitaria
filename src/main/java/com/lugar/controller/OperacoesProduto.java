@@ -5,10 +5,13 @@
 package com.lugar.controller;
 
 import com.lugar.confeitaria.Util;
+import com.lugar.model.Bolo;
 import com.lugar.model.Caracteristica;
+import com.lugar.model.Forma;
 import com.lugar.model.Produto;
 import com.lugar.model.ProdutoPersonalizado;
 import com.lugar.model.ProdutoPronto;
+import com.lugar.model.Trufa;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -31,17 +34,21 @@ public class OperacoesProduto implements OperacoesConexao<Produto> {
 
     @Override
     public Produto busca(int id) {
-        String sql = "SELECT DISTINCT Produto.id, Produto.tipo as tipoProduto, ProdutoPronto.valor, ProdutoPronto.estoque, ProdutoPronto.nome,\n"
-                + "ProdutoPersonalizado.detalhe, ProdutoPersonalizado.receita, Caracteristica.id AS idCaracteristica, Caracteristica.nome AS caracteristica, Caracteristica.tipo, Caracteristica.valorGrama,\n"
-                + "Forma.recheios, Forma.gramaRecheio, Forma.gramaCobertura, Forma.gramaMassa\n"
+        String sql = "SELECT DISTINCT Produto.id, Produto.tipo as tipoProduto, ProdutoPronto.nome, ProdutoPronto.estoque, ProdutoPronto.valor, \n"
+                + "ProdutoPersonalizado.detalhe, ProdutoPersonalizado.receita, Caracteristica.id AS idCaracteristica, \n"
+                + "Caracteristica.nome AS caracteristica, Caracteristica.tipo, Caracteristica.valorGrama, Forma.recheios, Forma.gramaRecheio, \n"
+                + "Forma.gramaCobertura, Forma.gramaMassa\n"
                 + "FROM Produto\n"
                 + "LEFT JOIN ProdutoPronto ON Produto.id = ProdutoPronto.id\n"
                 + "LEFT JOIN ProdutoPersonalizado ON Produto.id = ProdutoPersonalizado.id\n"
-                + "LEFT JOIN ProdutoPersonalizado_Recheio ON ProdutoPersonalizado.id = ProdutoPersonalizado_Recheio.idProdutoPersonalizado\n"
-                + "LEFT JOIN Caracteristica ON ProdutoPersonalizado.idForma = Caracteristica.id\n"
-                + "OR ProdutoPersonalizado.idCobertura = Caracteristica.id\n"
+                + "LEFT JOIN Bolo ON ProdutoPersonalizado.id = Bolo.id\n"
+                + "LEFT JOIN Trufa ON ProdutoPersonalizado.id = Trufa.id\n"
+                + "LEFT JOIN Bolo_Recheio ON Bolo.id = Bolo_Recheio.idBolo\n"
+                + "LEFT JOIN Caracteristica ON Bolo.idForma = Caracteristica.id\n"
+                + "OR Bolo.idCobertura = Caracteristica.id\n"
+                + "OR Trufa.idRecheio = Caracteristica.id\n"
                 + "OR ProdutoPersonalizado.idCor = Caracteristica.id\n"
-                + "OR ProdutoPersonalizado_Recheio.idRecheio = Caracteristica.id\n"
+                + "OR Bolo_Recheio.idRecheio = Caracteristica.id\n"
                 + "LEFT JOIN Forma ON Caracteristica.id = Forma.id\n"
                 + "WHERE Produto.id = " + id + "\n"
                 + "ORDER BY Produto.id;";
@@ -62,32 +69,49 @@ public class OperacoesProduto implements OperacoesConexao<Produto> {
                             rs.getDouble("valor"),
                             rs.getInt("estoque"));
                 } else {
-                    produto = new ProdutoPersonalizado(
-                            id,
-                            rs.getString("receita"),
-                            rs.getString("detalhe"));
+                    String receita = rs.getString("receita");
+                    if (receita.equals(Util.RECEITA_BOLO)) {
+                        produto = new Bolo(id, rs.getString("detalhe"));
+                    } else {
+                        produto = new Trufa(id, rs.getString("detalhe"));
+                    }
                     // Preenche características
                     do {
                         int idCaracteristica = rs.getInt("idCaracteristica");
                         String tipo = rs.getString("tipo");
-                        Caracteristica caracteristica = new Caracteristica(
-                                idCaracteristica,
-                                tipo,
-                                rs.getString("caracteristica"),
-                                rs.getDouble("valorGrama"));
-                        switch (tipo) {
-                            case Util.CARACTERISTICA_RECHEIO:
-                                ((ProdutoPersonalizado) produto).addRecheio(caracteristica);
-                                break;
-                            case Util.CARACTERISTICA_COR:
-                                ((ProdutoPersonalizado) produto).setCor(caracteristica);
-                                break;
-                            case Util.CARACTERISTICA_COBERTURA:
-                                ((ProdutoPersonalizado) produto).setCobertura(caracteristica);
-                                break;
-                            case Util.CARACTERISTICA_FORMA:
-                                ((ProdutoPersonalizado) produto).setForma(caracteristica);
-                                break;
+                        if (tipo.equals(Util.CARACTERISTICA_FORMA)) {
+                            Forma forma = new Forma(
+                                    idCaracteristica,
+                                    tipo,
+                                    rs.getString("caracteristica"),
+                                    rs.getDouble("valorGrama"),
+                                    rs.getInt("recheio"),
+                                    rs.getDouble("gramaRecheio"),
+                                    rs.getDouble("gramaCobertura"),
+                                    rs.getDouble("gramaMassa")
+                            );
+                            ((Bolo) produto).setForma((Forma) forma);
+                        } else {
+                            Caracteristica caracteristica = new Caracteristica(
+                                    idCaracteristica,
+                                    tipo,
+                                    rs.getString("caracteristica"),
+                                    rs.getDouble("valorGrama"));
+                            switch (tipo) {
+                                case Util.CARACTERISTICA_RECHEIO:
+                                    if (produto instanceof Bolo) {
+                                        ((Bolo) produto).addRecheio(caracteristica);
+                                    } else {
+                                        ((Trufa) produto).setRecheio(caracteristica);
+                                    }
+                                    break;
+                                case Util.CARACTERISTICA_COR:
+                                    ((ProdutoPersonalizado) produto).setCor(caracteristica);
+                                    break;
+                                case Util.CARACTERISTICA_COBERTURA:
+                                    ((Bolo) produto).setCobertura(caracteristica);
+                                    break;
+                            }
                         }
                     } while (rs.next());
                 }

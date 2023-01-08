@@ -17,6 +17,10 @@ public class Bolo extends ProdutoPersonalizado {
     private Caracteristica cobertura;
     private List<Caracteristica> recheios;
 
+    public Bolo(int id, String detalhe) {
+        super(id, Util.RECEITA_BOLO, detalhe);
+    }
+
     public Bolo(int id, String detalhe, Caracteristica cor, Forma forma,
             Caracteristica cobertura, List<Caracteristica> recheios) {
         super(id, Util.RECEITA_BOLO, detalhe, cor);
