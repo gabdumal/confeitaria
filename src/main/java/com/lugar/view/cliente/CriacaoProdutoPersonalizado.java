@@ -146,11 +146,11 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
                     preencheu1 = true;
                     continue;
                 } else if (!preencheu2 && this.recheios >= 2 && recheio.getId() == ((Bolo) produto).getRecheio(1).getId()) {
-                    this.comboBoxRecheioBolo1.setSelectedItem(recheio);
+                    this.comboBoxRecheioBolo2.setSelectedItem(recheio);
                     preencheu2 = true;
                     continue;
                 } else if (this.recheios >= 3 && recheio.getId() == ((Bolo) produto).getRecheio(2).getId()) {
-                    this.comboBoxRecheioBolo1.setSelectedItem(recheio);
+                    this.comboBoxRecheioBolo3.setSelectedItem(recheio);
                     break;
                 }
             }

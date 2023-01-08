@@ -35,7 +35,7 @@ public class OperacoesBolo implements OperacoesConexao<Bolo> {
 
     @Override
     public int insere(Bolo bolo) {
-        String sqlBuscaBolo = "SELECT DISTINCT ProdutoPersonalizado.id, Caracteristica.nome as recheio\n"
+        String sqlBuscaBolo = "SELECT ProdutoPersonalizado.id, Caracteristica.id as idRecheio\n"
                 + "FROM ProdutoPersonalizado\n"
                 + "INNER JOIN Bolo ON ProdutoPersonalizado.id = Bolo.id\n"
                 + "INNER JOIN Bolo_Recheio ON Bolo_Recheio.idBolo = Bolo.id \n"
@@ -53,8 +53,6 @@ public class OperacoesBolo implements OperacoesConexao<Bolo> {
             conn = Conexao.abreConexao();
             conn.setAutoCommit(false);
 
-            boolean mudanca = false;
-
             PreparedStatement pstmtBusca = conn.prepareStatement(sqlBuscaBolo);
             pstmtBusca.setString(1, bolo.getCobertura().getNome());
             pstmtBusca.setString(2, bolo.getCor().getNome());
@@ -62,38 +60,34 @@ public class OperacoesBolo implements OperacoesConexao<Bolo> {
             pstmtBusca.setString(4, bolo.getDetalhe());
             ResultSet rsBusca = pstmtBusca.executeQuery();
 
-            int tamanhoRecheiosPreenchidos = 0;
-            List<Caracteristica> recheiosPreenchidos = null;
-            recheiosPreenchidos = bolo.getRecheios();
-            tamanhoRecheiosPreenchidos = recheiosPreenchidos.size();
-
+            int indAux = 0;
+            List<Caracteristica> recheios = bolo.getRecheios();
+            int qtdRecheios = recheios.size();
+            boolean naoBate = false;
             if (rsBusca.next()) {
                 idProduto = rsBusca.getInt("id");
-                boolean[] recheiosBatem = new boolean[tamanhoRecheiosPreenchidos];
-                int contador = 0;
+                qtdRecheios = recheios.size();
                 do {
-                    for (int i = 0; i < tamanhoRecheiosPreenchidos; i++) {
-                        String recheioBanco = rsBusca.getString("recheio");
-                        if (recheioBanco.equals(recheiosPreenchidos.get(i).getNome())) {
-                            recheiosBatem[i] = true;
-                        }
+                    if ((indAux == qtdRecheios && !naoBate)) {
+                        break;
                     }
-                    contador++;
+                    int idAtual = rsBusca.getInt("id");
+                    if (idAtual != idProduto) {
+                        indAux = 0;
+                        naoBate = false;
+                    }
+                    if (indAux == qtdRecheios
+                            || recheios.get(indAux).getId() != rsBusca.getInt("idRecheio")) {
+                        naoBate = true;
+                    }
+                    idProduto = idAtual;
+                    indAux++;
                 } while (rsBusca.next());
-                if (contador == tamanhoRecheiosPreenchidos) {
-                    for (boolean b : recheiosBatem) {
-                        if (!b) {
-                            mudanca = true;
-                        }
-                    }
-                } else {
-                    mudanca = true;
-                }
             } else {
-                mudanca = true;
+                naoBate = true;
             }
-
-            if (!mudanca) {
+            if (!naoBate) {
+                // Existe
                 return idProduto;
             } else {
                 String sqlProduto = "INSERT INTO Produto(tipo) VALUES(1);";
@@ -107,47 +101,48 @@ public class OperacoesBolo implements OperacoesConexao<Bolo> {
                     ResultSet rs = pstmtProduto.getGeneratedKeys();
                     if (rs.next()) {
                         idProduto = rs.getInt(1);
-                    }
-                    String sqlProdutoPersonalizado = "INSERT INTO ProdutoPersonalizado(id, detalhe, receita, idCor) VALUES(?, ?, ?, ?);";
-                    PreparedStatement pstmtProdutoPersonalizado = conn.prepareStatement(sqlProdutoPersonalizado,
-                            Statement.RETURN_GENERATED_KEYS);
-                    pstmtProdutoPersonalizado.setInt(1, idProduto);
-                    pstmtProdutoPersonalizado.setString(2, bolo.getDetalhe());
-                    pstmtProdutoPersonalizado.setString(3, bolo.getReceita());
-                    pstmtProdutoPersonalizado.setInt(4, bolo.getCor().getId());
-                    linhaInserida = pstmtProdutoPersonalizado.executeUpdate();
 
-                    // Reverter operação em caso de erro
-                    if (linhaInserida != 1) {
-                        conn.rollback();
-                    } else {
-                        String sqlBolo = "INSERT INTO Bolo(id, idForma, idCobertura) VALUES(?, ?, ?);";
-                        PreparedStatement pstmtBolo = conn.prepareStatement(sqlBolo,
+                        String sqlProdutoPersonalizado = "INSERT INTO ProdutoPersonalizado(id, detalhe, receita, idCor) VALUES(?, ?, ?, ?);";
+                        PreparedStatement pstmtProdutoPersonalizado = conn.prepareStatement(sqlProdutoPersonalizado,
                                 Statement.RETURN_GENERATED_KEYS);
-                        pstmtBolo.setInt(1, idProduto);
-                        pstmtBolo.setInt(2, bolo.getForma().getId());
-                        pstmtBolo.setInt(3, bolo.getCobertura().getId());
-                        linhaInserida = pstmtBolo.executeUpdate();
+                        pstmtProdutoPersonalizado.setInt(1, idProduto);
+                        pstmtProdutoPersonalizado.setString(2, bolo.getDetalhe());
+                        pstmtProdutoPersonalizado.setString(3, bolo.getReceita());
+                        pstmtProdutoPersonalizado.setInt(4, bolo.getCor().getId());
+                        linhaInserida = pstmtProdutoPersonalizado.executeUpdate();
 
+                        // Reverter operação em caso de erro
                         if (linhaInserida != 1) {
                             conn.rollback();
                         } else {
-                            String sqlRecheio = "INSERT INTO Bolo_Recheio(idBolo, idRecheio) VALUES";
+                            String sqlBolo = "INSERT INTO Bolo(id, idForma, idCobertura) VALUES(?, ?, ?);";
+                            PreparedStatement pstmtBolo = conn.prepareStatement(sqlBolo,
+                                    Statement.RETURN_GENERATED_KEYS);
+                            pstmtBolo.setInt(1, idProduto);
+                            pstmtBolo.setInt(2, bolo.getForma().getId());
+                            pstmtBolo.setInt(3, bolo.getCobertura().getId());
+                            linhaInserida = pstmtBolo.executeUpdate();
 
-                            for (int i = 0; i < tamanhoRecheiosPreenchidos; i++) {
-                                sqlRecheio = sqlRecheio.concat("(" + idProduto + ",  ?), ");
+                            if (linhaInserida != 1) {
+                                conn.rollback();
+                            } else {
+                                String sqlRecheio = "INSERT INTO Bolo_Recheio(idBolo, idRecheio) VALUES";
+
+                                for (int i = 0; i < qtdRecheios; i++) {
+                                    sqlRecheio = sqlRecheio.concat("(" + idProduto + ",  ?), ");
+                                }
+                                sqlRecheio = sqlRecheio.substring(0, sqlRecheio.length() - 2).concat(";");
+
+                                PreparedStatement pstmtRecheio = conn.prepareStatement(sqlRecheio);
+                                int i = 1;
+                                for (Caracteristica recheio : recheios) {
+                                    pstmtRecheio.setInt(i, recheio.getId());
+                                    i++;
+                                }
+                                pstmtRecheio.executeUpdate();
+
+                                conn.commit();
                             }
-                            sqlRecheio = sqlRecheio.substring(0, sqlRecheio.length() - 2).concat(";");
-
-                            PreparedStatement pstmtRecheio = conn.prepareStatement(sqlRecheio);
-                            int i = 1;
-                            for (Caracteristica recheio : recheiosPreenchidos) {
-                                pstmtRecheio.setInt(i, recheio.getId());
-                                i++;
-                            }
-                            pstmtRecheio.executeUpdate();
-
-                            conn.commit();
                         }
                     }
                 }

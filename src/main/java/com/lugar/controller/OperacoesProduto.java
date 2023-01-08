@@ -34,7 +34,7 @@ public class OperacoesProduto implements OperacoesConexao<Produto> {
 
     @Override
     public Produto busca(int id) {
-        String sql = "SELECT DISTINCT Produto.id, Produto.tipo as tipoProduto, ProdutoPronto.nome, ProdutoPronto.estoque, ProdutoPronto.valor, \n"
+        String sql = "SELECT Produto.id, Produto.tipo as tipoProduto, ProdutoPronto.nome, ProdutoPronto.estoque, ProdutoPronto.valor, \n"
                 + "ProdutoPersonalizado.detalhe, ProdutoPersonalizado.receita, Caracteristica.id AS idCaracteristica, \n"
                 + "Caracteristica.nome AS caracteristica, Caracteristica.tipo, Caracteristica.valorGrama, Forma.recheios, Forma.gramaRecheio, \n"
                 + "Forma.gramaCobertura, Forma.gramaMassa\n"
