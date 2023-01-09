@@ -27,7 +27,19 @@ public class Funcionario extends Usuario {
             String nome,
             String nomeUsuario,
             String senhaHash,
-            boolean admin,
+            String email,
+            String telefone,
+            String identificador,
+            Endereco endereco
+    ) throws ExcecaoUsuarioInvalido {
+        super(idUsuario, nome, nomeUsuario, senhaHash, identificador, email, telefone, true, endereco);
+    }
+
+    public Funcionario(
+            int idUsuario,
+            String nome,
+            String nomeUsuario,
+            String senhaHash,
             String email,
             String telefone,
             String identificador,
@@ -35,7 +47,7 @@ public class Funcionario extends Usuario {
             String matricula,
             String funcao
     ) throws ExcecaoUsuarioInvalido {
-        super(idUsuario, nome, nomeUsuario, senhaHash, identificador, email, telefone, admin, endereco);
+        super(idUsuario, nome, nomeUsuario, senhaHash, identificador, email, telefone, true, endereco);
         this.matricula = matricula;
         this.funcao = funcao;
     }
@@ -61,6 +73,14 @@ public class Funcionario extends Usuario {
             throw new ExcecaoStringInvalido("identificador", "CPF deve ter 11 caracteres.");
         }
         return true;
+    }
+
+    public String getMatricula() {
+        return matricula;
+    }
+
+    public String getFuncao() {
+        return funcao;
     }
 
 }

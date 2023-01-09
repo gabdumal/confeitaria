@@ -6,17 +6,15 @@ package com.lugar.view;
 
 import com.lugar.confeitaria.Util;
 import com.lugar.controller.OperacoesCliente;
+import com.lugar.controller.OperacoesFuncionario;
 import com.lugar.controller.OperacoesUsuario;
 import com.lugar.model.Cliente;
 import com.lugar.model.Endereco;
 import com.lugar.model.Funcionario;
 import com.lugar.model.PessoaFisica;
 import com.lugar.model.PessoaJuridica;
-import com.lugar.model.SetStringString;
 import com.lugar.model.Usuario;
-import com.lugar.model.exceptions.ExcecaoCampoInvalido;
 import java.time.LocalDate;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 
 /**
@@ -28,8 +26,6 @@ public class EdicaoUsuario extends javax.swing.JDialog {
     private int id;
     private java.awt.Frame pai;
     private Usuario usuario;
-    private boolean isPessoaF;
-    private boolean funcionario;
     private OperacoesUsuario operacoesUsuario;
 
     public EdicaoUsuario(java.awt.Frame parent, boolean modal) {
@@ -43,8 +39,6 @@ public class EdicaoUsuario extends javax.swing.JDialog {
         this.pai = parent;
         this.operacoesUsuario = new OperacoesUsuario();
         this.usuario = operacoesUsuario.busca(id);
-        this.isPessoaF = usuario instanceof PessoaFisica;
-        this.funcionario = usuario.isAdmin();
 
         initComponents();
 
@@ -52,120 +46,159 @@ public class EdicaoUsuario extends javax.swing.JDialog {
         campoNome.setText(usuario.getNome());
         campoNomeUsuario.setText(usuario.getNomeUsuario());
         campoEmail.setText(usuario.getEmail());
-        campoTelefone.setText(usuario.getTelefone());
+        campoTelefone.setText(usuario.getTelefoneFormatado());
         Endereco endereco = usuario.getEndereco();
         campoLogradouro.setText(endereco.getLogradouro());
         campoNumero.setText(endereco.getNumero());
         campoComplemento.setText(endereco.getComplemento());
         campoBairro.setText(endereco.getBairro());
         campoCidade.setText(endereco.getCidade());
-        campoCep.setText(endereco.getCep());
-        campoIdentificador.setText(usuario.getIdentificador());
+        campoCep.setText(endereco.getCepFormatado());
+        campoIdentificador.setText(usuario.getIdentificadorFormatado());
         campoUf.setSelectedItem(endereco.getUf());
         campoSenha.setText(usuario.getSenhaHash());
+
+        if (usuario instanceof Funcionario) {
+            textoIdentificador.setText("CPF:");
+            campoMatricula.setText(((Funcionario) usuario).getMatricula());
+            campoFuncaoFuncionario.setText(((Funcionario) usuario).getFuncao());
+            textoCartaoCredito.setVisible(false);
+            campoCartao.setVisible(false);
+            textoDataDeNascimento.setVisible(false);
+            campoDataDeNascimento.setVisible(false);
+            textoRazaoSocial.setVisible(false);
+            campoRazaoSocial.setVisible(false);
+        } else if (usuario instanceof PessoaFisica) {
+            textoIdentificador.setText("CPF:");
+            campoDataDeNascimento.setText(((PessoaFisica) usuario).getDataNascimentoFormatada());
+            textoRazaoSocial.setVisible(false);
+            campoRazaoSocial.setVisible(false);
+            textoFuncaoFuncionario.setVisible(false);
+            campoFuncaoFuncionario.setVisible(false);
+            textoMatricula.setVisible(false);
+            campoMatricula.setVisible(false);
+        } else if (usuario instanceof PessoaJuridica) {
+            textoIdentificador.setText("CNPJ:");
+            campoRazaoSocial.setText(((PessoaJuridica) usuario).getRazaoSocial());
+            textoDataDeNascimento.setVisible(false);
+            campoDataDeNascimento.setVisible(false);
+            textoFuncaoFuncionario.setVisible(false);
+            campoFuncaoFuncionario.setVisible(false);
+            textoMatricula.setVisible(false);
+            campoMatricula.setVisible(false);
+        }
     }
 
     private void editaUsuario() {
-        String nome = campoNome.getText().trim();
-        String NomeUsuario = campoNomeUsuario.getText().trim();
-        String email = campoEmail.getText().trim();
-        String telefone = campoTelefone.getText().trim();
-        Endereco endereco = usuario.getEndereco();
-        String identificador = campoIdentificador.getText().trim();
-        String senha = String.valueOf(campoSenha.getPassword()).trim();
-        String cartao = campoCartao.getText().trim();
+        String nomeForm = campoNome.getText().trim();
+        String nomeUsuarioForm = campoNomeUsuario.getText().trim();
+        String senhaForm = String.valueOf(campoSenha.getPassword()).trim();
+        String emailForm = campoEmail.getText().trim();
+        String telefoneForm = campoTelefone.getText().replaceAll(" ", "").replaceAll("[(]", "").replaceAll("[)]", "").replaceAll("[-]", "");
+        String logradouroForm = campoLogradouro.getText().trim();
+        String numeroForm = campoNumero.getText().trim();
+        String complementoForm = campoComplemento.getText().trim();
+        String bairroForm = campoBairro.getText().trim();
+        String cidadeForm = campoCidade.getText().trim();
+        String ufForm = (String) campoUf.getSelectedItem();
+        String cepForm = campoCep.getText().replaceAll(" ", "").replaceAll("[-]", "");
+        String cartaoForm = campoCartao.getText().trim().replaceAll(" ", "").replaceAll("[.]", "");
+        String identificadorForm = campoIdentificador.getText().replaceAll(" ", "").replaceAll("[-]", "").replaceAll("[.]", "").replaceAll("[/]", "");
 
         boolean confirmacao = JOptionPane.showConfirmDialog(null, "Deseja confirmar a edição do perfil?", "Edição de Perfil", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == 0;
         if (confirmacao) {
-            int resultado = Util.RETORNO_SUCESSO;
+            int idUsuario = Util.RETORNO_ERRO_INDETERMINADO;
             try {
-                if (!usuario.isAdmin()) {
+                Endereco enderecoForm = new Endereco(numeroForm, complementoForm, logradouroForm, bairroForm, cidadeForm, ufForm, cepForm);
+                if (usuario instanceof Funcionario) {
+                    OperacoesFuncionario operacoesFuncionario = new OperacoesFuncionario();
+                    Funcionario funcionarioForm = new Funcionario(usuario.getId(), nomeForm, nomeUsuarioForm, senhaForm, emailForm, telefoneForm, identificadorForm, enderecoForm);
+                    operacoesFuncionario.atualiza(funcionarioForm);
+                } else {
                     Cliente cliente;
-                    Endereco enderecoAtualizado = new Endereco(endereco);
-                    if (isPessoaF) {
+                    OperacoesCliente operacoesCliente = new OperacoesCliente();
+                    if (usuario instanceof PessoaFisica) {
                         String dataNascimentoForm = campoDataDeNascimento.getText().trim();
                         LocalDate dataNascimento = Util.converteData(dataNascimentoForm);
-                        cliente = new PessoaFisica(id, nome, NomeUsuario, senha,
-                                identificador, email, telefone, endereco, cartao, dataNascimento);
+                        cliente = new PessoaFisica(0, nomeForm,
+                                nomeUsuarioForm, senhaForm,
+                                identificadorForm, emailForm,
+                                telefoneForm, enderecoForm, cartaoForm,
+                                dataNascimento);
                     } else {
-                        String razao = campoRazaoSocial.getText().trim();
-                        cliente = new PessoaJuridica(id, nome, NomeUsuario, senha, identificador, email, telefone, endereco, cartao, razao);
+                        String razaoSocialForm = campoRazaoSocial.getText().trim();
+                        cliente = new PessoaJuridica(0, nomeForm,
+                                nomeUsuarioForm, senhaForm,
+                                identificadorForm, emailForm,
+                                telefoneForm, enderecoForm, cartaoForm,
+                                razaoSocialForm
+                        );
                     }
-                    if (validaDados(nome, NomeUsuario, senha, email, telefone, cartao, identificador, endereco)) {
-                        OperacoesCliente operacoesCliente = new OperacoesCliente();
-                        resultado = operacoesCliente.atualiza(cliente);
-                    } else {
-                        resultado = -1;
-                    }
-
-                } else {
-//                    String matricula = campoMatricula.getText().trim();
-//                    String funcao = campoFuncaoFuncionario.getText().trim();
-//                    Funcionario pFuncionario = new Funcionario();
-//                    resultado = this.operacoesFuncionario.atualiza(Pfuncionario);
+                    operacoesCliente.atualiza(cliente);
                 }
-
-                if (resultado == Util.RETORNO_SUCESSO) {
+                if (idUsuario > Util.RETORNO_SUCESSO) {
                     JOptionPane.showMessageDialog(this.pai, "Edição realizada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                     this.dispose();
+                } else if (idUsuario == Util.RETORNO_ERRO_NAO_UNICO) {
+                    JOptionPane.showMessageDialog(null, "Infelizmente não foi possivel editar os dados, pois um usuário com este nome de usuário ou e-mail já existe no sistema.");
                 } else {
-                    JOptionPane.showMessageDialog(this.pai, "Infelizmente não foi possivel editar, tente novamente mais tarde!", "Erro", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this.pai, "Infelizmente não foi possivel editar os dados, tente novamente mais tarde!", "Erro", JOptionPane.ERROR_MESSAGE);
                 }
             } catch (Exception e) {
                 //to do
             }
         }
     }
-
-    private boolean validaDados(String nomeForm,
-            String nomeUsuarioForm,
-            String senhaForm,
-            String emailForm,
-            String telefoneForm,
-            String cartaoForm,
-            String identificadorForm,
-            Endereco endereco
-    ) {
-        String logradouro = endereco.getLogradouro();
-        String numero = endereco.getNumero();
-        String complemento = endereco.getComplemento();
-        String bairro = endereco.getBairro();
-        String cidade = endereco.getCidade();
-        String cep = endereco.getCep();
-
-        if (usuario.isAdmin()) {
-            cartaoForm = "0000000000000000";
-        }
-
-        if (nomeForm.isBlank() || nomeUsuarioForm.isBlank()
-                || senhaForm.isBlank() || emailForm.isBlank()
-                || telefoneForm.isBlank() || cartaoForm.isBlank()
-                || identificadorForm.isBlank() || logradouro.isBlank()
-                || numero.isBlank() || bairro.isBlank()
-                || cidade.isBlank() || cep.isBlank()) {
-            JOptionPane.showMessageDialog(null, "Preencha os campos obrigatórios");
-            return false;
-        } else if (nomeUsuarioForm.contains(" ")
-                || senhaForm.contains(" ")
-                || emailForm.contains(" ")
-                || cartaoForm.contains(" ")) {
-            JOptionPane.showMessageDialog(null, "Os campos nome de usuário, senha, email e cartão não devem conter espaço");
-            return false;
-        } else if (cartaoForm.length() != 16) {
-            JOptionPane.showMessageDialog(null, "Numero de cartao invalido");
-            return false;
-        }
-        /*
-        TODO tratar CNPJ e CPF
-        else if (identificadorForm.length() != 11) {
-            JOptionPane.showMessageDialog(null, "Numero de cartao invalido");
-            return 3;}*/
-//        else {
-//            return 0;
-////        }
+//
+//    private boolean validaDados(String nomeForm,
+//            String nomeUsuarioForm,
+//            String senhaForm,
+//            String emailForm,
+//            String telefoneForm,
+//            String cartaoForm,
+//            String identificadorForm,
+//            Endereco endereco
+//    ) {
+//        String logradouro = endereco.getLogradouro();
+//        String numero = endereco.getNumero();
+//        String complemento = endereco.getComplemento();
+//        String bairro = endereco.getBairro();
+//        String cidade = endereco.getCidade();
+//        String cep = endereco.getCep();
+//
+//        if (usuario.isAdmin()) {
+//            cartaoForm = "0000000000000000";
 //        }
-        return true;
-    }
+//
+//        if (nomeForm.isBlank() || nomeUsuarioForm.isBlank()
+//                || senhaForm.isBlank() || emailForm.isBlank()
+//                || telefoneForm.isBlank() || cartaoForm.isBlank()
+//                || identificadorForm.isBlank() || logradouro.isBlank()
+//                || numero.isBlank() || bairro.isBlank()
+//                || cidade.isBlank() || cep.isBlank()) {
+//            JOptionPane.showMessageDialog(null, "Preencha os campos obrigatórios");
+//            return false;
+//        } else if (nomeUsuarioForm.contains(" ")
+//                || senhaForm.contains(" ")
+//                || emailForm.contains(" ")
+//                || cartaoForm.contains(" ")) {
+//            JOptionPane.showMessageDialog(null, "Os campos nome de usuário, senha, email e cartão não devem conter espaço");
+//            return false;
+//        } else if (cartaoForm.length() != 16) {
+//            JOptionPane.showMessageDialog(null, "Numero de cartao invalido");
+//            return false;
+//        }
+//        /*
+//        TODO tratar CNPJ e CPF
+//        else if (identificadorForm.length() != 11) {
+//            JOptionPane.showMessageDialog(null, "Numero de cartao invalido");
+//            return 3;}*/
+////        else {
+////            return 0;
+//////        }
+////        }
+//        return true;
+//    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -192,9 +225,17 @@ public class EdicaoUsuario extends javax.swing.JDialog {
         textoTelefone = new javax.swing.JLabel();
         campoTelefone = new javax.swing.JFormattedTextField();
         textoIdentificador = new javax.swing.JLabel();
+        campoIdentificador = new javax.swing.JFormattedTextField();
         textoCartaoCredito = new javax.swing.JLabel();
         campoCartao = new javax.swing.JFormattedTextField();
-        campoIdentificador = new javax.swing.JFormattedTextField();
+        textoRazaoSocial = new javax.swing.JLabel();
+        campoRazaoSocial = new javax.swing.JFormattedTextField();
+        textoMatricula = new javax.swing.JLabel();
+        campoMatricula = new javax.swing.JFormattedTextField();
+        textoFuncaoFuncionario = new javax.swing.JLabel();
+        textoDataDeNascimento = new javax.swing.JLabel();
+        campoDataDeNascimento = new javax.swing.JFormattedTextField();
+        campoFuncaoFuncionario = new javax.swing.JFormattedTextField();
         painelCamposEndereco = new javax.swing.JPanel();
         textoLogradouro = new javax.swing.JLabel();
         campoLogradouro = new javax.swing.JFormattedTextField();
@@ -210,18 +251,6 @@ public class EdicaoUsuario extends javax.swing.JDialog {
         campoUf = new javax.swing.JComboBox<>();
         textoCep = new javax.swing.JLabel();
         campoCep = new javax.swing.JFormattedTextField();
-        painelCamposEspecificos = new javax.swing.JPanel();
-        painelPessoaJuridica = new javax.swing.JPanel();
-        textoRazaoSocial = new javax.swing.JLabel();
-        campoRazaoSocial = new javax.swing.JFormattedTextField();
-        painelFuncionario = new javax.swing.JPanel();
-        textoMatricula = new javax.swing.JLabel();
-        campoMatricula = new javax.swing.JFormattedTextField();
-        campoFuncaoFuncionario = new javax.swing.JFormattedTextField();
-        textoFuncaoFuncionario = new javax.swing.JLabel();
-        painelPessoaFisica = new javax.swing.JPanel();
-        textoDataDeNascimento = new javax.swing.JLabel();
-        campoDataDeNascimento = new javax.swing.JFormattedTextField();
         painelBotoes = new javax.swing.JPanel();
         botaoVoltar = new javax.swing.JButton();
         botaoEditar = new javax.swing.JButton();
@@ -232,22 +261,21 @@ public class EdicaoUsuario extends javax.swing.JDialog {
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         painelFormulario.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        painelFormulario.setMinimumSize(new java.awt.Dimension(550, 600));
-        painelFormulario.setPreferredSize(new java.awt.Dimension(550, 600));
+        painelFormulario.setMinimumSize(new java.awt.Dimension(550, 500));
         painelFormulario.setLayout(new java.awt.GridBagLayout());
 
         titulo.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         titulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        titulo.setText("PERFIL");
+        titulo.setText("Perfil");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
         painelFormulario.add(titulo, gridBagConstraints);
 
-        painelCampos.setMinimumSize(new java.awt.Dimension(500, 510));
+        painelCampos.setMinimumSize(new java.awt.Dimension(500, 600));
         painelCampos.setOpaque(false);
-        painelCampos.setPreferredSize(new java.awt.Dimension(500, 700));
         painelCampos.setRequestFocusEnabled(false);
         painelCampos.setLayout(new java.awt.GridBagLayout());
 
@@ -370,11 +398,24 @@ public class EdicaoUsuario extends javax.swing.JDialog {
         textoIdentificador.setText("CPF / CNPJ:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.ipadx = 30;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCampos.add(textoIdentificador, gridBagConstraints);
+
+        campoIdentificador.setPreferredSize(new java.awt.Dimension(200, 22));
+        campoIdentificador.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                campoIdentificadorActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        painelCampos.add(campoIdentificador, gridBagConstraints);
 
         textoCartaoCredito.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         textoCartaoCredito.setText("Cartão de Crédito:");
@@ -404,18 +445,91 @@ public class EdicaoUsuario extends javax.swing.JDialog {
             painelCampos.add(campoCartao, gridBagConstraints);
         }
 
-        campoIdentificador.setPreferredSize(new java.awt.Dimension(200, 22));
-        campoIdentificador.addActionListener(new java.awt.event.ActionListener() {
+        textoRazaoSocial.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        textoRazaoSocial.setText("Razão Social:");
+        textoRazaoSocial.setMinimumSize(new java.awt.Dimension(100, 18));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 8;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 30;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        painelCampos.add(textoRazaoSocial, gridBagConstraints);
+
+        campoRazaoSocial.setMinimumSize(new java.awt.Dimension(90, 24));
+        campoRazaoSocial.setPreferredSize(new java.awt.Dimension(200, 24));
+        campoRazaoSocial.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                campoIdentificadorActionPerformed(evt);
+                campoRazaoSocialActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 8;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        painelCampos.add(campoRazaoSocial, gridBagConstraints);
+
+        textoMatricula.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        textoMatricula.setText("Matricula:");
+        textoMatricula.setMinimumSize(new java.awt.Dimension(100, 18));
+        textoMatricula.setPreferredSize(new java.awt.Dimension(100, 18));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 10;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 30;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        painelCampos.add(textoMatricula, gridBagConstraints);
+
+        campoMatricula.setEditable(false);
+        campoMatricula.setMinimumSize(new java.awt.Dimension(100, 24));
+        campoMatricula.setPreferredSize(new java.awt.Dimension(200, 24));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 10;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        painelCampos.add(campoMatricula, gridBagConstraints);
+
+        textoFuncaoFuncionario.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        textoFuncaoFuncionario.setText("Função:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 9;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 30;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        painelCampos.add(textoFuncaoFuncionario, gridBagConstraints);
+
+        textoDataDeNascimento.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        textoDataDeNascimento.setText("Data de Nascimento:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 30;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        painelCampos.add(textoDataDeNascimento, gridBagConstraints);
+
+        campoDataDeNascimento.setMinimumSize(new java.awt.Dimension(140, 24));
+        campoDataDeNascimento.setPreferredSize(new java.awt.Dimension(170, 24));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 7;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
-        painelCampos.add(campoIdentificador, gridBagConstraints);
+        painelCampos.add(campoDataDeNascimento, gridBagConstraints);
+
+        campoFuncaoFuncionario.setEditable(false);
+        campoFuncaoFuncionario.setMinimumSize(new java.awt.Dimension(200, 24));
+        campoFuncaoFuncionario.setPreferredSize(new java.awt.Dimension(200, 24));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 9;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
+        painelCampos.add(campoFuncaoFuncionario, gridBagConstraints);
 
         painelCamposEndereco.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Endereço"));
         painelCamposEndereco.setLayout(new java.awt.GridBagLayout());
@@ -566,7 +680,7 @@ public class EdicaoUsuario extends javax.swing.JDialog {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 11;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
@@ -574,130 +688,11 @@ public class EdicaoUsuario extends javax.swing.JDialog {
         painelCampos.add(painelCamposEndereco, gridBagConstraints);
         painelCamposEndereco.getAccessibleContext().setAccessibleDescription("");
 
-        if(!usuario.isAdmin()){
-            painelCamposEspecificos.setBorder(javax.swing.BorderFactory.createTitledBorder("Cliente"));
-        }else{
-            painelCamposEspecificos.setBorder(javax.swing.BorderFactory.createTitledBorder("Funcionário"));
-        }
-        painelCamposEspecificos.setMinimumSize(new java.awt.Dimension(350, 58));
-        painelCamposEspecificos.setPreferredSize(new java.awt.Dimension(350, 100));
-        painelCamposEspecificos.setLayout(new java.awt.GridBagLayout());
-
-        painelPessoaJuridica.setMinimumSize(new java.awt.Dimension(300, 29));
-        painelPessoaJuridica.setLayout(new java.awt.GridBagLayout());
-
-        textoRazaoSocial.setText("Razão Social");
-        textoRazaoSocial.setMinimumSize(new java.awt.Dimension(100, 18));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
-        painelPessoaJuridica.add(textoRazaoSocial, gridBagConstraints);
-
-        campoRazaoSocial.setMinimumSize(new java.awt.Dimension(90, 24));
-        campoRazaoSocial.setPreferredSize(new java.awt.Dimension(200, 24));
-        campoRazaoSocial.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                campoRazaoSocialActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
-        painelPessoaJuridica.add(campoRazaoSocial, gridBagConstraints);
-
-        if(!isPessoaF && !usuario.isAdmin()){
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.gridx = 0;
-            gridBagConstraints.gridy = 0;
-            painelCamposEspecificos.add(painelPessoaJuridica, gridBagConstraints);
-        }
-
-        painelFuncionario.setMinimumSize(new java.awt.Dimension(300, 58));
-        painelFuncionario.setPreferredSize(new java.awt.Dimension(450, 100));
-        painelFuncionario.setLayout(new java.awt.GridBagLayout());
-
-        textoMatricula.setText("Matricula");
-        textoMatricula.setMinimumSize(new java.awt.Dimension(100, 18));
-        textoMatricula.setPreferredSize(new java.awt.Dimension(100, 18));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
-        painelFuncionario.add(textoMatricula, gridBagConstraints);
-
-        campoMatricula.setMinimumSize(new java.awt.Dimension(100, 24));
-        campoMatricula.setPreferredSize(new java.awt.Dimension(200, 24));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
-        painelFuncionario.add(campoMatricula, gridBagConstraints);
-
-        campoFuncaoFuncionario.setMinimumSize(new java.awt.Dimension(200, 24));
-        campoFuncaoFuncionario.setPreferredSize(new java.awt.Dimension(200, 24));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
-        painelFuncionario.add(campoFuncaoFuncionario, gridBagConstraints);
-
-        textoFuncaoFuncionario.setText("Função");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
-        painelFuncionario.add(textoFuncaoFuncionario, gridBagConstraints);
-
-        if(funcionario){
-
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.gridx = 0;
-            gridBagConstraints.gridy = 2;
-            painelCamposEspecificos.add(painelFuncionario, gridBagConstraints);
-        }
-
-        painelPessoaFisica.setMinimumSize(new java.awt.Dimension(300, 29));
-        painelPessoaFisica.setLayout(new java.awt.GridBagLayout());
-
-        textoDataDeNascimento.setText("Data de Nascimento");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.ipadx = 10;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
-        painelPessoaFisica.add(textoDataDeNascimento, gridBagConstraints);
-
-        campoDataDeNascimento.setMinimumSize(new java.awt.Dimension(140, 24));
-        campoDataDeNascimento.setPreferredSize(new java.awt.Dimension(170, 24));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
-        painelPessoaFisica.add(campoDataDeNascimento, gridBagConstraints);
-
-        if(isPessoaF && !usuario.isAdmin()){
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.gridx = 0;
-            gridBagConstraints.gridy = 1;
-            painelCamposEspecificos.add(painelPessoaFisica, gridBagConstraints);
-        }
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 8;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        painelCampos.add(painelCamposEspecificos, gridBagConstraints);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
         painelFormulario.add(painelCampos, gridBagConstraints);
 
         painelBotoes.setLayout(new java.awt.GridBagLayout());
@@ -728,10 +723,7 @@ public class EdicaoUsuario extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
         painelFormulario.add(painelBotoes, gridBagConstraints);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        getContentPane().add(painelFormulario, gridBagConstraints);
+        getContentPane().add(painelFormulario, new java.awt.GridBagConstraints());
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -866,11 +858,7 @@ public class EdicaoUsuario extends javax.swing.JDialog {
     private javax.swing.JPanel painelBotoes;
     private javax.swing.JPanel painelCampos;
     private javax.swing.JPanel painelCamposEndereco;
-    private javax.swing.JPanel painelCamposEspecificos;
     private javax.swing.JPanel painelFormulario;
-    private javax.swing.JPanel painelFuncionario;
-    private javax.swing.JPanel painelPessoaFisica;
-    private javax.swing.JPanel painelPessoaJuridica;
     private javax.swing.JLabel textoBairro;
     private javax.swing.JLabel textoCartaoCredito;
     private javax.swing.JLabel textoCep;

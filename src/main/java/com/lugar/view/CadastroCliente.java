@@ -14,7 +14,6 @@ import com.lugar.model.exceptions.ExcecaoAtributo;
 import com.lugar.model.exceptions.ExcecaoDataInvalida;
 import com.lugar.model.exceptions.ExcecaoEnderecoInvalido;
 import com.lugar.model.exceptions.ExcecaoUsuarioInvalido;
-import java.awt.HeadlessException;
 import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -281,7 +280,7 @@ public class CadastroCliente extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCampos.add(campoIdentificador, gridBagConstraints);
 
-        painelCamposEndereco.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), null));
+        painelCamposEndereco.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Endereço"));
         painelCamposEndereco.setLayout(new java.awt.GridBagLayout());
 
         textoLogradouro.setText("Logradouro");
@@ -537,37 +536,6 @@ public class CadastroCliente extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private int validaCadastro(String nomeForm,
-            String nomeUsuarioForm,
-            String senhaForm,
-            String emailForm,
-            String telefoneForm,
-            String cartaoForm,
-            String identificadorForm) {
-        if (nomeForm.isBlank() || nomeUsuarioForm.isBlank()
-                || senhaForm.isBlank() || emailForm.isBlank()
-                || telefoneForm.isBlank() || cartaoForm.isBlank()
-                || identificadorForm.isBlank()) {
-            JOptionPane.showMessageDialog(null, "Preencha os campos obrigatórios");
-            return -1;
-        } else if (nomeUsuarioForm.contains(" ")
-                || senhaForm.contains(" ")
-                || emailForm.contains(" ")
-                || cartaoForm.contains(" ")) {
-            JOptionPane.showMessageDialog(null, "Os campos nome de usuário, senha, email e cartão não devem conter espaço");
-            return -2;
-        } else if (cartaoForm.length() != 16) {
-            JOptionPane.showMessageDialog(null, "Numero de cartao invalido");
-            return -3;
-        } /*
-        TODO tratar CNPJ e CPF
-        else if (identificadorForm.length() != 11) {
-            JOptionPane.showMessageDialog(null, "Numero de cartao invalido");
-            return 3;}*/ else {
-            return 0;
-        }
-    }
 
     private void trocaCamposPFPJ(boolean juridica) {
         textoRazaoSocial.setVisible(juridica);

@@ -100,8 +100,9 @@ public class OperacoesUsuario implements OperacoesConexao<Usuario> {
                 if (rs.getInt("admin") == 1) {
                     String matricula = rs.getString("matricula");
                     String funcao = rs.getString("funcao");
-                    usuario = new Funcionario(id, nome, nomeUsuario, senhaHash, admin,
-                            email, telefone, identificador, endereco, matricula, funcao);
+                    usuario = new Funcionario(id, nome, nomeUsuario, senhaHash,
+                            email, telefone, identificador, endereco, matricula, funcao
+                    );
                 } else {
                     String cartao = rs.getString("cartao");
                     if (rs.getInt("fisica") == 0) {
@@ -118,7 +119,7 @@ public class OperacoesUsuario implements OperacoesConexao<Usuario> {
         } catch (SQLException | ExcecaoUsuarioInvalido | ExcecaoEnderecoInvalido ex) {
             Logger.getLogger(Conexao.class
                     .getName()).log(Level.SEVERE, null, ex);
-        }finally {
+        } finally {
             Conexao.fechaConexao(conn);
         }
         return usuario;

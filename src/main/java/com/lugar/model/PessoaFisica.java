@@ -47,7 +47,7 @@ public class PessoaFisica extends Cliente {
             throw new ExcecaoPessoaFisicaInvalida(ex);
         }
     }
-    
+
     private void verificaPreenchimentoPessoaFisica(
             LocalDate dataNascimento
     ) throws ExcecaoDataInvalida {
@@ -58,6 +58,10 @@ public class PessoaFisica extends Cliente {
 
     public LocalDate getDataNascimento() {
         return dataNascimento;
+    }
+
+    public String getDataNascimentoFormatada() {
+        return Util.formataData(this.dataNascimento);
     }
 
     @Override
