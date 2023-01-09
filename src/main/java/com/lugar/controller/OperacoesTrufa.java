@@ -56,6 +56,8 @@ public class OperacoesTrufa implements OperacoesConexao<Trufa> {
             ResultSet rsBusca = pstmtBusca.executeQuery();
 
             if (rsBusca.next()) {
+                idProduto = rsBusca.getInt("id");
+            }else{
                 String sqlProduto = "INSERT INTO Produto(tipo) VALUES(1);";
                 PreparedStatement pstmtProduto = conn.prepareStatement(sqlProduto, Statement.RETURN_GENERATED_KEYS);
                 int linhaInserida = pstmtProduto.executeUpdate();

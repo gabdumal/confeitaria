@@ -126,6 +126,8 @@ public class VisualizacaoItemProdutoPersonalizado extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 0);
         painelFormulario.add(titulo, gridBagConstraints);
 
+        painelCampos.setMinimumSize(new java.awt.Dimension(300, 343));
+        painelCampos.setPreferredSize(new java.awt.Dimension(300, 391));
         painelCampos.setLayout(new java.awt.GridBagLayout());
 
         textoNome.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -417,6 +419,7 @@ public class VisualizacaoItemProdutoPersonalizado extends javax.swing.JDialog {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 0);
         painelFormulario.add(painelCampos, gridBagConstraints);
 
@@ -438,6 +441,7 @@ public class VisualizacaoItemProdutoPersonalizado extends javax.swing.JDialog {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         getContentPane().add(painelFormulario, gridBagConstraints);

@@ -5,6 +5,9 @@
 package com.lugar.model;
 
 import com.lugar.confeitaria.Util;
+import com.lugar.model.exceptions.ExcecaoPessoaJuridicaInvalida;
+import com.lugar.model.exceptions.ExcecaoStringInvalido;
+import com.lugar.model.exceptions.ExcecaoUsuarioInvalido;
 import java.text.ParseException;
 
 /**
@@ -15,7 +18,7 @@ public class PessoaJuridica extends Cliente {
 
     private String razaoSocial;
 
-    public PessoaJuridica(int idUsuario, String nomeUsuario, String senhaHash) {
+    public PessoaJuridica(int idUsuario, String nomeUsuario, String senhaHash) throws ExcecaoUsuarioInvalido {
         super(idUsuario, nomeUsuario, senhaHash, false);
     }
 
@@ -30,10 +33,23 @@ public class PessoaJuridica extends Cliente {
             Endereco endereco,
             String cartao,
             String razaoSocial
-    ) {
+    ) throws ExcecaoUsuarioInvalido {
         super(idUsuario, nome, nomeUsuario, senhaHash, identificador, email,
                 telefone, endereco, cartao, false);
-        this.razaoSocial = razaoSocial;
+        try {
+            this.verificaPreenchimentoPessoaJuridica(razaoSocial);
+            this.razaoSocial = razaoSocial;
+        } catch (ExcecaoStringInvalido ex) {
+            throw new ExcecaoPessoaJuridicaInvalida(ex);
+        }
+    }
+    
+    private void verificaPreenchimentoPessoaJuridica(
+            String razaoSocial
+    ) throws ExcecaoStringInvalido {
+        if (razaoSocial.isBlank()) {
+            throw new ExcecaoStringInvalido("razaoSocial", false);
+        }
     }
 
     public String getRazaoSocial() {
@@ -49,4 +65,17 @@ public class PessoaJuridica extends Cliente {
         }
     }
 
+    @Override
+    public boolean validaIdentificador(String identificador) throws ExcecaoStringInvalido {
+        if (identificador.isBlank()) {
+            throw new ExcecaoStringInvalido("identificador", false);
+        }
+        if (!identificador.matches("[0-9]+")) {
+            throw new ExcecaoStringInvalido("identificador", "CNPJ deve conter apenas números.");
+        }
+        if (identificador.length() != 14) {
+            throw new ExcecaoStringInvalido("identificador", "CNPJ deve ter 14 caracteres.");
+        }
+        return true;
+    }
 }

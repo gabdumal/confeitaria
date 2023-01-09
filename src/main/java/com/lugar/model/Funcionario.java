@@ -5,9 +5,9 @@
 package com.lugar.model;
 
 import com.lugar.confeitaria.Util;
+import com.lugar.model.exceptions.ExcecaoStringInvalido;
+import com.lugar.model.exceptions.ExcecaoUsuarioInvalido;
 import java.text.ParseException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -18,7 +18,7 @@ public class Funcionario extends Usuario {
     private String matricula;
     private String funcao;
 
-    public Funcionario(int idUsuario, String nomeUsuario, String senhaHash) {
+    public Funcionario(int idUsuario, String nomeUsuario, String senhaHash) throws ExcecaoUsuarioInvalido {
         super(idUsuario, nomeUsuario, senhaHash, true);
     }
 
@@ -34,7 +34,7 @@ public class Funcionario extends Usuario {
             Endereco endereco,
             String matricula,
             String funcao
-    ) {
+    ) throws ExcecaoUsuarioInvalido {
         super(idUsuario, nome, nomeUsuario, senhaHash, identificador, email, telefone, admin, endereco);
         this.matricula = matricula;
         this.funcao = funcao;
@@ -48,4 +48,19 @@ public class Funcionario extends Usuario {
             return this.getIdentificador();
         }
     }
+
+    @Override
+    public boolean validaIdentificador(String identificador) throws ExcecaoStringInvalido {
+        if (identificador.isBlank()) {
+            throw new ExcecaoStringInvalido("identificador", false);
+        }
+        if (!identificador.matches("[0-9]+")) {
+            throw new ExcecaoStringInvalido("identificador", "CPF deve conter apenas números.");
+        }
+        if (identificador.length() != 11) {
+            throw new ExcecaoStringInvalido("identificador", "CPF deve ter 11 caracteres.");
+        }
+        return true;
+    }
+
 }

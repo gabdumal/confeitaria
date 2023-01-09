@@ -33,7 +33,8 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
     private List<Caracteristica> listaFormas;
     private List<Caracteristica> listaCores;
     private List<Caracteristica> listaCoberturas;
-    private List<Caracteristica> listaRecheios;
+    private List<Caracteristica> listaRecheios;  
+    private List<SetStringString> listaReceitas;
     private DefaultComboBoxModel modeloReceita;
     private DefaultComboBoxModel modeloFormas;
     private DefaultComboBoxModel modeloCores;
@@ -90,8 +91,11 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
         this.modeloRecheios1 = new DefaultComboBoxModel();
         this.modeloRecheios2 = new DefaultComboBoxModel();
         this.modeloRecheios3 = new DefaultComboBoxModel();
+        this.listaReceitas = new ArrayList<SetStringString>();
         SetStringString receitaBolo = new SetStringString(Util.RECEITA_BOLO, "Bolo");
         SetStringString receitaTrufa = new SetStringString(Util.RECEITA_TRUFA, "Trufa");
+        listaReceitas.add(receitaBolo);
+        listaReceitas.add(receitaTrufa);
         this.modeloReceita.addElement(receitaBolo);
         this.modeloReceita.addElement(receitaTrufa);
         OperacoesCaracteristica novaListaDeListas = new OperacoesCaracteristica();
@@ -118,7 +122,12 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
 
     private void preencheCampos(ProdutoPersonalizado produto) {
         this.campoQuantidade.setValue(produto.getCarrinho());
-
+        for (SetStringString receitaL : listaReceitas) {
+            if (receitaL.getChave().equals(produto.getReceita())) {
+                this.comboBoxReceita.setSelectedItem(receitaL);
+                break;
+            }
+        }
         if (produto instanceof Bolo) {
             this.areaTextoDetalheBolo.setText(produto.getDetalhe());
             for (Caracteristica forma : listaFormas) {
@@ -159,13 +168,13 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
             this.areaTextoDetalheTrufa.setText(produto.getDetalhe());
             for (Caracteristica cor : listaCores) {
                 if (cor.getId() == produto.getCor().getId()) {
-                    this.comboBoxFormaBolo.setSelectedItem(cor);
+                    this.comboBoxCorTrufa.setSelectedItem(cor);
                     break;
                 }
             }
             for (Caracteristica recheio : listaRecheios) {
                 if (recheio.getId() == ((Trufa) produto).getRecheio().getId()) {
-                    this.comboBoxFormaBolo.setSelectedItem(recheio);
+                    this.comboBoxRecheioTrufa.setSelectedItem(recheio);
                     break;
                 }
             }
