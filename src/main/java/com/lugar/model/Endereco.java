@@ -34,6 +34,16 @@ public class Endereco {
         this.cep = cep;
     }
 
+    public Endereco(Endereco endereco) {
+        this.numero = endereco.getNumero();
+        this.complemento = endereco.getComplemento();
+        this.logradouro = endereco.getLogradouro();
+        this.bairro = endereco.getBairro();
+        this.cidade = endereco.getCidade();
+        this.uf = endereco.getUf();
+        this.cep = endereco.getCep();
+    }
+
     public int getId() {
         return id;
     }

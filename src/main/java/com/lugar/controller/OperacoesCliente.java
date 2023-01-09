@@ -140,9 +140,71 @@ public class OperacoesCliente implements OperacoesConexao<Cliente> {
     }
 
     @Override
-    public int atualiza(Cliente cliente
-    ) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public int atualiza(Cliente cliente) {
+        String sqlUsuario = "UPDATE Usuario SET nome = ?, nomeUsuario = ?, senhaHash = ?, identificador = ?, email = ?, telefone = ? WHERE id = ?;";
+        String sqlCliente = "UPTADE Cliente SET cartao = ? WHERER id = ?;";
+        String sqlEndereco = "UPDATE Endereco SET numero = ?, complemento = ?, logradouro = ?, bairro = ?, cidade = ?, uf = ? , cep = ? WHERE id = ?;";
+        String sqlPFPJ;
+
+        Connection conn = null;
+        int valorRetorno = Util.RETORNO_SUCESSO;
+        try {
+            conn = Conexao.abreConexao();
+            conn.setAutoCommit(false);
+
+            PreparedStatement pstmtUsuario = conn.prepareStatement(sqlUsuario);
+            pstmtUsuario.setString(1, cliente.getNome());
+            pstmtUsuario.setString(2, cliente.getNomeUsuario());
+            pstmtUsuario.setString(3, cliente.getSenhaHash());
+            pstmtUsuario.setString(4, cliente.getIdentificador());
+            pstmtUsuario.setString(5, cliente.getEmail());
+            pstmtUsuario.setString(6, cliente.getTelefone());
+            pstmtUsuario.setInt(7, cliente.getId());
+
+            int linhaAtualizada = pstmtUsuario.executeUpdate();
+
+            // Reverter operação em caso de erro
+            if (linhaAtualizada != 1) {
+                conn.rollback();
+            } else {
+                PreparedStatement pstmtCliente = conn.prepareStatement(sqlCliente);
+                pstmtCliente.setString(1, cliente.getCartao());
+                pstmtCliente.setInt(2, cliente.getId());
+
+                linhaAtualizada = pstmtCliente.executeUpdate();
+
+                if (linhaAtualizada != -1) {
+
+                    if (cliente instanceof PessoaFisica) {
+                        sqlPFPJ = "UPDATE PessoaFisica SET dataNascimento = ? WHERE id = ?;";
+                        PreparedStatement pstmtPessoaFisica = conn.prepareStatement(sqlPFPJ);
+                        pstmtPessoaFisica.setString(1, ((PessoaFisica) cliente).getDataNascimento().toString());
+                        pstmtPessoaFisica.setInt(2, cliente.getId());
+                        linhaAtualizada = pstmtPessoaFisica.executeUpdate();
+                    } else {
+                        sqlPFPJ = "UPDATE PessoaJuridica SET razaoSocial = ? WHERE id = ?;";
+                        PreparedStatement pstmtPessoaJuridica = conn.prepareStatement(sqlPFPJ);
+                        pstmtPessoaJuridica.setString(1, ((PessoaJuridica) cliente).getRazaoSocial());
+                        pstmtPessoaJuridica.setInt(2, cliente.getId());
+                        linhaAtualizada = pstmtPessoaJuridica.executeUpdate();
+                    }
+                    if (linhaAtualizada != 1) {
+                        conn.rollback();
+                    } else {
+                        conn.commit();
+                    }
+                }
+            }
+            conn.setAutoCommit(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexao.class
+                    .getName())
+                    .log(Level.SEVERE, null, ex);
+            valorRetorno = Conexao.determinaValorErro(ex.getMessage());
+        } finally {
+            Conexao.fechaConexao(conn);
+            return valorRetorno;
+        }
     }
 
     @Override

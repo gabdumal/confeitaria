@@ -63,7 +63,6 @@ public class EdicaoUsuario extends javax.swing.JDialog {
         campoIdentificador.setText(usuario.getIdentificador());
         campoUf.setSelectedItem(endereco.getUf());
         campoSenha.setText(usuario.getSenhaHash());
-
     }
 
     private void editaUsuario() {
@@ -75,33 +74,45 @@ public class EdicaoUsuario extends javax.swing.JDialog {
         String identificador = campoIdentificador.getText().trim();
         String senha = String.valueOf(campoSenha.getPassword()).trim();
         String cartao = campoCartao.getText().trim();
-        String dataNascimento = campoDataDeNascimento.getText().trim();
-        String matricula = campoMatricula.getText().trim();
-        String funcao = campoFuncaoFuncionario.getText().trim();
-        String razao = campoRazaoSocial.getText().trim();
 
-        if (validaDados(nome, NomeUsuario, senha, email, telefone, cartao, identificador, endereco, dataNascimento, matricula, funcao, razao)) {
-            boolean confirmacao = JOptionPane.showConfirmDialog(null, "Deseja confirmar a edição do perfil?", "Edição de Perfil", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == 0;
-            if (confirmacao) {
-                int resultado = Util.RETORNO_SUCESSO;
-//                if (usuario.isAdmin()) {
+        boolean confirmacao = JOptionPane.showConfirmDialog(null, "Deseja confirmar a edição do perfil?", "Edição de Perfil", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == 0;
+        if (confirmacao) {
+            int resultado = Util.RETORNO_SUCESSO;
+            try {
+                if (!usuario.isAdmin()) {
+                    Cliente cliente;
+                    Endereco enderecoAtualizado = new Endereco(endereco);
+                    if (isPessoaF) {
+                        String dataNascimentoForm = campoDataDeNascimento.getText().trim();
+                        LocalDate dataNascimento = Util.converteData(dataNascimentoForm);
+                        cliente = new PessoaFisica(id, nome, NomeUsuario, senha,
+                                identificador, email, telefone, endereco, cartao, dataNascimento);
+                    } else {
+                        String razao = campoRazaoSocial.getText().trim();
+                        cliente = new PessoaJuridica(id, nome, NomeUsuario, senha, identificador, email, telefone, endereco, cartao, razao);
+                    }
+                    if (validaDados(nome, NomeUsuario, senha, email, telefone, cartao, identificador, endereco)) {
+                        OperacoesCliente operacoesCliente = new OperacoesCliente();
+                        resultado = operacoesCliente.atualiza(cliente);
+                    } else {
+                        resultado = -1;
+                    }
+
+                } else {
+//                    String matricula = campoMatricula.getText().trim();
+//                    String funcao = campoFuncaoFuncionario.getText().trim();
 //                    Funcionario pFuncionario = new Funcionario();
 //                    resultado = this.operacoesFuncionario.atualiza(Pfuncionario);
-//                } else {
-//                    if (isPessoaF) {
-//                        PessoaFisica pessoa = new PessoaFisica();
-//                        resultado = this.operacoesPessoaFisica.atualiza(pessoa);
-//                    } else {
-//                        PessoaJuridica pessoa = new PessoaJuridica();
-//                        resultado = this.operacoesPessoaJuridica.atualiza(pessoa);
-//                    }
-//                }
+                }
+
                 if (resultado == Util.RETORNO_SUCESSO) {
                     JOptionPane.showMessageDialog(this.pai, "Edição realizada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                     this.dispose();
                 } else {
                     JOptionPane.showMessageDialog(this.pai, "Infelizmente não foi possivel editar, tente novamente mais tarde!", "Erro", JOptionPane.ERROR_MESSAGE);
                 }
+            } catch (Exception e) {
+                //to do
             }
         }
     }
@@ -113,11 +124,7 @@ public class EdicaoUsuario extends javax.swing.JDialog {
             String telefoneForm,
             String cartaoForm,
             String identificadorForm,
-            Endereco endereco,
-            String dataNascimentoForm,
-            String matriculaForm,
-            String funcaoForm,
-            String razaoForm
+            Endereco endereco
     ) {
         String logradouro = endereco.getLogradouro();
         String numero = endereco.getNumero();
@@ -126,28 +133,16 @@ public class EdicaoUsuario extends javax.swing.JDialog {
         String cidade = endereco.getCidade();
         String cep = endereco.getCep();
 
-        //PARA OS CASOS ESPECIFICOS
-        if (!usuario.isAdmin()) {
-            matriculaForm = "00";
-            funcaoForm = "00";
-            if (isPessoaF) {
-                razaoForm = "00";
-            } else {
-                dataNascimentoForm = "00";
-            }
-        } else {
+        if (usuario.isAdmin()) {
             cartaoForm = "0000000000000000";
-            razaoForm = "00";
-            dataNascimentoForm = "00";
         }
 
         if (nomeForm.isBlank() || nomeUsuarioForm.isBlank()
                 || senhaForm.isBlank() || emailForm.isBlank()
                 || telefoneForm.isBlank() || cartaoForm.isBlank()
                 || identificadorForm.isBlank() || logradouro.isBlank()
-                || numero.isBlank() || complemento.isBlank() || bairro.isBlank()
-                || cidade.isBlank() || cep.isBlank() || matriculaForm.isBlank()
-                || funcaoForm.isBlank() || razaoForm.isBlank() || dataNascimentoForm.isBlank()) {
+                || numero.isBlank() || bairro.isBlank()
+                || cidade.isBlank() || cep.isBlank()) {
             JOptionPane.showMessageDialog(null, "Preencha os campos obrigatórios");
             return false;
         } else if (nomeUsuarioForm.contains(" ")
@@ -393,6 +388,7 @@ public class EdicaoUsuario extends javax.swing.JDialog {
             painelCampos.add(textoCartaoCredito, gridBagConstraints);
         }
 
+        campoCartao.setText("123412348888888");
         campoCartao.setPreferredSize(new java.awt.Dimension(200, 22));
         campoCartao.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
