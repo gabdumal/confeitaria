@@ -9,6 +9,7 @@ import com.lugar.controller.OperacoesCliente;
 import com.lugar.controller.OperacoesUsuario;
 import com.lugar.model.Cliente;
 import com.lugar.model.Endereco;
+import com.lugar.model.Funcionario;
 import com.lugar.model.PessoaFisica;
 import com.lugar.model.PessoaJuridica;
 import com.lugar.model.SetStringString;
@@ -23,19 +24,19 @@ import javax.swing.JOptionPane;
  * @author lugar
  */
 public class EdicaoUsuario extends javax.swing.JDialog {
-    
+
     private int id;
     private java.awt.Frame pai;
     private Usuario usuario;
     private boolean isPessoaF;
     private boolean funcionario;
     private OperacoesUsuario operacoesUsuario;
-    
+
     public EdicaoUsuario(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
     }
-    
+
     public EdicaoUsuario(java.awt.Frame parent, boolean modal, int id) {
         super(parent, modal);
         this.id = id;
@@ -44,7 +45,7 @@ public class EdicaoUsuario extends javax.swing.JDialog {
         this.usuario = operacoesUsuario.busca(id);
         this.isPessoaF = usuario instanceof PessoaFisica;
         this.funcionario = usuario.isAdmin();
-        
+
         initComponents();
 
         //Preenchendo infos
@@ -61,17 +62,114 @@ public class EdicaoUsuario extends javax.swing.JDialog {
         campoCep.setText(endereco.getCep());
         campoIdentificador.setText(usuario.getIdentificador());
         campoUf.setSelectedItem(endereco.getUf());
-        
-        if (usuario.isAdmin()) {
-            //to do ( nao foi implementada a operacaoFuncionario)
-        } else {
-//            OperacoesCliente operacaoCliente = new OperacoesCliente();
-//            Cliente cliente = operacaoCliente.busca(id);
-//            campoCartao.setText(cliente.getCartao());
-//            ...
-//            ainda nao foi implementada a operacaoCliente;
+        campoSenha.setText(usuario.getSenhaHash());
+
+    }
+
+    private void editaUsuario() {
+        String nome = campoNome.getText().trim();
+        String NomeUsuario = campoNomeUsuario.getText().trim();
+        String email = campoEmail.getText().trim();
+        String telefone = campoTelefone.getText().trim();
+        Endereco endereco = usuario.getEndereco();
+        String identificador = campoIdentificador.getText().trim();
+        String senha = String.valueOf(campoSenha.getPassword()).trim();
+        String cartao = campoCartao.getText().trim();
+        String dataNascimento = campoDataDeNascimento.getText().trim();
+        String matricula = campoMatricula.getText().trim();
+        String funcao = campoFuncaoFuncionario.getText().trim();
+        String razao = campoRazaoSocial.getText().trim();
+
+        if (validaDados(nome, NomeUsuario, senha, email, telefone, cartao, identificador, endereco, dataNascimento, matricula, funcao, razao)) {
+            boolean confirmacao = JOptionPane.showConfirmDialog(null, "Deseja confirmar a edição do perfil?", "Edição de Perfil", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == 0;
+            if (confirmacao) {
+                int resultado = Util.RETORNO_SUCESSO;
+//                if (usuario.isAdmin()) {
+//                    Funcionario pFuncionario = new Funcionario();
+//                    resultado = this.operacoesFuncionario.atualiza(Pfuncionario);
+//                } else {
+//                    if (isPessoaF) {
+//                        PessoaFisica pessoa = new PessoaFisica();
+//                        resultado = this.operacoesPessoaFisica.atualiza(pessoa);
+//                    } else {
+//                        PessoaJuridica pessoa = new PessoaJuridica();
+//                        resultado = this.operacoesPessoaJuridica.atualiza(pessoa);
+//                    }
+//                }
+                if (resultado == Util.RETORNO_SUCESSO) {
+                    JOptionPane.showMessageDialog(this.pai, "Edição realizada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                    this.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(this.pai, "Infelizmente não foi possivel editar, tente novamente mais tarde!", "Erro", JOptionPane.ERROR_MESSAGE);
+                }
+            }
         }
-        
+    }
+
+    private boolean validaDados(String nomeForm,
+            String nomeUsuarioForm,
+            String senhaForm,
+            String emailForm,
+            String telefoneForm,
+            String cartaoForm,
+            String identificadorForm,
+            Endereco endereco,
+            String dataNascimentoForm,
+            String matriculaForm,
+            String funcaoForm,
+            String razaoForm
+    ) {
+        String logradouro = endereco.getLogradouro();
+        String numero = endereco.getNumero();
+        String complemento = endereco.getComplemento();
+        String bairro = endereco.getBairro();
+        String cidade = endereco.getCidade();
+        String cep = endereco.getCep();
+
+        //PARA OS CASOS ESPECIFICOS
+        if (!usuario.isAdmin()) {
+            matriculaForm = "00";
+            funcaoForm = "00";
+            if (isPessoaF) {
+                razaoForm = "00";
+            } else {
+                dataNascimentoForm = "00";
+            }
+        } else {
+            cartaoForm = "0000000000000000";
+            razaoForm = "00";
+            dataNascimentoForm = "00";
+        }
+
+        if (nomeForm.isBlank() || nomeUsuarioForm.isBlank()
+                || senhaForm.isBlank() || emailForm.isBlank()
+                || telefoneForm.isBlank() || cartaoForm.isBlank()
+                || identificadorForm.isBlank() || logradouro.isBlank()
+                || numero.isBlank() || complemento.isBlank() || bairro.isBlank()
+                || cidade.isBlank() || cep.isBlank() || matriculaForm.isBlank()
+                || funcaoForm.isBlank() || razaoForm.isBlank() || dataNascimentoForm.isBlank()) {
+            JOptionPane.showMessageDialog(null, "Preencha os campos obrigatórios");
+            return false;
+        } else if (nomeUsuarioForm.contains(" ")
+                || senhaForm.contains(" ")
+                || emailForm.contains(" ")
+                || cartaoForm.contains(" ")) {
+            JOptionPane.showMessageDialog(null, "Os campos nome de usuário, senha, email e cartão não devem conter espaço");
+            return false;
+        } else if (cartaoForm.length() != 16) {
+            JOptionPane.showMessageDialog(null, "Numero de cartao invalido");
+            return false;
+        }
+        /*
+        TODO tratar CNPJ e CPF
+        else if (identificadorForm.length() != 11) {
+            JOptionPane.showMessageDialog(null, "Numero de cartao invalido");
+            return 3;}*/
+//        else {
+//            return 0;
+////        }
+//        }
+        return true;
     }
 
     /**
@@ -619,6 +717,11 @@ public class EdicaoUsuario extends javax.swing.JDialog {
         painelBotoes.add(botaoVoltar, gridBagConstraints);
 
         botaoEditar.setText("Editar");
+        botaoEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoEditarActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.insets = new java.awt.Insets(10, 5, 0, 0);
         painelBotoes.add(botaoEditar, gridBagConstraints);
@@ -640,50 +743,54 @@ public class EdicaoUsuario extends javax.swing.JDialog {
     private void campoNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoNomeActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_campoNomeActionPerformed
-    
+
     private void campoSenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoSenhaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_campoSenhaActionPerformed
-    
+
     private void campoNomeUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoNomeUsuarioActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_campoNomeUsuarioActionPerformed
-    
+
     private void campoEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoEmailActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_campoEmailActionPerformed
-    
+
     private void campoIdentificadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoIdentificadorActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_campoIdentificadorActionPerformed
-    
+
     private void campoTelefoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoTelefoneActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_campoTelefoneActionPerformed
-    
+
     private void campoCartaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoCartaoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_campoCartaoActionPerformed
-    
+
     private void campoCidadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoCidadeActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_campoCidadeActionPerformed
-    
+
     private void campoUfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoUfActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_campoUfActionPerformed
-    
+
     private void campoNumeroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoNumeroActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_campoNumeroActionPerformed
-    
+
     private void botaoVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoVoltarActionPerformed
         this.dispose();
     }//GEN-LAST:event_botaoVoltarActionPerformed
-    
+
     private void campoRazaoSocialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoRazaoSocialActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_campoRazaoSocialActionPerformed
+
+    private void botaoEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoEditarActionPerformed
+        this.editaUsuario();
+    }//GEN-LAST:event_botaoEditarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -699,21 +806,21 @@ public class EdicaoUsuario extends javax.swing.JDialog {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
-                    
+
                 }
             }
         } catch (ClassNotFoundException ex) {
             java.util.logging.Logger.getLogger(EdicaoUsuario.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-            
+
         } catch (InstantiationException ex) {
             java.util.logging.Logger.getLogger(EdicaoUsuario.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-            
+
         } catch (IllegalAccessException ex) {
             java.util.logging.Logger.getLogger(EdicaoUsuario.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-            
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(EdicaoUsuario.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
