@@ -5,10 +5,14 @@
 package com.lugar.model;
 
 import com.lugar.confeitaria.Util;
+import com.lugar.model.exceptions.ExcecaoDataInvalida;
+import com.lugar.model.exceptions.ExcecaoPessoaFisicaInvalida;
 import com.lugar.model.exceptions.ExcecaoStringInvalido;
 import com.lugar.model.exceptions.ExcecaoUsuarioInvalido;
 import java.text.ParseException;
 import java.time.LocalDate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -36,7 +40,20 @@ public class PessoaFisica extends Cliente {
     ) throws ExcecaoUsuarioInvalido {
         super(idUsuario, nome, nomeUsuario, senhaHash, identificador, email,
                 telefone, endereco, cartao, true);
-        this.dataNascimento = dataNascimento;
+        try {
+            this.verificaPreenchimentoPessoaFisica(dataNascimento);
+            this.dataNascimento = dataNascimento;
+        } catch (ExcecaoDataInvalida ex) {
+            throw new ExcecaoPessoaFisicaInvalida(ex);
+        }
+    }
+    
+    private void verificaPreenchimentoPessoaFisica(
+            LocalDate dataNascimento
+    ) throws ExcecaoDataInvalida {
+        if (LocalDate.now().isBefore(dataNascimento)) {
+            throw new ExcecaoDataInvalida("dataNascimento", "A data de nascimento não pode ser posterior ao dia de hoje.");
+        }
     }
 
     public LocalDate getDataNascimento() {

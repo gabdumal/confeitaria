@@ -72,7 +72,7 @@ public class Util {
         if (Util.dataValida(data)) {
             return LocalDate.parse(data, DateTimeFormatter.ofPattern(Util.FORMATO_DATA));
         } else {
-            throw new ExcecaoDataInvalida();
+            throw new ExcecaoDataInvalida("data");
         }
     }
 

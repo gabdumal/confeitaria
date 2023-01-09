@@ -10,6 +10,7 @@ import com.lugar.model.PessoaFisica;
 import com.lugar.model.PessoaJuridica;
 import com.lugar.model.Usuario;
 import com.lugar.model.exceptions.ExcecaoEnderecoInvalido;
+import com.lugar.model.exceptions.ExcecaoStringInvalido;
 import com.lugar.model.exceptions.ExcecaoUsuarioInvalido;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -117,7 +118,7 @@ public class OperacoesUsuario implements OperacoesConexao<Usuario> {
         } catch (SQLException | ExcecaoUsuarioInvalido | ExcecaoEnderecoInvalido ex) {
             Logger.getLogger(Conexao.class
                     .getName()).log(Level.SEVERE, null, ex);
-        } finally {
+        }finally {
             Conexao.fechaConexao(conn);
         }
         return usuario;

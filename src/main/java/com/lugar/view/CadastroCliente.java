@@ -281,7 +281,7 @@ public class CadastroCliente extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCampos.add(campoIdentificador, gridBagConstraints);
 
-        painelCamposEndereco.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Endereço"));
+        painelCamposEndereco.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), null));
         painelCamposEndereco.setLayout(new java.awt.GridBagLayout());
 
         textoLogradouro.setText("Logradouro");
@@ -438,7 +438,7 @@ public class CadastroCliente extends javax.swing.JDialog {
         painelCampos.add(painelCamposEndereco, gridBagConstraints);
         painelCamposEndereco.getAccessibleContext().setAccessibleDescription("");
 
-        painelCamposEspecificos.setBorder(javax.swing.BorderFactory.createTitledBorder("Classificação"));
+        painelCamposEspecificos.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         painelCamposEspecificos.setLayout(new java.awt.GridBagLayout());
 
         botoesTipoPessoa.add(botaoPessoaFisica);

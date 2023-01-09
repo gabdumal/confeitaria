@@ -10,9 +10,13 @@ import com.lugar.confeitaria.Util;
  *
  * @author lugar
  */
-public class ExcecaoDataInvalida extends Exception {
+public class ExcecaoDataInvalida extends ExcecaoAtributo {
 
-    public ExcecaoDataInvalida() {
-        super("ERRO: a data informada não segue os padrões " + Util.FORMATO_DATA + "!");
+    public ExcecaoDataInvalida(String atributo) {
+        super(atributo, "ERRO: a data informada (" + atributo + ") não segue os padrões " + Util.FORMATO_DATA + "!");
     }
+    public ExcecaoDataInvalida(String atributo, String mensagemExtra) {
+        super(atributo, mensagemExtra, "ERRO: atributo " + atributo + ", do tipo LocalDate, foi preenchido de forma invalida!");
+    }
+    
 }

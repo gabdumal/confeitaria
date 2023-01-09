@@ -5,6 +5,7 @@
 package com.lugar.model;
 
 import com.lugar.confeitaria.Util;
+import com.lugar.model.exceptions.ExcecaoPessoaJuridicaInvalida;
 import com.lugar.model.exceptions.ExcecaoStringInvalido;
 import com.lugar.model.exceptions.ExcecaoUsuarioInvalido;
 import java.text.ParseException;
@@ -35,7 +36,20 @@ public class PessoaJuridica extends Cliente {
     ) throws ExcecaoUsuarioInvalido {
         super(idUsuario, nome, nomeUsuario, senhaHash, identificador, email,
                 telefone, endereco, cartao, false);
-        this.razaoSocial = razaoSocial;
+        try {
+            this.verificaPreenchimentoPessoaJuridica(razaoSocial);
+            this.razaoSocial = razaoSocial;
+        } catch (ExcecaoStringInvalido ex) {
+            throw new ExcecaoPessoaJuridicaInvalida(ex);
+        }
+    }
+    
+    private void verificaPreenchimentoPessoaJuridica(
+            String razaoSocial
+    ) throws ExcecaoStringInvalido {
+        if (razaoSocial.isBlank()) {
+            throw new ExcecaoStringInvalido("razaoSocial", false);
+        }
     }
 
     public String getRazaoSocial() {

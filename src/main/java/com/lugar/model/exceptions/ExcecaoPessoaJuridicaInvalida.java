@@ -8,15 +8,11 @@ package com.lugar.model.exceptions;
  *
  * @author lugar
  */
-public class ExcecaoClienteInvalido extends ExcecaoUsuarioInvalido {
+public class ExcecaoPessoaJuridicaInvalida extends ExcecaoClienteInvalido {
 
-    public ExcecaoClienteInvalido(Throwable cause) {
-        super("ERRO: o cliente não pôde ser instanciado pois foram "
+    public ExcecaoPessoaJuridicaInvalida(Throwable cause) {
+        super("ERRO: o cliente (pessoa jurídica) não pôde ser instanciado pois foram "
                 + "informados atributos inváidos!", cause);
-    }
-    
-    public ExcecaoClienteInvalido(String message, Throwable cause) {
-    super(message, cause);
     }
 
 }

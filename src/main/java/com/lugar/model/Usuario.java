@@ -10,8 +10,6 @@ import com.lugar.model.exceptions.ExcecaoStringInvalido;
 import com.lugar.model.exceptions.ExcecaoStringSensivelInvalido;
 import com.lugar.model.exceptions.ExcecaoUsuarioInvalido;
 import java.text.ParseException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -59,7 +57,7 @@ public abstract class Usuario {
     ) throws ExcecaoUsuarioInvalido {
         this(id, nomeUsuario, senhaHash, admin);
         try {
-            this.verificaPreenchimento(id, nome, nomeUsuario, senhaHash, identificador, email, telefone);
+            this.verificaPreenchimentoUsuario(id, nome, nomeUsuario, senhaHash, identificador, email, telefone);
             this.nome = nome;
             this.identificador = identificador;
             this.email = email;
@@ -86,7 +84,7 @@ public abstract class Usuario {
         }
     }
 
-    public void verificaPreenchimento(
+    private void verificaPreenchimentoUsuario(
             int id,
             String nome,
             String nomeUsuario,
@@ -163,12 +161,15 @@ public abstract class Usuario {
     public String getTelefoneFormatado() {
         try {
             String mascara;
-            if (this.telefone.length() == 11) {
-                mascara = "(##) #####-####";
-            } else if (this.telefone.length() == 10) {
-                mascara = "(##) ####-####";
-            } else {
-                return this.telefone;
+            switch (this.telefone.length()) {
+                case 11:
+                    mascara = "(##) #####-####";
+                    break;
+                case 10:
+                    mascara = "(##) ####-####";
+                    break;
+                default:
+                    return this.telefone;
             }
             return Util.formataString(this.telefone, mascara);
         } catch (ParseException ex) {

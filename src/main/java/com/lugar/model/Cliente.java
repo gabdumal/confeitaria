@@ -37,7 +37,7 @@ public abstract class Cliente extends Usuario {
         super(idUsuario, nome, nomeUsuario, senhaHash, identificador, email,
                 telefone, false, endereco);
         try {
-            this.verificaPreenchimento(cartao);
+            this.verificaPreenchimentoCliente(cartao);
             this.cartao = cartao;
             this.fisica = fisica;
         } catch (ExcecaoStringInvalido ex) {
@@ -45,7 +45,7 @@ public abstract class Cliente extends Usuario {
         }
     }
 
-    public void verificaPreenchimento(
+    private void verificaPreenchimentoCliente(
             String cartao
     ) throws ExcecaoStringInvalido {
         if (cartao.isBlank()) {
