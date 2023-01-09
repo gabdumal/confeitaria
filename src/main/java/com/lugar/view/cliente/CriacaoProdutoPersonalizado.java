@@ -654,8 +654,8 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
     }//GEN-LAST:event_comboBoxReceitaActionPerformed
 
     private void comboBoxFormaBoloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxFormaBoloActionPerformed
-        this.atualizaValor();
         this.trocaExibicaoRecheios();
+        this.atualizaValor();
     }//GEN-LAST:event_comboBoxFormaBoloActionPerformed
 
     private void comboBoxRecheioBolo1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxRecheioBolo1ActionPerformed

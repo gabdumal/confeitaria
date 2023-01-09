@@ -30,7 +30,7 @@ public class Trufa extends ProdutoPersonalizado {
 
     @Override
     public double getValor() {
-        return this.getCor().getValorGrama() + this.getRecheio().getValorGrama() * 30;
+        return this.getCor().getValorGrama() * 0.025 + this.getRecheio().getValorGrama() * 40;
     }
 
     public Caracteristica getRecheio() {
