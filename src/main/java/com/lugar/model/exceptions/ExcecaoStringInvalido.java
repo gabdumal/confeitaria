@@ -10,9 +10,11 @@ package com.lugar.model.exceptions;
  */
 public class ExcecaoStringInvalido extends ExcecaoAtributo {
 
-    public ExcecaoStringInvalido(String atributo) {
-        super(atributo, "ERRO: atributo " + atributo + ", do tipo String,"
-                + " não foi preenchido, e não pode ser vazio!");
+    public ExcecaoStringInvalido(String atributo, boolean preenchido) {
+        super(atributo, preenchido ? "ERRO: atributo " + atributo
+                + ", do tipo String, foi preenchido de forma invalida!"
+                : "ERRO: atributo " + atributo + ", do tipo String, não foi"
+                + " preenchido, e não pode ser vazio!");
     }
 
     public ExcecaoStringInvalido(String atributo, String mensagemExtra) {

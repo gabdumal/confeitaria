@@ -5,6 +5,7 @@
 package com.lugar.model;
 
 import com.lugar.confeitaria.Util;
+import com.lugar.model.exceptions.ExcecaoStringInvalido;
 import com.lugar.model.exceptions.ExcecaoUsuarioInvalido;
 import java.text.ParseException;
 
@@ -50,4 +51,17 @@ public class PessoaJuridica extends Cliente {
         }
     }
 
+    @Override
+    public boolean validaIdentificador(String identificador) throws ExcecaoStringInvalido {
+        if (identificador.isBlank()) {
+            throw new ExcecaoStringInvalido("identificador", false);
+        }
+        if (!identificador.matches("[0-9]+")) {
+            throw new ExcecaoStringInvalido("identificador", "CNPJ deve conter apenas números.");
+        }
+        if (identificador.length() != 14) {
+            throw new ExcecaoStringInvalido("identificador", "CNPJ deve ter 14 caracteres.");
+        }
+        return true;
+    }
 }

@@ -43,25 +43,25 @@ public class Endereco {
     public static void verificaPreenchimento(
             String numero, String logradouro, String bairro, String cidade, String uf, String cep) throws ExcecaoStringInvalido {
         if (numero.isBlank()) {
-            throw new ExcecaoStringInvalido("numero");
+            throw new ExcecaoStringInvalido("numero", false);
         }
         if (logradouro.isBlank()) {
-            throw new ExcecaoStringInvalido("logradouro");
+            throw new ExcecaoStringInvalido("logradouro", false);
         }
         if (bairro.isBlank()) {
-            throw new ExcecaoStringInvalido("bairro");
+            throw new ExcecaoStringInvalido("bairro", false);
         }
         if (bairro.matches(".*\\d.*")) {
             throw new ExcecaoStringInvalido("bairro", "Bairro não pode conter números.");
         }
         if (cidade.isBlank()) {
-            throw new ExcecaoStringInvalido("cidade");
+            throw new ExcecaoStringInvalido("cidade", false);
         }
         if (cidade.matches(".*\\d.*")) {
             throw new ExcecaoStringInvalido("cidade", "Cidade não pode conter números.");
         }
         if (uf.isBlank()) {
-            throw new ExcecaoStringInvalido("uf");
+            throw new ExcecaoStringInvalido("uf", false);
         }
         if (uf.matches(".*\\d.*")) {
             throw new ExcecaoStringInvalido("uf", "UF não pode conter números.");
@@ -70,9 +70,9 @@ public class Endereco {
             throw new ExcecaoStringInvalido("uf", "UF deve ter dois caracteres.");
         }
         if (cep.isBlank()) {
-            throw new ExcecaoStringInvalido("cep");
+            throw new ExcecaoStringInvalido("cep", false);
         }
-        if (uf.length() != 8) {
+        if (cep.length() != 8) {
             throw new ExcecaoStringInvalido("cep", "CEP deve ter oito caracteres.");
         }
     }

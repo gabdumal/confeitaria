@@ -5,6 +5,7 @@
 package com.lugar.model;
 
 import com.lugar.confeitaria.Util;
+import com.lugar.model.exceptions.ExcecaoStringInvalido;
 import com.lugar.model.exceptions.ExcecaoUsuarioInvalido;
 import java.text.ParseException;
 
@@ -47,4 +48,19 @@ public class Funcionario extends Usuario {
             return this.getIdentificador();
         }
     }
+
+    @Override
+    public boolean validaIdentificador(String identificador) throws ExcecaoStringInvalido {
+        if (identificador.isBlank()) {
+            throw new ExcecaoStringInvalido("identificador", false);
+        }
+        if (!identificador.matches("[0-9]+")) {
+            throw new ExcecaoStringInvalido("identificador", "CPF deve conter apenas números.");
+        }
+        if (identificador.length() != 11) {
+            throw new ExcecaoStringInvalido("identificador", "CPF deve ter 11 caracteres.");
+        }
+        return true;
+    }
+
 }

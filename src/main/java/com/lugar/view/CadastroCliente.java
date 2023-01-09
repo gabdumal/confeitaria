@@ -581,23 +581,23 @@ public class CadastroCliente extends javax.swing.JDialog {
         String nomeUsuarioForm = campoNomeUsuario.getText().trim();
         String senhaForm = String.valueOf(campoSenha.getPassword()).trim();
         String emailForm = campoEmail.getText().trim();
-        String telefoneForm = campoTelefone.getText().trim();
+        String telefoneForm = campoTelefone.getText().replaceAll(" ", "").replaceAll("[(]", "").replaceAll("[)]", "").replaceAll("[-]", "");
         String logradouroForm = campoLogradouro.getText().trim();
         String numeroForm = campoNumero.getText().trim();
         String complementoForm = campoComplemento.getText().trim();
         String bairroForm = campoBairro.getText().trim();
         String cidadeForm = campoCidade.getText().trim();
         String ufForm = (String) campoUf.getSelectedItem();
-        String cepForm = campoCep.getText().trim();
-        String cartaoForm = campoCartao.getText().trim();
-        String identificadorForm = campoIdentificador.getText().trim();
+        String cepForm = campoCep.getText().replaceAll(" ", "").replaceAll("[-]", "");
+        String cartaoForm = campoCartao.getText().trim().replaceAll(" ", "").replaceAll("[.]", "");
+        String identificadorForm = campoIdentificador.getText().replaceAll(" ", "").replaceAll("[-]", "").replaceAll("[.]", "").replaceAll("[/]", "");
 
         try {
             Cliente cliente;
             Endereco endereco = new Endereco(numeroForm, complementoForm, logradouroForm, bairroForm, cidadeForm, ufForm, cepForm);
             if (this.juridica) {
                 String razaoSocialForm = campoRazaoSocial.getText().trim();
-                cliente = new PessoaJuridica(-1, nomeForm,
+                cliente = new PessoaJuridica(0, nomeForm,
                         nomeUsuarioForm, senhaForm,
                         identificadorForm, emailForm,
                         telefoneForm, endereco, cartaoForm,
@@ -606,29 +606,26 @@ public class CadastroCliente extends javax.swing.JDialog {
             } else {
                 String dataNascimentoForm = campoDataDeNascimento.getText().trim();
                 LocalDate dataNascimento = Util.converteData(dataNascimentoForm);
-                cliente = new PessoaFisica(-1, nomeForm,
+                cliente = new PessoaFisica(0, nomeForm,
                         nomeUsuarioForm, senhaForm,
                         identificadorForm, emailForm,
                         telefoneForm, endereco, cartaoForm,
                         dataNascimento);
             }
 
-            if (validaCadastro(nomeForm, nomeUsuarioForm, senhaForm, emailForm,
-                    telefoneForm, cartaoForm, identificadorForm) == 0) {
-
-                OperacoesCliente operacoesCliente = new OperacoesCliente();
-                int idCliente = operacoesCliente.insere(cliente);
-                if (idCliente >= Util.RETORNO_SUCESSO) {
-                    JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!");
-                    this.dispose();
-                } else if (idCliente == Util.RETORNO_ERRO_NAO_UNICO) {
-                    JOptionPane.showMessageDialog(null, "Não foi possível realizar o cadastro! O usuário preenchido já existe no sistema.");
-                } else {
-                    JOptionPane.showMessageDialog(null, "Não foi possível realizar o cadastro! Tente novamente mais tarde.");
-                }
+            OperacoesCliente operacoesCliente = new OperacoesCliente();
+            int idCliente = operacoesCliente.insere(cliente);
+            if (idCliente >= Util.RETORNO_SUCESSO) {
+                JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!");
+                this.dispose();
+            } else if (idCliente == Util.RETORNO_ERRO_NAO_UNICO) {
+                JOptionPane.showMessageDialog(null, "Não foi possível realizar o cadastro! O usuário preenchido já existe no sistema.");
+            } else {
+                JOptionPane.showMessageDialog(null, "Não foi possível realizar o cadastro! Tente novamente mais tarde.");
             }
-        } catch (ExcecaoDataInvalida | HeadlessException ex) {
-            // TO DO
+
+        } catch (ExcecaoDataInvalida ex) {
+            JOptionPane.showMessageDialog(null, "Não foi possível realizar o cadastro! A data de nascimento foi preenchida de forma inválida.");
         } catch (ExcecaoEnderecoInvalido ex) {
             String mensagemErro = "Não foi possível realizar o cadastro! O endereço foi preenchido de forma inválida.";
             Throwable cause = ex.getCause();
@@ -638,6 +635,12 @@ public class CadastroCliente extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(null, mensagemErro);
             Logger.getLogger(CadastroCliente.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ExcecaoUsuarioInvalido ex) {
+            String mensagemErro = "Não foi possível realizar o cadastro!";
+            Throwable cause = ex.getCause();
+            if (cause instanceof ExcecaoAtributo) {
+                mensagemErro += "\n" + ((ExcecaoAtributo) cause).getMessage();
+            }
+            JOptionPane.showMessageDialog(null, mensagemErro);
             Logger.getLogger(CadastroCliente.class.getName()).log(Level.SEVERE, null, ex);
         }
 

@@ -6,9 +6,12 @@ package com.lugar.model;
 
 import com.lugar.confeitaria.Util;
 import com.lugar.model.exceptions.ExcecaoIntegerInvalido;
+import com.lugar.model.exceptions.ExcecaoStringInvalido;
 import com.lugar.model.exceptions.ExcecaoStringSensivelInvalido;
 import com.lugar.model.exceptions.ExcecaoUsuarioInvalido;
 import java.text.ParseException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -38,7 +41,7 @@ public abstract class Usuario {
             this.nomeUsuario = nomeUsuario;
             this.senhaHash = senhaHash;
             this.admin = admin;
-        } catch (Exception ex) {
+        } catch (ExcecaoIntegerInvalido | ExcecaoStringSensivelInvalido ex) {
             throw new ExcecaoUsuarioInvalido(ex);
         }
     }
@@ -55,11 +58,16 @@ public abstract class Usuario {
             Endereco endereco
     ) throws ExcecaoUsuarioInvalido {
         this(id, nomeUsuario, senhaHash, admin);
-        this.nome = nome;
-        this.identificador = identificador;
-        this.email = email;
-        this.telefone = telefone;
-        this.endereco = endereco;
+        try {
+            this.verificaPreenchimento(id, nome, nomeUsuario, senhaHash, identificador, email, telefone);
+            this.nome = nome;
+            this.identificador = identificador;
+            this.email = email;
+            this.telefone = telefone;
+            this.endereco = endereco;
+        } catch (ExcecaoIntegerInvalido | ExcecaoStringSensivelInvalido | ExcecaoStringInvalido ex) {
+            throw new ExcecaoUsuarioInvalido(ex);
+        }
     }
 
     public static void verificaPreenchimento(
@@ -75,6 +83,40 @@ public abstract class Usuario {
         }
         if (senhaHash.isBlank()) {
             throw new ExcecaoStringSensivelInvalido("senhaHash");
+        }
+    }
+
+    public void verificaPreenchimento(
+            int id,
+            String nome,
+            String nomeUsuario,
+            String senhaHash,
+            String identificador,
+            String email,
+            String telefone
+    ) throws ExcecaoIntegerInvalido, ExcecaoStringSensivelInvalido, ExcecaoStringInvalido {
+        Usuario.verificaPreenchimento(id, nomeUsuario, senhaHash);
+        if (nome.isBlank()) {
+            throw new ExcecaoStringInvalido("nome", false);
+        }
+        if (identificador.isBlank()) {
+            throw new ExcecaoStringInvalido("identificador", false);
+        }
+        this.validaIdentificador(identificador);
+        if (email.isBlank()) {
+            throw new ExcecaoStringInvalido("email", false);
+        }
+        if (!email.contains("@") || !email.contains(".") || email.contains(" ")) {
+            throw new ExcecaoStringInvalido("email", "E-mail deve conter [@] e [.], além de não poder ter espaços.");
+        }
+        if (telefone.isBlank()) {
+            throw new ExcecaoStringInvalido("telefone", false);
+        }
+        if (!telefone.matches("[0-9]+") || telefone.contains(" ")) {
+            throw new ExcecaoStringInvalido("telefone", "Telefone deve conter apenas números, além de não poder ter espaços.");
+        }
+        if (!(telefone.length() == 11 || telefone.length() == 10)) {
+            throw new ExcecaoStringInvalido("telefone", "Telefone deve conter 11 ou 10 números, com o DDD.");
         }
     }
 
@@ -143,5 +185,7 @@ public abstract class Usuario {
     public Endereco getEndereco() {
         return endereco;
     }
+
+    public abstract boolean validaIdentificador(String identificador) throws ExcecaoStringInvalido;
 
 }
