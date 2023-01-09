@@ -9,6 +9,8 @@ import com.lugar.model.Funcionario;
 import com.lugar.model.PessoaFisica;
 import com.lugar.model.PessoaJuridica;
 import com.lugar.model.Usuario;
+import com.lugar.model.exceptions.ExcecaoIntegerInvalido;
+import com.lugar.model.exceptions.ExcecaoStringSensivelInvalido;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -61,6 +63,10 @@ public class OperacoesUsuario implements OperacoesConexao<Usuario> {
         } catch (SQLException ex) {
             Logger.getLogger(Conexao.class
                     .getName()).log(Level.SEVERE, null, ex);
+        } catch (ExcecaoIntegerInvalido ex) {
+            Logger.getLogger(OperacoesUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ExcecaoStringSensivelInvalido ex) {
+            Logger.getLogger(OperacoesUsuario.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             Conexao.fechaConexao(conn);
         }
@@ -115,6 +121,10 @@ public class OperacoesUsuario implements OperacoesConexao<Usuario> {
         } catch (SQLException ex) {
             Logger.getLogger(Conexao.class
                     .getName()).log(Level.SEVERE, null, ex);
+        } catch (ExcecaoIntegerInvalido ex) {
+            Logger.getLogger(OperacoesUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ExcecaoStringSensivelInvalido ex) {
+            Logger.getLogger(OperacoesUsuario.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             Conexao.fechaConexao(conn);
         }

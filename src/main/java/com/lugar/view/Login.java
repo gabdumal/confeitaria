@@ -6,6 +6,9 @@ package com.lugar.view;
 
 import com.lugar.controller.OperacoesUsuario;
 import com.lugar.model.Usuario;
+import com.lugar.model.exceptions.ExcecaoIntegerInvalido;
+import com.lugar.model.exceptions.ExcecaoStringSensivelInvalido;
+import java.awt.HeadlessException;
 import java.util.List;
 import javax.swing.JOptionPane;
 
@@ -28,21 +31,27 @@ public class Login extends javax.swing.JFrame {
 
         String usuarioForm = campoUsuario.getText();
         char[] senhaForm = campoSenha.getPassword();
-        boolean logou = false;
-        for (Usuario usuario : listaUsuarios) {
-            if (usuario.getNomeUsuario().compareTo(usuarioForm) == 0
-                    && usuario.getSenhaHash().compareTo(String.valueOf(senhaForm)) == 0) {
-                logou = true;
-                for (char c : senhaForm) {
-                    c = '\u0000';
-                }
-                ExibicaoProdutos exibicaoProdutos = new ExibicaoProdutos(usuario, this);
-                this.setVisible(false);
-                exibicaoProdutos.setVisible(true);
-            }
+        if (usuarioForm.isBlank() || String.valueOf(senhaForm).isBlank()) {
+            return;
         }
-        if (!logou) {
-            JOptionPane.showMessageDialog(null, "Usuário ou senha não correspondem!");
+        try {
+            boolean logou = false;
+            for (Usuario usuario : listaUsuarios) {
+                if (usuario.verificaLogin(usuarioForm, String.valueOf(senhaForm))) {
+                    logou = true;
+                    for (char c : senhaForm) {
+                        c = '\u0000';
+                    }
+                    ExibicaoProdutos exibicaoProdutos = new ExibicaoProdutos(usuario, this);
+                    this.setVisible(false);
+                    exibicaoProdutos.setVisible(true);
+                }
+            }
+            if (!logou) {
+                JOptionPane.showMessageDialog(null, "Usuário ou senha não correspondem!");
+            }
+        } catch (ExcecaoStringSensivelInvalido | HeadlessException ex) {
+            JOptionPane.showMessageDialog(this, "Campos usuário e senha foram preenchidos incorretamente!", "Erro", JOptionPane.ERROR_MESSAGE);
         }
 
         this.campoUsuario.setText("");

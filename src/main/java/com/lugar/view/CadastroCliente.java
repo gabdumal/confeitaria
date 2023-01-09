@@ -10,10 +10,7 @@ import com.lugar.model.Cliente;
 import com.lugar.model.Endereco;
 import com.lugar.model.PessoaFisica;
 import com.lugar.model.PessoaJuridica;
-import com.lugar.model.SetStringString;
-import com.lugar.model.exceptions.ExcecaoCampoInvalido;
 import java.time.LocalDate;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 
 /**

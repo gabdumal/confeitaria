@@ -4,6 +4,9 @@
  */
 package com.lugar.model;
 
+import com.lugar.model.exceptions.ExcecaoIntegerInvalido;
+import com.lugar.model.exceptions.ExcecaoStringSensivelInvalido;
+
 /**
  *
  * @author lugar
@@ -13,7 +16,7 @@ public abstract class Cliente extends Usuario {
     private String cartao;
     private boolean fisica;
 
-    public Cliente(int idUsuario, String nomeUsuario, String senhaHash, boolean fisica) {
+    public Cliente(int idUsuario, String nomeUsuario, String senhaHash, boolean fisica) throws ExcecaoIntegerInvalido, ExcecaoStringSensivelInvalido {
         super(idUsuario, nomeUsuario, senhaHash, false);
         this.fisica = fisica;
     }
@@ -29,7 +32,7 @@ public abstract class Cliente extends Usuario {
             Endereco endereco,
             String cartao,
             boolean fisica
-    ) {
+    ) throws ExcecaoIntegerInvalido, ExcecaoStringSensivelInvalido {
         super(idUsuario, nome, nomeUsuario, senhaHash, identificador, email,
                 telefone, false, endereco);
         this.cartao = cartao;

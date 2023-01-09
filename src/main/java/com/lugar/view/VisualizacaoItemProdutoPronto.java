@@ -69,7 +69,6 @@ public class VisualizacaoItemProdutoPronto extends javax.swing.JDialog {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 0);
         painelFormulario.add(titulo, gridBagConstraints);
 
@@ -149,8 +148,9 @@ public class VisualizacaoItemProdutoPronto extends javax.swing.JDialog {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 10);
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 0);
         painelFormulario.add(painelCampos, gridBagConstraints);
 
         painelBotoes.setLayout(new java.awt.GridLayout(1, 0, 10, 0));
@@ -165,8 +165,7 @@ public class VisualizacaoItemProdutoPronto extends javax.swing.JDialog {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridy = 2;
         painelFormulario.add(painelBotoes, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();

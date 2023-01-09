@@ -5,7 +5,11 @@
 package com.lugar.model;
 
 import com.lugar.confeitaria.Util;
+import com.lugar.model.exceptions.ExcecaoIntegerInvalido;
+import com.lugar.model.exceptions.ExcecaoStringSensivelInvalido;
 import java.text.ParseException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -28,7 +32,8 @@ public abstract class Usuario {
             String nomeUsuario,
             String senhaHash,
             boolean admin
-    ) {
+    ) throws ExcecaoIntegerInvalido, ExcecaoStringSensivelInvalido {
+        Usuario.verificaPreenchimento(id, nomeUsuario, senhaHash);
         this.id = id;
         this.nomeUsuario = nomeUsuario;
         this.senhaHash = senhaHash;
@@ -45,13 +50,41 @@ public abstract class Usuario {
             String telefone,
             boolean admin,
             Endereco endereco
-    ) {
+    ) throws ExcecaoIntegerInvalido, ExcecaoStringSensivelInvalido {
         this(id, nomeUsuario, senhaHash, admin);
         this.nome = nome;
         this.identificador = identificador;
         this.email = email;
         this.telefone = telefone;
         this.endereco = endereco;
+    }
+
+    public static void verificaPreenchimento(
+            int id,
+            String nomeUsuario,
+            String senhaHash
+    ) throws ExcecaoIntegerInvalido, ExcecaoStringSensivelInvalido {
+        if (id < 0) {
+            throw new ExcecaoIntegerInvalido("id", id);
+        }
+        if (nomeUsuario.isBlank() || nomeUsuario.contains(" ")) {
+            throw new ExcecaoStringSensivelInvalido("nomeUsuario");
+        }
+        if (senhaHash.isBlank()) {
+            throw new ExcecaoStringSensivelInvalido("senhaHash");
+        }
+    }
+
+    public boolean verificaLogin(String nomeUsuario, String senhaHash) throws ExcecaoStringSensivelInvalido {
+        try {
+            Usuario.verificaPreenchimento(0, nomeUsuario, senhaHash);
+            if (this.nomeUsuario.equals(nomeUsuario)
+                    && this.senhaHash.equals(senhaHash)) {
+                return true;
+            }
+        } catch (ExcecaoIntegerInvalido ex) {
+        }
+        return false;
     }
 
     public String getNome() {

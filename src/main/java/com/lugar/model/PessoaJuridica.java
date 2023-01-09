@@ -5,6 +5,8 @@
 package com.lugar.model;
 
 import com.lugar.confeitaria.Util;
+import com.lugar.model.exceptions.ExcecaoIntegerInvalido;
+import com.lugar.model.exceptions.ExcecaoStringSensivelInvalido;
 import java.text.ParseException;
 
 /**
@@ -15,7 +17,7 @@ public class PessoaJuridica extends Cliente {
 
     private String razaoSocial;
 
-    public PessoaJuridica(int idUsuario, String nomeUsuario, String senhaHash) {
+    public PessoaJuridica(int idUsuario, String nomeUsuario, String senhaHash) throws ExcecaoIntegerInvalido, ExcecaoStringSensivelInvalido {
         super(idUsuario, nomeUsuario, senhaHash, false);
     }
 
@@ -30,7 +32,7 @@ public class PessoaJuridica extends Cliente {
             Endereco endereco,
             String cartao,
             String razaoSocial
-    ) {
+    ) throws ExcecaoIntegerInvalido, ExcecaoStringSensivelInvalido {
         super(idUsuario, nome, nomeUsuario, senhaHash, identificador, email,
                 telefone, endereco, cartao, false);
         this.razaoSocial = razaoSocial;
