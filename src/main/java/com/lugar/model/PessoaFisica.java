@@ -5,8 +5,7 @@
 package com.lugar.model;
 
 import com.lugar.confeitaria.Util;
-import com.lugar.model.exceptions.ExcecaoIntegerInvalido;
-import com.lugar.model.exceptions.ExcecaoStringSensivelInvalido;
+import com.lugar.model.exceptions.ExcecaoUsuarioInvalido;
 import java.text.ParseException;
 import java.time.LocalDate;
 
@@ -18,7 +17,7 @@ public class PessoaFisica extends Cliente {
 
     private LocalDate dataNascimento;
 
-    public PessoaFisica(int idUsuario, String nomeUsuario, String senhaHash) throws ExcecaoIntegerInvalido, ExcecaoStringSensivelInvalido {
+    public PessoaFisica(int idUsuario, String nomeUsuario, String senhaHash) throws ExcecaoUsuarioInvalido {
         super(idUsuario, nomeUsuario, senhaHash, true);
     }
 
@@ -33,7 +32,7 @@ public class PessoaFisica extends Cliente {
             Endereco endereco,
             String cartao,
             LocalDate dataNascimento
-    ) throws ExcecaoIntegerInvalido, ExcecaoStringSensivelInvalido {
+    ) throws ExcecaoUsuarioInvalido {
         super(idUsuario, nome, nomeUsuario, senhaHash, identificador, email,
                 telefone, endereco, cartao, true);
         this.dataNascimento = dataNascimento;

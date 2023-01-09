@@ -6,7 +6,6 @@ package com.lugar.view;
 
 import com.lugar.controller.OperacoesUsuario;
 import com.lugar.model.Usuario;
-import com.lugar.model.exceptions.ExcecaoIntegerInvalido;
 import com.lugar.model.exceptions.ExcecaoStringSensivelInvalido;
 import java.awt.HeadlessException;
 import java.util.List;

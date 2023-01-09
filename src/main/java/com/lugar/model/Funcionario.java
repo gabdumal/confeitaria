@@ -5,11 +5,8 @@
 package com.lugar.model;
 
 import com.lugar.confeitaria.Util;
-import com.lugar.model.exceptions.ExcecaoIntegerInvalido;
-import com.lugar.model.exceptions.ExcecaoStringSensivelInvalido;
+import com.lugar.model.exceptions.ExcecaoUsuarioInvalido;
 import java.text.ParseException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -20,7 +17,7 @@ public class Funcionario extends Usuario {
     private String matricula;
     private String funcao;
 
-    public Funcionario(int idUsuario, String nomeUsuario, String senhaHash) throws ExcecaoIntegerInvalido, ExcecaoStringSensivelInvalido {
+    public Funcionario(int idUsuario, String nomeUsuario, String senhaHash) throws ExcecaoUsuarioInvalido {
         super(idUsuario, nomeUsuario, senhaHash, true);
     }
 
@@ -36,7 +33,7 @@ public class Funcionario extends Usuario {
             Endereco endereco,
             String matricula,
             String funcao
-    ) throws ExcecaoIntegerInvalido, ExcecaoStringSensivelInvalido {
+    ) throws ExcecaoUsuarioInvalido {
         super(idUsuario, nome, nomeUsuario, senhaHash, identificador, email, telefone, admin, endereco);
         this.matricula = matricula;
         this.funcao = funcao;

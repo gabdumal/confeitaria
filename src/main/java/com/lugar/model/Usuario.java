@@ -7,9 +7,8 @@ package com.lugar.model;
 import com.lugar.confeitaria.Util;
 import com.lugar.model.exceptions.ExcecaoIntegerInvalido;
 import com.lugar.model.exceptions.ExcecaoStringSensivelInvalido;
+import com.lugar.model.exceptions.ExcecaoUsuarioInvalido;
 import java.text.ParseException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -32,12 +31,16 @@ public abstract class Usuario {
             String nomeUsuario,
             String senhaHash,
             boolean admin
-    ) throws ExcecaoIntegerInvalido, ExcecaoStringSensivelInvalido {
-        Usuario.verificaPreenchimento(id, nomeUsuario, senhaHash);
-        this.id = id;
-        this.nomeUsuario = nomeUsuario;
-        this.senhaHash = senhaHash;
-        this.admin = admin;
+    ) throws ExcecaoUsuarioInvalido {
+        try {
+            Usuario.verificaPreenchimento(id, nomeUsuario, senhaHash);
+            this.id = id;
+            this.nomeUsuario = nomeUsuario;
+            this.senhaHash = senhaHash;
+            this.admin = admin;
+        } catch (Exception ex) {
+            throw new ExcecaoUsuarioInvalido(ex);
+        }
     }
 
     public Usuario(
@@ -50,7 +53,7 @@ public abstract class Usuario {
             String telefone,
             boolean admin,
             Endereco endereco
-    ) throws ExcecaoIntegerInvalido, ExcecaoStringSensivelInvalido {
+    ) throws ExcecaoUsuarioInvalido {
         this(id, nomeUsuario, senhaHash, admin);
         this.nome = nome;
         this.identificador = identificador;
@@ -65,7 +68,7 @@ public abstract class Usuario {
             String senhaHash
     ) throws ExcecaoIntegerInvalido, ExcecaoStringSensivelInvalido {
         if (id < 0) {
-            throw new ExcecaoIntegerInvalido("id", id);
+            throw new ExcecaoIntegerInvalido("id");
         }
         if (nomeUsuario.isBlank() || nomeUsuario.contains(" ")) {
             throw new ExcecaoStringSensivelInvalido("nomeUsuario");

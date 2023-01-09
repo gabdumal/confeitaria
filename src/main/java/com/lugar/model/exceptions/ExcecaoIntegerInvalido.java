@@ -8,10 +8,10 @@ package com.lugar.model.exceptions;
  *
  * @author lugar
  */
-public class ExcecaoIntegerInvalido extends Exception {
+public class ExcecaoIntegerInvalido extends ExcecaoAtributo {
 
-    public ExcecaoIntegerInvalido(String atributo, int inteiro) {
-        super("ERRO: atributo " + atributo + " (" + inteiro + "), do tipo "
+    public ExcecaoIntegerInvalido(String atributo) {
+        super(atributo, "ERRO: atributo " + atributo + ", do tipo "
                 + "inteiro, foi preenchido de forma invalida!");
     }
 

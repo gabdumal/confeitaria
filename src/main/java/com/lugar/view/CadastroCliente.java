@@ -10,7 +10,14 @@ import com.lugar.model.Cliente;
 import com.lugar.model.Endereco;
 import com.lugar.model.PessoaFisica;
 import com.lugar.model.PessoaJuridica;
+import com.lugar.model.exceptions.ExcecaoAtributo;
+import com.lugar.model.exceptions.ExcecaoDataInvalida;
+import com.lugar.model.exceptions.ExcecaoEnderecoInvalido;
+import com.lugar.model.exceptions.ExcecaoUsuarioInvalido;
+import java.awt.HeadlessException;
 import java.time.LocalDate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -620,8 +627,18 @@ public class CadastroCliente extends javax.swing.JDialog {
                     JOptionPane.showMessageDialog(null, "Não foi possível realizar o cadastro! Tente novamente mais tarde.");
                 }
             }
-        } catch (Exception ex) {
+        } catch (ExcecaoDataInvalida | HeadlessException ex) {
             // TO DO
+        } catch (ExcecaoEnderecoInvalido ex) {
+            String mensagemErro = "Não foi possível realizar o cadastro! O endereço foi preenchido de forma inválida.";
+            Throwable cause = ex.getCause();
+            if (cause instanceof ExcecaoAtributo) {
+                mensagemErro += "\n" + ((ExcecaoAtributo) cause).getMessage();
+            }
+            JOptionPane.showMessageDialog(null, mensagemErro);
+            Logger.getLogger(CadastroCliente.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ExcecaoUsuarioInvalido ex) {
+            Logger.getLogger(CadastroCliente.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }

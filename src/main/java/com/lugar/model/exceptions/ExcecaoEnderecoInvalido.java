@@ -8,11 +8,11 @@ package com.lugar.model.exceptions;
  *
  * @author lugar
  */
-public class ExcecaoStringSensivelInvalido extends ExcecaoAtributo {
+public class ExcecaoEnderecoInvalido extends Exception {
 
-    public ExcecaoStringSensivelInvalido(String atributo) {
-        super(atributo, "ERRO: atributo sensível " + atributo + ", do tipo String,"
-                + " foi preenchido de forma invalida!");
+    public ExcecaoEnderecoInvalido(Throwable cause) {
+        super("ERRO: o endereço não pôde ser instanciado pois foram "
+                + "informados atributos inváidos!", cause);
     }
 
 }

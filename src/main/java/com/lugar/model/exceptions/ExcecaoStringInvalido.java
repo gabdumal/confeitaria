@@ -8,10 +8,15 @@ package com.lugar.model.exceptions;
  *
  * @author lugar
  */
-public class ExcecaoStringInvalido extends Exception {
+public class ExcecaoStringInvalido extends ExcecaoAtributo {
 
-    public ExcecaoStringInvalido(String atributo, String texto) {
-        super("ERRO: atributo " + atributo + " (" + texto + "), do tipo String,"
+    public ExcecaoStringInvalido(String atributo) {
+        super(atributo, "ERRO: atributo " + atributo + ", do tipo String,"
+                + " não foi preenchido, e não pode ser vazio!");
+    }
+
+    public ExcecaoStringInvalido(String atributo, String mensagemExtra) {
+        super(atributo, mensagemExtra, "ERRO: atributo " + atributo + ", do tipo String,"
                 + " foi preenchido de forma invalida!");
     }
 
