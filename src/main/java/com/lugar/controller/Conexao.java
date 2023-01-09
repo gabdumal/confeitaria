@@ -94,12 +94,30 @@ public class Conexao {
             sql = "CREATE TABLE IF NOT EXISTS \"ProdutoPersonalizado\" (\n"
                     + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
                     + "	\"detalhe\"	TEXT,\n"
-                    + "	\"receita\"	TEXT NOT NULL CHECK(receita IN('B','T')),\n"
-                    + "	\"idCobertura\"	INTEGER,\n"
+                    + "	\"receita\"	TEXT NOT NULL CHECK(\"receita\" IN ('B', 'T')),\n"
                     + "	\"idCor\"	INTEGER NOT NULL,\n"
+                    + "	FOREIGN KEY(\"id\") REFERENCES \"Produto\"(\"id\") ON DELETE CASCADE,\n"
+                    + "	PRIMARY KEY(\"id\")"
+                    + ");";
+            stmt.addBatch(sql);
+
+            sql = "CREATE TABLE IF NOT EXISTS \"Bolo\" (\n"
+                    + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
                     + "	\"idForma\"	INTEGER NOT NULL,\n"
-                    + "	PRIMARY KEY(\"id\"),\n"
-                    + "	FOREIGN KEY(\"id\") REFERENCES \"Produto\"(\"id\") ON DELETE CASCADE\n"
+                    + "	\"idCobertura\"	INTEGER NOT NULL,\n"
+                    + "	FOREIGN KEY(\"idCobertura\") REFERENCES \"Caracteristica\"(\"id\"),\n"
+                    + "	FOREIGN KEY(\"id\") REFERENCES \"ProdutoPersonalizado\"(\"id\") ON DELETE CASCADE,\n"
+                    + "	FOREIGN KEY(\"idForma\") REFERENCES \"Forma\"(\"id\"),\n"
+                    + "	PRIMARY KEY(\"id\")\n"
+                    + ");";
+            stmt.addBatch(sql);
+
+            sql = "CREATE TABLE IF NOT EXISTS \"Trufa\" (\n"
+                    + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
+                    + "	\"idRecheio\"	INTEGER NOT NULL,\n"
+                    + "	FOREIGN KEY(\"idRecheio\") REFERENCES \"Caracteristica\"(\"id\"),\n"
+                    + "	FOREIGN KEY(\"id\") REFERENCES \"ProdutoPersonalizado\"(\"id\") ON DELETE CASCADE,\n"
+                    + "	PRIMARY KEY(\"id\")\n"
                     + ");";
             stmt.addBatch(sql);
 
@@ -203,13 +221,13 @@ public class Conexao {
                     + ");";
             stmt.addBatch(sql);
 
-            sql = "CREATE TABLE IF NOT EXISTS \"ProdutoPersonalizado_Recheio\" (\n"
+            sql = "CREATE TABLE IF NOT EXISTS \"Bolo_Recheio\" (\n"
                     + "	\"id\"	INTEGER NOT NULL UNIQUE,\n"
-                    + "	\"idProdutoPersonalizado\"	INTEGER NOT NULL,\n"
+                    + "	\"idBolo\"	INTEGER NOT NULL,\n"
                     + "	\"idRecheio\"	INTEGER NOT NULL,\n"
-                    + "	FOREIGN KEY(\"idRecheio\") REFERENCES \"Caracteristica\"(\"id\") ON DELETE CASCADE,\n"
-                    + "	FOREIGN KEY(\"idProdutoPersonalizado\") REFERENCES \"Produto\"(\"id\") ON DELETE CASCADE,\n"
-                    + "	PRIMARY KEY(\"id\" AUTOINCREMENT)\n"
+                    + "	PRIMARY KEY(\"id\" AUTOINCREMENT),\n"
+                    + "	FOREIGN KEY(\"idBolo\") REFERENCES \"Bolo\"(\"id\") ON DELETE CASCADE,\n"
+                    + "	FOREIGN KEY(\"idRecheio\") REFERENCES \"Caracteristica\"(\"id\") ON DELETE CASCADE\n"
                     + ");";
             stmt.addBatch(sql);
 
@@ -244,6 +262,7 @@ public class Conexao {
             ResultSet rs = stmt.executeQuery(sql);
             conn.commit();
 
+            // Casos de exemplo
             if (!rs.next()) {
                 sql = "INSERT INTO \"Produto\" (\"id\",\"tipo\") VALUES (1,1);\n"
                         + "INSERT INTO \"Produto\" (\"id\",\"tipo\") VALUES (2,1);\n"
@@ -253,9 +272,21 @@ public class Conexao {
                         + "INSERT INTO \"ProdutoPronto\" (\"id\",\"nome\",\"estoque\",\"valor\") VALUES (3,'Brownie',3,6.95);\n"
                         + "INSERT INTO \"ProdutoPronto\" (\"id\",\"nome\",\"estoque\",\"valor\") VALUES (4,'Bolo de milho simples',0,7.89);\n"
                         + "INSERT INTO \"ProdutoPronto\" (\"id\",\"nome\",\"estoque\",\"valor\") VALUES (5,'Sorvete de manga apimentada',0,3.67);\n"
-                        + "INSERT INTO \"ProdutoPersonalizado\" (\"id\",\"detalhe\",\"receita\",\"idCobertura\",\"idCor\",\"idForma\") VALUES (1,'Gostoso','B',4,3,2);\n"
-                        + "INSERT INTO \"Transacao\" (\"id\",\"valor\",\"diaHora\",\"descricao\",\"ehPedido\") VALUES (0,12.10,'2020-08-17T10:11:16.908732','Transação teste',0);\n"
-                        + "INSERT INTO \"Transacao\" (\"id\",\"valor\",\"diaHora\",\"descricao\",\"ehPedido\") VALUES (1,42.64,'2023-01-05T17:07:14.672255400','Pedido',1);\n"
+                        + "INSERT INTO \"Caracteristica\" (\"id\",\"tipo\",\"nome\",\"valorGrama\") VALUES (1,'R','Creme de morango',0.032);\n"
+                        + "INSERT INTO \"Caracteristica\" (\"id\",\"tipo\",\"nome\",\"valorGrama\") VALUES (2,'F','Redonda 20cm',0.0325);\n"
+                        + "INSERT INTO \"Caracteristica\" (\"id\",\"tipo\",\"nome\",\"valorGrama\") VALUES (3,'C','Azul',0.0);\n"
+                        + "INSERT INTO \"Caracteristica\" (\"id\",\"tipo\",\"nome\",\"valorGrama\") VALUES (4,'T','Glacê de limão',0.023);\n"
+                        + "INSERT INTO \"Caracteristica\" (\"id\",\"tipo\",\"nome\",\"valorGrama\") VALUES (5,'R','Ganache meio amargo',0.057);\n"
+                        + "INSERT INTO \"Caracteristica\" (\"id\",\"tipo\",\"nome\",\"valorGrama\") VALUES (6,'F','Redonda 32cm',0.0325);\n"
+                        + "INSERT INTO \"Forma\" (\"id\",\"recheios\",\"gramaRecheio\",\"gramaCobertura\",\"gramaMassa\") VALUES (2,1,200,150,800);\n"
+                        + "INSERT INTO \"Forma\" (\"id\",\"recheios\",\"gramaRecheio\",\"gramaCobertura\",\"gramaMassa\") VALUES (6,3,200,200,1400);\n"
+                        + "INSERT INTO \"ProdutoPersonalizado\" (\"id\",\"detalhe\",\"receita\",\"idCor\") VALUES (1,'','B',3);\n"
+                        + "INSERT INTO \"Bolo\" (\"id\",\"idForma\",\"idCobertura\") VALUES (1,2,4);\n"
+                        + "INSERT INTO \"Bolo_Recheio\" (\"id\",\"idBolo\",\"idRecheio\") VALUES (1,1,5);\n"
+                        + "INSERT INTO \"ProdutoPersonalizado\" (\"id\",\"detalhe\",\"receita\",\"idCor\") VALUES (2,'','T',3);\n"
+                        + "INSERT INTO \"Trufa\" (\"id\",\"idRecheio\") VALUES (2,5);\n"
+                        + "INSERT INTO \"Transacao\" (\"id\",\"valor\",\"diaHora\",\"descricao\",\"ehPedido\") VALUES (1,12.10,'2020-08-17T10:11:16.908732','Compra de materiais',0);\n"
+                        + "INSERT INTO \"Transacao\" (\"id\",\"valor\",\"diaHora\",\"descricao\",\"ehPedido\") VALUES (2,31.56,'2023-01-05T17:07:14.672255400','Pedido',1);\n"
                         + "INSERT INTO \"Endereco\" (\"id\",\"numero\",\"complemento\",\"logradouro\",\"bairro\",\"cidade\",\"uf\",\"cep\") VALUES (1,'0','','Rua dos bobos','Vale Místico','Lírica do Norte','MG','37589287');\n"
                         + "INSERT INTO \"Endereco\" (\"id\",\"numero\",\"complemento\",\"logradouro\",\"bairro\",\"cidade\",\"uf\",\"cep\") VALUES (2,'34','APT 506','Avenida Brasil','Centro','Mar de Espanha','MG','38976235');\n"
                         + "INSERT INTO \"Endereco\" (\"id\",\"numero\",\"complemento\",\"logradouro\",\"bairro\",\"cidade\",\"uf\",\"cep\") VALUES (3,'S/N','','Rua das Indústrias','Distrito Industrial','Juiz de Fora','MG','38079725');\n"
@@ -267,14 +298,7 @@ public class Conexao {
                         + "INSERT INTO \"PessoaFisica\" (\"id\",\"dataNascimento\") VALUES (1,'1996-08-17');\n"
                         + "INSERT INTO \"PessoaJuridica\" (\"id\",\"razaoSocial\") VALUES (2,'Empresa de Papéis LTDA');\n"
                         + "INSERT INTO \"Funcionario\" (\"id\",\"matricula\",\"funcao\") VALUES (3,'201709675','Caixa');\n"
-                        + "INSERT INTO \"Caracteristica\" (\"id\",\"tipo\",\"nome\",\"valorGrama\") VALUES (1,'R','Creme de morango',0.32);\n"
-                        + "INSERT INTO \"Caracteristica\" (\"id\",\"tipo\",\"nome\",\"valorGrama\") VALUES (2,'F','Redonda 20cm',0.0625);\n"
-                        + "INSERT INTO \"Caracteristica\" (\"id\",\"tipo\",\"nome\",\"valorGrama\") VALUES (3,'C','Azul',0.0);\n"
-                        + "INSERT INTO \"Caracteristica\" (\"id\",\"tipo\",\"nome\",\"valorGrama\") VALUES (4,'T','Glacê de limão',0.023);\n"
-                        + "INSERT INTO \"Caracteristica\" (\"id\",\"tipo\",\"nome\",\"valorGrama\") VALUES (5,'R','Ganache meio amargo',0.57);\n"
-                        + "INSERT INTO \"Forma\" (\"id\",\"recheios\",\"gramaRecheio\",\"gramaCobertura\",\"gramaMassa\") VALUES (2,1,100,150,800);\n"
-                        + "INSERT INTO \"ProdutoPersonalizado_Recheio\" (\"id\",\"idProdutoPersonalizado\",\"idRecheio\") VALUES (1,1,5);\n"
-                        + "INSERT INTO \"Pedido\" (\"id\",\"estado\",\"dataEntrega\",\"comentario\",\"idCliente\") VALUES (1,'S','2023-01-09T19:00','Em uma caixa grande, por favor.',1);\n"
+                        + "INSERT INTO \"Pedido\" (\"id\",\"estado\",\"dataEntrega\",\"comentario\",\"idCliente\") VALUES (1,'S','2023-30-09T19:30','Em uma caixa grande, por favor.',1);\n"
                         + "INSERT INTO \"Item\" (\"id\",\"valorTotal\",\"quantidade\",\"idProduto\",\"idPedido\") VALUES (1,34.75,5,3,1);\n"
                         + "INSERT INTO \"Item\" (\"id\",\"valorTotal\",\"quantidade\",\"idProduto\",\"idPedido\") VALUES (2,7.89,1,4,1);";
 
