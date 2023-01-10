@@ -122,7 +122,6 @@ public class CadastroCliente extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCampos.add(textoNome, gridBagConstraints);
 
-        campoNome.setText("Novo");
         campoNome.setPreferredSize(new java.awt.Dimension(200, 22));
         campoNome.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -146,7 +145,6 @@ public class CadastroCliente extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCampos.add(textoSenha, gridBagConstraints);
 
-        campoSenha.setText("senha");
         campoSenha.setMinimumSize(new java.awt.Dimension(150, 24));
         campoSenha.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -170,7 +168,6 @@ public class CadastroCliente extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCampos.add(textoNomeUsuario, gridBagConstraints);
 
-        campoNomeUsuario.setText("novo");
         campoNomeUsuario.setPreferredSize(new java.awt.Dimension(200, 22));
         campoNomeUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -194,7 +191,6 @@ public class CadastroCliente extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCampos.add(textoEmail, gridBagConstraints);
 
-        campoEmail.setText("novo@gmail.com");
         campoEmail.setPreferredSize(new java.awt.Dimension(200, 22));
         campoEmail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -218,7 +214,6 @@ public class CadastroCliente extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCampos.add(textoTelefone, gridBagConstraints);
 
-        campoTelefone.setText("32987879878");
         campoTelefone.setPreferredSize(new java.awt.Dimension(200, 22));
         campoTelefone.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -252,7 +247,6 @@ public class CadastroCliente extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCampos.add(textoCartaoCredito, gridBagConstraints);
 
-        campoCartao.setText("4444123412341234");
         campoCartao.setPreferredSize(new java.awt.Dimension(200, 22));
         campoCartao.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -266,7 +260,6 @@ public class CadastroCliente extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCampos.add(campoCartao, gridBagConstraints);
 
-        campoIdentificador.setText("11111122280");
         campoIdentificador.setPreferredSize(new java.awt.Dimension(200, 22));
         campoIdentificador.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -310,7 +303,6 @@ public class CadastroCliente extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         painelCamposEndereco.add(textoNumero, gridBagConstraints);
 
-        campoNumero.setText("S/N");
         campoNumero.setPreferredSize(new java.awt.Dimension(170, 22));
         campoNumero.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

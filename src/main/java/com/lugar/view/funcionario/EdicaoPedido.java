@@ -125,9 +125,11 @@ public class EdicaoPedido extends javax.swing.JDialog {
         Produto produtoClicado = itemClicado.getProduto();
         if (produtoClicado instanceof ProdutoPronto) {
             VisualizacaoItemProdutoPronto visualizacaoItemProdutoPronto = new VisualizacaoItemProdutoPronto(this.pai, true, itemClicado);
+            visualizacaoItemProdutoPronto.setLocationRelativeTo(null);
             visualizacaoItemProdutoPronto.setVisible(true);
         } else {
             VisualizacaoItemProdutoPersonalizado visualizacaoItemProdutoPersonalizado = new VisualizacaoItemProdutoPersonalizado(this.pai, true, itemClicado);
+            visualizacaoItemProdutoPersonalizado.setLocationRelativeTo(null);
             visualizacaoItemProdutoPersonalizado.setVisible(true);
         }
     }
@@ -205,7 +207,6 @@ public class EdicaoPedido extends javax.swing.JDialog {
         painelCampos.add(textoValor, gridBagConstraints);
 
         textoValorPreenchido.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        textoValorPreenchido.setText("R$ 0,00");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -225,7 +226,6 @@ public class EdicaoPedido extends javax.swing.JDialog {
         painelCampos.add(textoSolicitado, gridBagConstraints);
 
         textoSolicitadoPreenchido.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        textoSolicitadoPreenchido.setText("00/00/0000");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -245,7 +245,6 @@ public class EdicaoPedido extends javax.swing.JDialog {
         painelCampos.add(textoEntrega, gridBagConstraints);
 
         textoEntregaPreenchido.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        textoEntregaPreenchido.setText("11/11/1111");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
@@ -314,7 +313,6 @@ public class EdicaoPedido extends javax.swing.JDialog {
         painelCliente.add(textoNome, gridBagConstraints);
 
         textoNomePreenchido.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        textoNomePreenchido.setText("Maria Silva");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -334,7 +332,6 @@ public class EdicaoPedido extends javax.swing.JDialog {
         painelCliente.add(textoEmail, gridBagConstraints);
 
         textoEmailPreenchido.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        textoEmailPreenchido.setText("maria@email.com");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
@@ -354,7 +351,6 @@ public class EdicaoPedido extends javax.swing.JDialog {
         painelCliente.add(textoTelefone, gridBagConstraints);
 
         textoTelefonePreenchido.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        textoTelefonePreenchido.setText("(32) 98795-9735");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -383,7 +379,6 @@ public class EdicaoPedido extends javax.swing.JDialog {
         painelCliente.add(textoIdentificador, gridBagConstraints);
 
         textoIdentificadorPreenchido.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        textoIdentificadorPreenchido.setText("000.000.000-00");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;

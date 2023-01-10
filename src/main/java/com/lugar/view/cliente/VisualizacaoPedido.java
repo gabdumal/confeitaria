@@ -72,9 +72,11 @@ public class VisualizacaoPedido extends javax.swing.JDialog {
         Produto produtoClicado = itemClicado.getProduto();
         if (produtoClicado instanceof ProdutoPronto) {
             VisualizacaoItemProdutoPronto visualizacaoItemProdutoPronto = new VisualizacaoItemProdutoPronto(this.pai, true, itemClicado);
+            visualizacaoItemProdutoPronto.setLocationRelativeTo(null);
             visualizacaoItemProdutoPronto.setVisible(true);
         } else {
             VisualizacaoItemProdutoPersonalizado visualizacaoItemProdutoPersonalizado = new VisualizacaoItemProdutoPersonalizado(this.pai, true, itemClicado);
+            visualizacaoItemProdutoPersonalizado.setLocationRelativeTo(null);
             visualizacaoItemProdutoPersonalizado.setVisible(true);
         }
     }

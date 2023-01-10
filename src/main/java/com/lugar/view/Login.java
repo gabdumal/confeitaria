@@ -43,6 +43,7 @@ public class Login extends javax.swing.JFrame {
                     }
                     ExibicaoProdutos exibicaoProdutos = new ExibicaoProdutos(usuario, this);
                     this.setVisible(false);
+                    exibicaoProdutos.setExtendedState(MAXIMIZED_BOTH);
                     exibicaoProdutos.setVisible(true);
                 }
             }
@@ -59,6 +60,7 @@ public class Login extends javax.swing.JFrame {
 
     private void chamaTelaCadastroCliente() {
         CadastroCliente cadastroCliente = new CadastroCliente(this, true);
+        cadastroCliente.setLocationRelativeTo(null);
         cadastroCliente.setVisible(true);
     }
 
@@ -105,7 +107,6 @@ public class Login extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
         painelFormulario.add(textoUsuario, gridBagConstraints);
 
-        campoUsuario.setText("cliente");
         campoUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 campoUsuarioActionPerformed(evt);
@@ -126,7 +127,6 @@ public class Login extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
         painelFormulario.add(textoSenha, gridBagConstraints);
 
-        campoSenha.setText("senha");
         campoSenha.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 campoSenhaActionPerformed(evt);
