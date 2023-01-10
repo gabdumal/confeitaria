@@ -14,7 +14,13 @@ import com.lugar.model.Funcionario;
 import com.lugar.model.PessoaFisica;
 import com.lugar.model.PessoaJuridica;
 import com.lugar.model.Usuario;
+import com.lugar.model.exceptions.ExcecaoAtributo;
+import com.lugar.model.exceptions.ExcecaoDataInvalida;
+import com.lugar.model.exceptions.ExcecaoEnderecoInvalido;
+import com.lugar.model.exceptions.ExcecaoUsuarioInvalido;
 import java.time.LocalDate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -42,7 +48,7 @@ public class EdicaoUsuario extends javax.swing.JDialog {
 
         initComponents();
 
-        //Preenchendo infos
+        // Preenchendo campos
         campoNome.setText(usuario.getNome());
         campoNomeUsuario.setText(usuario.getNomeUsuario());
         campoEmail.setText(usuario.getEmail());
@@ -68,24 +74,27 @@ public class EdicaoUsuario extends javax.swing.JDialog {
             campoDataDeNascimento.setVisible(false);
             textoRazaoSocial.setVisible(false);
             campoRazaoSocial.setVisible(false);
-        } else if (usuario instanceof PessoaFisica) {
-            textoIdentificador.setText("CPF:");
-            campoDataDeNascimento.setText(((PessoaFisica) usuario).getDataNascimentoFormatada());
-            textoRazaoSocial.setVisible(false);
-            campoRazaoSocial.setVisible(false);
-            textoFuncaoFuncionario.setVisible(false);
-            campoFuncaoFuncionario.setVisible(false);
-            textoMatricula.setVisible(false);
-            campoMatricula.setVisible(false);
-        } else if (usuario instanceof PessoaJuridica) {
-            textoIdentificador.setText("CNPJ:");
-            campoRazaoSocial.setText(((PessoaJuridica) usuario).getRazaoSocial());
-            textoDataDeNascimento.setVisible(false);
-            campoDataDeNascimento.setVisible(false);
-            textoFuncaoFuncionario.setVisible(false);
-            campoFuncaoFuncionario.setVisible(false);
-            textoMatricula.setVisible(false);
-            campoMatricula.setVisible(false);
+        } else {
+            campoCartao.setText(((Cliente) usuario).getCartao());
+            if (usuario instanceof PessoaFisica) {
+                textoIdentificador.setText("CPF:");
+                campoDataDeNascimento.setText(((PessoaFisica) usuario).getDataNascimentoFormatada());
+                textoRazaoSocial.setVisible(false);
+                campoRazaoSocial.setVisible(false);
+                textoFuncaoFuncionario.setVisible(false);
+                campoFuncaoFuncionario.setVisible(false);
+                textoMatricula.setVisible(false);
+                campoMatricula.setVisible(false);
+            } else if (usuario instanceof PessoaJuridica) {
+                textoIdentificador.setText("CNPJ:");
+                campoRazaoSocial.setText(((PessoaJuridica) usuario).getRazaoSocial());
+                textoDataDeNascimento.setVisible(false);
+                campoDataDeNascimento.setVisible(false);
+                textoFuncaoFuncionario.setVisible(false);
+                campoFuncaoFuncionario.setVisible(false);
+                textoMatricula.setVisible(false);
+                campoMatricula.setVisible(false);
+            }
         }
     }
 
@@ -107,45 +116,61 @@ public class EdicaoUsuario extends javax.swing.JDialog {
 
         boolean confirmacao = JOptionPane.showConfirmDialog(null, "Deseja confirmar a edição do perfil?", "Edição de Perfil", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == 0;
         if (confirmacao) {
-            int idUsuario = Util.RETORNO_ERRO_INDETERMINADO;
+            int valorRetorno = Util.RETORNO_ERRO_INDETERMINADO;
             try {
-                Endereco enderecoForm = new Endereco(numeroForm, complementoForm, logradouroForm, bairroForm, cidadeForm, ufForm, cepForm);
+                Endereco enderecoForm = new Endereco(usuario.getEndereco().getId(), numeroForm, complementoForm, logradouroForm, bairroForm, cidadeForm, ufForm, cepForm);
                 if (usuario instanceof Funcionario) {
                     OperacoesFuncionario operacoesFuncionario = new OperacoesFuncionario();
                     Funcionario funcionarioForm = new Funcionario(usuario.getId(), nomeForm, nomeUsuarioForm, senhaForm, emailForm, telefoneForm, identificadorForm, enderecoForm);
-                    operacoesFuncionario.atualiza(funcionarioForm);
+                    valorRetorno = operacoesFuncionario.atualiza(funcionarioForm);
                 } else {
                     Cliente cliente;
                     OperacoesCliente operacoesCliente = new OperacoesCliente();
                     if (usuario instanceof PessoaFisica) {
                         String dataNascimentoForm = campoDataDeNascimento.getText().trim();
                         LocalDate dataNascimento = Util.converteData(dataNascimentoForm);
-                        cliente = new PessoaFisica(0, nomeForm,
+                        cliente = new PessoaFisica(usuario.getId(), nomeForm,
                                 nomeUsuarioForm, senhaForm,
                                 identificadorForm, emailForm,
                                 telefoneForm, enderecoForm, cartaoForm,
                                 dataNascimento);
                     } else {
                         String razaoSocialForm = campoRazaoSocial.getText().trim();
-                        cliente = new PessoaJuridica(0, nomeForm,
+                        cliente = new PessoaJuridica(usuario.getId(), nomeForm,
                                 nomeUsuarioForm, senhaForm,
                                 identificadorForm, emailForm,
                                 telefoneForm, enderecoForm, cartaoForm,
                                 razaoSocialForm
                         );
                     }
-                    operacoesCliente.atualiza(cliente);
+                    valorRetorno = operacoesCliente.atualiza(cliente);
                 }
-                if (idUsuario > Util.RETORNO_SUCESSO) {
+                if (valorRetorno == Util.RETORNO_SUCESSO) {
                     JOptionPane.showMessageDialog(this.pai, "Edição realizada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                     this.dispose();
-                } else if (idUsuario == Util.RETORNO_ERRO_NAO_UNICO) {
+                } else if (valorRetorno == Util.RETORNO_ERRO_NAO_UNICO) {
                     JOptionPane.showMessageDialog(null, "Infelizmente não foi possivel editar os dados, pois um usuário com este nome de usuário ou e-mail já existe no sistema.");
                 } else {
                     JOptionPane.showMessageDialog(this.pai, "Infelizmente não foi possivel editar os dados, tente novamente mais tarde!", "Erro", JOptionPane.ERROR_MESSAGE);
                 }
-            } catch (Exception e) {
-                //to do
+            } catch (ExcecaoDataInvalida ex) {
+                JOptionPane.showMessageDialog(null, "Não foi possível atualizar os dados do perfil! A data de nascimento foi preenchida de forma inválida.");
+            } catch (ExcecaoEnderecoInvalido ex) {
+                String mensagemErro = "Não foi possível atualizar os dados do perfil! O endereço foi preenchido de forma inválida.";
+                Throwable cause = ex.getCause();
+                if (cause instanceof ExcecaoAtributo) {
+                    mensagemErro += "\n" + ((ExcecaoAtributo) cause).getMessage();
+                }
+                JOptionPane.showMessageDialog(null, mensagemErro);
+                Logger.getLogger(CadastroCliente.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ExcecaoUsuarioInvalido ex) {
+                String mensagemErro = "Não foi possível atualizar os dados do perfil!";
+                Throwable cause = ex.getCause();
+                if (cause instanceof ExcecaoAtributo) {
+                    mensagemErro += "\n" + ((ExcecaoAtributo) cause).getMessage();
+                }
+                JOptionPane.showMessageDialog(null, mensagemErro);
+                Logger.getLogger(CadastroCliente.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -256,7 +281,7 @@ public class EdicaoUsuario extends javax.swing.JDialog {
         botaoEditar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("PERFIL");
+        setTitle("Edição de Perfil");
         setMinimumSize(new java.awt.Dimension(500, 660));
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
@@ -429,7 +454,6 @@ public class EdicaoUsuario extends javax.swing.JDialog {
             painelCampos.add(textoCartaoCredito, gridBagConstraints);
         }
 
-        campoCartao.setText("123412348888888");
         campoCartao.setPreferredSize(new java.awt.Dimension(200, 22));
         campoCartao.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

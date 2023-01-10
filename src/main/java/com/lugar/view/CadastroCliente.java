@@ -562,7 +562,7 @@ public class CadastroCliente extends javax.swing.JDialog {
 
         try {
             Cliente cliente;
-            Endereco endereco = new Endereco(numeroForm, complementoForm, logradouroForm, bairroForm, cidadeForm, ufForm, cepForm);
+            Endereco endereco = new Endereco(0, numeroForm, complementoForm, logradouroForm, bairroForm, cidadeForm, ufForm, cepForm);
             if (this.juridica) {
                 String razaoSocialForm = campoRazaoSocial.getText().trim();
                 cliente = new PessoaJuridica(0, nomeForm,
