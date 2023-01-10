@@ -6,7 +6,6 @@ package com.lugar.confeitaria;
 
 import com.lugar.model.exceptions.ExcecaoDataHoraInvalida;
 import com.lugar.model.exceptions.ExcecaoDataInvalida;
-import com.lugar.model.exceptions.ExcecaoDataPassada;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -47,6 +46,11 @@ public class Util {
     public static String formataDiaHora(LocalDateTime diaHora) {
         DateTimeFormatter formatador = DateTimeFormatter.ofPattern(Util.FORMATO_DATAHORA);
         return diaHora.format(formatador);
+    }
+
+    public static String formataData(LocalDate data) {
+        DateTimeFormatter formatador = DateTimeFormatter.ofPattern(Util.FORMATO_DATA);
+        return data.format(formatador);
     }
 
     private static MaskFormatter criaFormatador(String mascara) {

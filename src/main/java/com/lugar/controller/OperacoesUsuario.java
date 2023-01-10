@@ -74,7 +74,7 @@ public class OperacoesUsuario implements OperacoesConexao<Usuario> {
     public Usuario busca(int id) {
         String sql = "SELECT Usuario.id, Usuario.nome, Usuario.nomeUsuario, Usuario.senhaHash, Usuario.identificador, Usuario.email, Usuario.telefone, Usuario.admin, Usuario.idEndereco, \n"
                 + "Funcionario.matricula, Funcionario.funcao, Cliente.cartao, Cliente.fisica, PessoaFisica.dataNascimento, PessoaJuridica.razaoSocial,\n"
-                + "Endereco.numero, Endereco.complemento, Endereco.logradouro, Endereco.bairro, Endereco.cidade, Endereco.uf, Endereco.cep\n"
+                + "Endereco.id as idEndereco, Endereco.numero, Endereco.complemento, Endereco.logradouro, Endereco.bairro, Endereco.cidade, Endereco.uf, Endereco.cep\n"
                 + "FROM Usuario LEFT JOIN Funcionario ON Usuario.id = Funcionario.id LEFT JOIN Cliente ON Usuario.id = Cliente.id LEFT JOIN PessoaFisica ON Cliente.id = PessoaFisica.id\n"
                 + "LEFT JOIN PessoaJuridica ON Cliente.id = PessoaJuridica.id INNER JOIN Endereco ON Usuario.idEndereco = Endereco.id WHERE Usuario.id = " + id + ";";
         Connection conn = null;
@@ -87,21 +87,21 @@ public class OperacoesUsuario implements OperacoesConexao<Usuario> {
                 String nome = rs.getString("nome");
                 String nomeUsuario = rs.getString("nomeUsuario");
                 String senhaHash = rs.getString("senhaHash");
-                boolean admin = rs.getInt("admin") == 1;
                 String email = rs.getString("email");
                 String telefone = rs.getString("telefone");
                 String identificador = rs.getString("identificador");
                 int idEndereco = rs.getInt("idEndereco");
-                Endereco endereco = new Endereco(rs.getString("numero"),
-                        rs.getString("complemento"), rs.getString("logradouro"),
+                Endereco endereco = new Endereco(rs.getInt("idEndereco"),
+                        rs.getString("numero"), rs.getString("complemento"), rs.getString("logradouro"),
                         rs.getString("bairro"), rs.getString("cidade"),
                         rs.getString("uf"), rs.getString("cep"));
 
                 if (rs.getInt("admin") == 1) {
                     String matricula = rs.getString("matricula");
                     String funcao = rs.getString("funcao");
-                    usuario = new Funcionario(id, nome, nomeUsuario, senhaHash, admin,
-                            email, telefone, identificador, endereco, matricula, funcao);
+                    usuario = new Funcionario(id, nome, nomeUsuario, senhaHash,
+                            email, telefone, identificador, endereco, matricula, funcao
+                    );
                 } else {
                     String cartao = rs.getString("cartao");
                     if (rs.getInt("fisica") == 0) {
@@ -118,7 +118,7 @@ public class OperacoesUsuario implements OperacoesConexao<Usuario> {
         } catch (SQLException | ExcecaoUsuarioInvalido | ExcecaoEnderecoInvalido ex) {
             Logger.getLogger(Conexao.class
                     .getName()).log(Level.SEVERE, null, ex);
-        }finally {
+        } finally {
             Conexao.fechaConexao(conn);
         }
         return usuario;

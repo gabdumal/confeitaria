@@ -6,6 +6,7 @@ package com.lugar.model;
 
 import com.lugar.confeitaria.Util;
 import com.lugar.model.exceptions.ExcecaoEnderecoInvalido;
+import com.lugar.model.exceptions.ExcecaoIntegerInvalido;
 import com.lugar.model.exceptions.ExcecaoStringInvalido;
 import java.text.ParseException;
 
@@ -24,10 +25,11 @@ public class Endereco {
     private String uf;
     private String cep;
 
-    public Endereco(String numero, String complemento, String logradouro,
+    public Endereco(int id, String numero, String complemento, String logradouro,
             String bairro, String cidade, String uf, String cep) throws ExcecaoEnderecoInvalido {
         try {
-            Endereco.verificaPreenchimento(numero, logradouro, bairro, cidade, uf, cep);
+            Endereco.verificaPreenchimento(id, numero, logradouro, bairro, cidade, uf, cep);
+            this.id = id;
             this.numero = numero;
             this.complemento = complemento;
             this.logradouro = logradouro;
@@ -35,13 +37,15 @@ public class Endereco {
             this.cidade = cidade;
             this.uf = uf;
             this.cep = cep;
-        } catch (ExcecaoStringInvalido ex) {
+        } catch (ExcecaoStringInvalido | ExcecaoIntegerInvalido ex) {
             throw new ExcecaoEnderecoInvalido(ex);
         }
     }
 
-    public static void verificaPreenchimento(
-            String numero, String logradouro, String bairro, String cidade, String uf, String cep) throws ExcecaoStringInvalido {
+    public static void verificaPreenchimento(int id, String numero, String logradouro, String bairro, String cidade, String uf, String cep) throws ExcecaoStringInvalido, ExcecaoIntegerInvalido {
+        if (id < 0) {
+            throw new ExcecaoIntegerInvalido("id");
+        }
         if (numero.isBlank()) {
             throw new ExcecaoStringInvalido("numero", false);
         }
