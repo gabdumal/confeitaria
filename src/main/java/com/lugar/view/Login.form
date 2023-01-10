@@ -74,9 +74,6 @@
           </Constraints>
         </Component>
         <Component class="javax.swing.JFormattedTextField" name="campoUsuario">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="cliente"/>
-          </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="campoUsuarioActionPerformed"/>
           </Events>
@@ -97,9 +94,6 @@
           </Constraints>
         </Component>
         <Component class="javax.swing.JPasswordField" name="campoSenha">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="senha"/>
-          </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="campoSenhaActionPerformed"/>
           </Events>

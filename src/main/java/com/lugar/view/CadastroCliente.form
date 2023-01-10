@@ -99,7 +99,6 @@
             </Component>
             <Component class="javax.swing.JFormattedTextField" name="campoNome">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Novo"/>
                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="[200, 22]"/>
                 </Property>
@@ -128,7 +127,6 @@
             </Component>
             <Component class="javax.swing.JPasswordField" name="campoSenha">
               <Properties>
-                <Property name="text" type="java.lang.String" value="senha"/>
                 <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="[150, 24]"/>
                 </Property>
@@ -157,7 +155,6 @@
             </Component>
             <Component class="javax.swing.JFormattedTextField" name="campoNomeUsuario">
               <Properties>
-                <Property name="text" type="java.lang.String" value="novo"/>
                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="[200, 22]"/>
                 </Property>
@@ -186,7 +183,6 @@
             </Component>
             <Component class="javax.swing.JFormattedTextField" name="campoEmail">
               <Properties>
-                <Property name="text" type="java.lang.String" value="novo@gmail.com"/>
                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="[200, 22]"/>
                 </Property>
@@ -215,7 +211,6 @@
             </Component>
             <Component class="javax.swing.JFormattedTextField" name="campoTelefone">
               <Properties>
-                <Property name="text" type="java.lang.String" value="32987879878"/>
                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="[200, 22]"/>
                 </Property>
@@ -257,7 +252,6 @@
             </Component>
             <Component class="javax.swing.JFormattedTextField" name="campoCartao">
               <Properties>
-                <Property name="text" type="java.lang.String" value="4444123412341234"/>
                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="[200, 22]"/>
                 </Property>
@@ -273,7 +267,6 @@
             </Component>
             <Component class="javax.swing.JFormattedTextField" name="campoIdentificador">
               <Properties>
-                <Property name="text" type="java.lang.String" value="11111122280"/>
                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="[200, 22]"/>
                 </Property>
@@ -344,7 +337,6 @@
                 </Component>
                 <Component class="javax.swing.JFormattedTextField" name="campoNumero">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="S/N"/>
                     <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                       <Dimension value="[170, 22]"/>
                     </Property>
