@@ -78,6 +78,7 @@ public class ExibicaoPedidos extends javax.swing.JDialog {
         } else {
             tela = new VisualizacaoPedido(pai, true, id);
         }
+        tela.setLocationRelativeTo(null);
         tela.setVisible(true);
         this.atualizaTabela();
     }

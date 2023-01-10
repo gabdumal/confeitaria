@@ -17,6 +17,7 @@ public class Confeitaria {
         Conexao.criaBancoDeDados();
 
         Login login = new Login();
+        login.setLocationRelativeTo(null);
         login.setVisible(true);
     }
 }

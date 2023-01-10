@@ -43,6 +43,7 @@ public class Login extends javax.swing.JFrame {
                     }
                     ExibicaoProdutos exibicaoProdutos = new ExibicaoProdutos(usuario, this);
                     this.setVisible(false);
+                    exibicaoProdutos.setExtendedState(MAXIMIZED_BOTH);
                     exibicaoProdutos.setVisible(true);
                 }
             }
@@ -59,6 +60,7 @@ public class Login extends javax.swing.JFrame {
 
     private void chamaTelaCadastroCliente() {
         CadastroCliente cadastroCliente = new CadastroCliente(this, true);
+        cadastroCliente.setLocationRelativeTo(null);
         cadastroCliente.setVisible(true);
     }
 

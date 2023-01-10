@@ -49,6 +49,7 @@ public class ExibicaoTransacoes extends javax.swing.JDialog {
 
     private void chamarTelaCadastroTransacao() {
         CadastroTransacao tela = new CadastroTransacao(pai, true);
+        tela.setLocationRelativeTo(null);
         tela.setVisible(true);
         this.atualizaTabela();
     }
@@ -67,6 +68,7 @@ public class ExibicaoTransacoes extends javax.swing.JDialog {
     private void chamaTelaEdicao(int id) {
         EdicaoTransacao tela = new EdicaoTransacao(pai, true, id);
         if (!tela.isPedido()) {
+            tela.setLocationRelativeTo(null);
             tela.setVisible(true);
             this.atualizaTabela();
         }

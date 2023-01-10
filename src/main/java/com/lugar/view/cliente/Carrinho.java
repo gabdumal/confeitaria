@@ -120,6 +120,7 @@ public class Carrinho extends javax.swing.JDialog {
 
         // Solicita confirmação do usuário
         ConfirmacaoPedido confirmacaoPedido = new ConfirmacaoPedido(this.pai, true, valorTotal);
+        confirmacaoPedido.setLocationRelativeTo(null);
         confirmacaoPedido.setVisible(true);
         if (confirmacaoPedido.isConfirmado()) {
             List<Item> listaItens = new ArrayList<Item>();
@@ -154,6 +155,7 @@ public class Carrinho extends javax.swing.JDialog {
 
         if (produto instanceof ProdutoPronto) {
             AdicaoProdutoCarrinho adicaoProdutoCarrinho = new AdicaoProdutoCarrinho(this.pai, true, produto);
+            adicaoProdutoCarrinho.setLocationRelativeTo(null);
             adicaoProdutoCarrinho.setVisible(true);
             int quantidadeComprada = adicaoProdutoCarrinho.getQuantidade();
             this.listaProdutosCarrinho.put(id, quantidadeComprada);
@@ -161,6 +163,7 @@ public class Carrinho extends javax.swing.JDialog {
         } else {
             CriacaoProdutoPersonalizado criacaoProdutoPersonalizado
                     = new CriacaoProdutoPersonalizado(this.pai, true, (ProdutoPersonalizado) produto);
+            criacaoProdutoPersonalizado.setLocationRelativeTo(null);
             criacaoProdutoPersonalizado.setVisible(true);
             if (criacaoProdutoPersonalizado.isEditado()) {
                 this.listaProdutosCarrinho.remove(id);

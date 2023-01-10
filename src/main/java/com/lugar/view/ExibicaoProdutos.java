@@ -116,6 +116,7 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
     // Fluxo de telas
     private void chamaTelaEdicao(int id) {
         EdicaoProduto edicaoProduto = new EdicaoProduto(this, true, id);
+        edicaoProduto.setLocationRelativeTo(null);
         edicaoProduto.setVisible(true);
         this.atualizaTabela();
     }
@@ -125,6 +126,7 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
         ProdutoPronto produto = novoProdutoPronto.busca(id);
         produto.setCarrinho(this.listaProdutosCarrinho.getOrDefault(id, 1));
         AdicaoProdutoCarrinho adicaoProdutoCarrinho = new AdicaoProdutoCarrinho(this, true, produto);
+        adicaoProdutoCarrinho.setLocationRelativeTo(null);
         adicaoProdutoCarrinho.setVisible(true);
         if (adicaoProdutoCarrinho.isEditado()) {
             int quantidadeComprada = adicaoProdutoCarrinho.getQuantidade();
@@ -135,12 +137,14 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
 
     private void chamaTelaCadastroProduto() {
         CadastroProduto cadastroProduto = new CadastroProduto(this, true);
+        cadastroProduto.setLocationRelativeTo(null);
         cadastroProduto.setVisible(true);
         this.atualizaTabela();
     }
 
     private void chamaTelaCarrinho() {
         Carrinho carrinho = new Carrinho(this, true, (Cliente) usuario, listaProdutosCarrinho);
+        carrinho.setLocationRelativeTo(null);
         carrinho.setVisible(true);
         this.listaProdutosCarrinho = carrinho.getListaProdutosCarrinho();
         this.atualizaTabela();
@@ -148,6 +152,7 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
 
     private void chamaTelaCriacaoProdutoPersonalizado() {
         CriacaoProdutoPersonalizado criacaoProdutoPersonalizado = new CriacaoProdutoPersonalizado(this, true);
+        criacaoProdutoPersonalizado.setLocationRelativeTo(null);
         criacaoProdutoPersonalizado.setVisible(true);
         int idProduto = criacaoProdutoPersonalizado.getIdProduto();
         if (idProduto >= Util.RETORNO_SUCESSO) {
@@ -158,11 +163,13 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
 
     private void chamaTelaTransacoes() {
         ExibicaoTransacoes tela = new ExibicaoTransacoes(this, true);
+        tela.setLocationRelativeTo(null);
         tela.setVisible(true);
     }
 
     private void chamaTelaPedidos() {
         ExibicaoPedidos tela = new ExibicaoPedidos(this, true, usuario.isAdmin(), usuario.getId());
+        tela.setLocationRelativeTo(null);
         tela.setVisible(true);
     }
 
@@ -173,6 +180,7 @@ public class ExibicaoProdutos extends javax.swing.JFrame {
 
     private void chamaTelaEdicaoUsuario() {
         EdicaoUsuario tela = new EdicaoUsuario(this, true, usuario.getId());
+        tela.setLocationRelativeTo(null);
         tela.setVisible(true);
     }
 
