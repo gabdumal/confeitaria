@@ -151,18 +151,8 @@ public class ConfirmacaoPedido extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
         painelCampos.add(textoData, gridBagConstraints);
 
-        campoData.setForeground(new java.awt.Color(153, 153, 153));
         campoData.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT))));
-        campoData.setText("dd/mm/aaaa");
         campoData.setPreferredSize(new java.awt.Dimension(200, 22));
-        campoData.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                campoDataFocusGained(evt);
-            }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                campoDataFocusLost(evt);
-            }
-        });
         campoData.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 campoDataActionPerformed(evt);
@@ -186,18 +176,8 @@ public class ConfirmacaoPedido extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
         painelCampos.add(textoHora, gridBagConstraints);
 
-        campoHora.setForeground(new java.awt.Color(153, 153, 153));
         campoHora.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(java.text.DateFormat.getTimeInstance(java.text.DateFormat.SHORT))));
-        campoHora.setText("hh:mm");
         campoHora.setPreferredSize(new java.awt.Dimension(200, 22));
-        campoHora.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                campoHoraFocusGained(evt);
-            }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                campoHoraFocusLost(evt);
-            }
-        });
         campoHora.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 campoHoraActionPerformed(evt);
@@ -278,34 +258,6 @@ public class ConfirmacaoPedido extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_campoDataActionPerformed
 
-    private void campoDataFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_campoDataFocusGained
-        if (campoData.getText().equals("dd/mm/aaaa")) {
-            campoData.setText("");
-            campoData.setForeground(Color.BLACK);
-        }
-    }//GEN-LAST:event_campoDataFocusGained
-
-    private void campoHoraFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_campoHoraFocusGained
-        if (campoHora.getText().equals("hh:mm")) {
-            campoHora.setText("");
-            campoHora.setForeground(Color.BLACK);
-        }
-    }//GEN-LAST:event_campoHoraFocusGained
-
-    private void campoDataFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_campoDataFocusLost
-        if (campoData.getText().equals("")) {
-            campoData.setForeground(new Color(153, 153, 153));
-            campoData.setText("dd/mm/aaaa");
-        }
-    }//GEN-LAST:event_campoDataFocusLost
-
-    private void campoHoraFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_campoHoraFocusLost
-        if (campoHora.getText().equals("")) {
-            campoHora.setForeground(new Color(153, 153, 153));
-            campoHora.setText("hh:mm");
-        }
-    }//GEN-LAST:event_campoHoraFocusLost
-
     /**
      * @param args the command line arguments
      */
@@ -331,8 +283,6 @@ public class ConfirmacaoPedido extends javax.swing.JDialog {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(ConfirmacaoPedido.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
