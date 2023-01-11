@@ -18,6 +18,10 @@ import javax.swing.text.MaskFormatter;
 /**
  *
  * @author lugar
+ *Anna Júlia de Almeida Lucas - 2021760029
+ *Celso Gabriel Dutra Almeida Malosto - 202176002
+ *Lucas Paiva dos Santos - 2021760026
+ *Rodrigo Soares de Assis - 202176027
  */
 public class Util {
 
