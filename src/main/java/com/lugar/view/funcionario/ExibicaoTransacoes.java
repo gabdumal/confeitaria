@@ -94,6 +94,8 @@ public class ExibicaoTransacoes extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Transações");
+        setMinimumSize(new java.awt.Dimension(271, 550));
+        setPreferredSize(new java.awt.Dimension(472, 550));
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         painelAcoes.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));

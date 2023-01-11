@@ -307,9 +307,12 @@ public class VisualizacaoItemProdutoPersonalizado extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
         painelCamposBolo.add(textoDetalheBolo, gridBagConstraints);
 
+        painelAreaTextoDetalheBolo.setMinimumSize(new java.awt.Dimension(16, 100));
+        painelAreaTextoDetalheBolo.setPreferredSize(new java.awt.Dimension(64, 100));
+
         areaTextoDetalheBolo.setEnabled(false);
-        areaTextoDetalheBolo.setMinimumSize(new java.awt.Dimension(62, 66));
-        areaTextoDetalheBolo.setPreferredSize(new java.awt.Dimension(62, 66));
+        areaTextoDetalheBolo.setMinimumSize(new java.awt.Dimension(62, 100));
+        areaTextoDetalheBolo.setPreferredSize(new java.awt.Dimension(62, 100));
         painelAreaTextoDetalheBolo.setViewportView(areaTextoDetalheBolo);
 
         gridBagConstraints = new java.awt.GridBagConstraints();

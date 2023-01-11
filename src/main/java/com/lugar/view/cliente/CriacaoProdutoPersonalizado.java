@@ -312,7 +312,7 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 0);
         painelFormulario.add(titulo, gridBagConstraints);
 
         painelInformacoesProduto.setLayout(new java.awt.GridBagLayout());
@@ -444,6 +444,8 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
         painelCamposTrufa.add(textoDetalheTrufa, gridBagConstraints);
 
         painelAreaTextoDetalheTrufa.setPreferredSize(new java.awt.Dimension(64, 66));
+
+        areaTextoDetalheTrufa.setAutoscrolls(false);
         painelAreaTextoDetalheTrufa.setViewportView(areaTextoDetalheTrufa);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -596,6 +598,7 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
         painelCamposBolo.add(textoDetalheBolo, gridBagConstraints);
 
+        areaTextoDetalheBolo.setAutoscrolls(false);
         areaTextoDetalheBolo.setMinimumSize(new java.awt.Dimension(62, 66));
         areaTextoDetalheBolo.setPreferredSize(new java.awt.Dimension(62, 66));
         painelAreaTextoDetalheBolo.setViewportView(areaTextoDetalheBolo);
