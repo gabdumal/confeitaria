@@ -112,7 +112,9 @@ public class VisualizacaoItemProdutoPersonalizado extends javax.swing.JDialog {
         botaoEditar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Edição da Transação");
+        setTitle("Visualização do item");
+        setMinimumSize(new java.awt.Dimension(550, 449));
+        setPreferredSize(new java.awt.Dimension(320, 480));
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         painelFormulario.setLayout(new java.awt.GridBagLayout());
@@ -126,8 +128,8 @@ public class VisualizacaoItemProdutoPersonalizado extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 0);
         painelFormulario.add(titulo, gridBagConstraints);
 
-        painelCampos.setMinimumSize(new java.awt.Dimension(300, 343));
-        painelCampos.setPreferredSize(new java.awt.Dimension(300, 391));
+        painelCampos.setMinimumSize(new java.awt.Dimension(400, 343));
+        painelCampos.setPreferredSize(new java.awt.Dimension(400, 391));
         painelCampos.setLayout(new java.awt.GridBagLayout());
 
         textoNome.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N

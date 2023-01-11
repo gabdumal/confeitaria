@@ -107,6 +107,8 @@ public class ExibicaoPedidos extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Pedidos");
+        setMinimumSize(new java.awt.Dimension(700, 466));
+        setPreferredSize(new java.awt.Dimension(700, 466));
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         painelAcoes.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));

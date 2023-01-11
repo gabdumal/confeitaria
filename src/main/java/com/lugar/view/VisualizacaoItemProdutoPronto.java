@@ -58,7 +58,9 @@ public class VisualizacaoItemProdutoPronto extends javax.swing.JDialog {
         botaoEditar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Edição da Transação");
+        setTitle("Visualização do item");
+        setMinimumSize(new java.awt.Dimension(300, 250));
+        setPreferredSize(new java.awt.Dimension(300, 250));
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         painelFormulario.setLayout(new java.awt.GridBagLayout());

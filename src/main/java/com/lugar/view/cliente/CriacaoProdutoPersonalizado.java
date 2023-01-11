@@ -33,7 +33,7 @@ public class CriacaoProdutoPersonalizado extends javax.swing.JDialog {
     private List<Caracteristica> listaFormas;
     private List<Caracteristica> listaCores;
     private List<Caracteristica> listaCoberturas;
-    private List<Caracteristica> listaRecheios;  
+    private List<Caracteristica> listaRecheios;
     private List<SetStringString> listaReceitas;
     private DefaultComboBoxModel modeloReceita;
     private DefaultComboBoxModel modeloFormas;

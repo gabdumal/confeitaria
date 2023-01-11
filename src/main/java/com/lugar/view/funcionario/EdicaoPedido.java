@@ -190,10 +190,10 @@ public class EdicaoPedido extends javax.swing.JDialog {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 0);
         painelFormulario.add(titulo, gridBagConstraints);
 
-        painelCampos.setPreferredSize(new java.awt.Dimension(291, 260));
+        painelCampos.setMinimumSize(new java.awt.Dimension(187, 200));
+        painelCampos.setPreferredSize(new java.awt.Dimension(300, 260));
         painelCampos.setLayout(new java.awt.GridBagLayout());
 
         textoValor.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -280,9 +280,12 @@ public class EdicaoPedido extends javax.swing.JDialog {
         gridBagConstraints.ipadx = 30;
         painelCampos.add(textoComentario, gridBagConstraints);
 
+        painelPainelTextoComentario.setMinimumSize(new java.awt.Dimension(55, 70));
+        painelPainelTextoComentario.setPreferredSize(new java.awt.Dimension(55, 70));
+
         painelTextoComentario.setEditable(false);
-        painelTextoComentario.setMinimumSize(new java.awt.Dimension(62, 66));
-        painelTextoComentario.setPreferredSize(new java.awt.Dimension(62, 66));
+        painelTextoComentario.setMinimumSize(new java.awt.Dimension(55, 70));
+        painelTextoComentario.setPreferredSize(new java.awt.Dimension(55, 70));
         painelPainelTextoComentario.setViewportView(painelTextoComentario);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
