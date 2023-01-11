@@ -113,8 +113,9 @@ public class VisualizacaoItemProdutoPersonalizado extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Visualização do item");
-        setMinimumSize(new java.awt.Dimension(550, 449));
-        setPreferredSize(new java.awt.Dimension(320, 480));
+        setAutoRequestFocus(false);
+        setMinimumSize(new java.awt.Dimension(550, 550));
+        setPreferredSize(new java.awt.Dimension(320, 550));
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         painelFormulario.setLayout(new java.awt.GridBagLayout());
@@ -128,8 +129,9 @@ public class VisualizacaoItemProdutoPersonalizado extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 0);
         painelFormulario.add(titulo, gridBagConstraints);
 
-        painelCampos.setMinimumSize(new java.awt.Dimension(400, 343));
-        painelCampos.setPreferredSize(new java.awt.Dimension(400, 391));
+        painelCampos.setMinimumSize(new java.awt.Dimension(400, 360));
+        painelCampos.setPreferredSize(new java.awt.Dimension(400, 390));
+        painelCampos.setRequestFocusEnabled(false);
         painelCampos.setLayout(new java.awt.GridBagLayout());
 
         textoNome.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -310,9 +312,13 @@ public class VisualizacaoItemProdutoPersonalizado extends javax.swing.JDialog {
         painelAreaTextoDetalheBolo.setMinimumSize(new java.awt.Dimension(16, 100));
         painelAreaTextoDetalheBolo.setPreferredSize(new java.awt.Dimension(64, 100));
 
+        areaTextoDetalheBolo.setCaretColor(new java.awt.Color(0, 0, 0));
+        areaTextoDetalheBolo.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         areaTextoDetalheBolo.setEnabled(false);
         areaTextoDetalheBolo.setMinimumSize(new java.awt.Dimension(62, 100));
         areaTextoDetalheBolo.setPreferredSize(new java.awt.Dimension(62, 100));
+        areaTextoDetalheBolo.setSelectedTextColor(new java.awt.Color(0, 0, 0));
+        areaTextoDetalheBolo.setSelectionColor(new java.awt.Color(0, 0, 0));
         painelAreaTextoDetalheBolo.setViewportView(areaTextoDetalheBolo);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -402,9 +408,16 @@ public class VisualizacaoItemProdutoPersonalizado extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
         painelCamposTrufa.add(textoDetalheTrufa, gridBagConstraints);
 
+        painelAreaTextoDetalheTrufa.setMinimumSize(new java.awt.Dimension(16, 100));
+        painelAreaTextoDetalheTrufa.setPreferredSize(new java.awt.Dimension(64, 100));
+
+        areaTextoDetalheTrufa.setCaretColor(new java.awt.Color(0, 0, 0));
+        areaTextoDetalheTrufa.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         areaTextoDetalheTrufa.setEnabled(false);
-        areaTextoDetalheTrufa.setMinimumSize(new java.awt.Dimension(62, 66));
-        areaTextoDetalheTrufa.setPreferredSize(new java.awt.Dimension(62, 66));
+        areaTextoDetalheTrufa.setMinimumSize(new java.awt.Dimension(62, 100));
+        areaTextoDetalheTrufa.setPreferredSize(new java.awt.Dimension(62, 100));
+        areaTextoDetalheTrufa.setSelectedTextColor(new java.awt.Color(0, 0, 0));
+        areaTextoDetalheTrufa.setSelectionColor(new java.awt.Color(0, 0, 0));
         painelAreaTextoDetalheTrufa.setViewportView(areaTextoDetalheTrufa);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -425,6 +438,7 @@ public class VisualizacaoItemProdutoPersonalizado extends javax.swing.JDialog {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 0);
         painelFormulario.add(painelCampos, gridBagConstraints);
 
