@@ -7,6 +7,7 @@ package com.lugar.view.funcionario;
 import com.lugar.confeitaria.Util;
 import com.lugar.controller.Conexao;
 import com.lugar.controller.OperacoesProdutoPronto;
+import com.lugar.controller.OperacoesProduto;
 import com.lugar.model.ProdutoPronto;
 import javax.swing.JOptionPane;
 
@@ -24,6 +25,7 @@ public class EdicaoProduto extends javax.swing.JDialog {
     private ProdutoPronto estadoAnterior;
     private java.awt.Frame pai;
     private OperacoesProdutoPronto operacoesProdutoPronto;
+    private OperacoesProduto operacoesProduto;
 
     public EdicaoProduto(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -36,6 +38,7 @@ public class EdicaoProduto extends javax.swing.JDialog {
         this.id = id;
         this.pai = parent;
         this.operacoesProdutoPronto = new OperacoesProdutoPronto();
+        this.operacoesProduto = new OperacoesProduto();
         OperacoesProdutoPronto novoProdutoPronto = new OperacoesProdutoPronto();
         ProdutoPronto produto = novoProdutoPronto.busca(id);
         this.estadoAnterior = produto;
@@ -97,7 +100,7 @@ public class EdicaoProduto extends javax.swing.JDialog {
                 JOptionPane.WARNING_MESSAGE) == 0;
 
         if (confirmacao) {
-            int resultado = this.operacoesProdutoPronto.deleta(this.id);
+            int resultado = this.operacoesProduto.deleta(this.id);
             if (resultado == Util.RETORNO_SUCESSO) {
                 JOptionPane.showMessageDialog(this.pai, "Deleção realizada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();
