@@ -116,6 +116,9 @@ public abstract class Usuario {
         if (!(telefone.length() == 11 || telefone.length() == 10)) {
             throw new ExcecaoStringInvalido("telefone", "Telefone deve conter 11 ou 10 números, com o DDD.");
         }
+        if (senhaHash.length() < 5) {
+            throw new ExcecaoStringInvalido("Senha", "A senha deve conter ao menos 5 digitos!");
+        }
     }
 
     public boolean verificaLogin(String nomeUsuario, String senhaHash) throws ExcecaoStringSensivelInvalido {

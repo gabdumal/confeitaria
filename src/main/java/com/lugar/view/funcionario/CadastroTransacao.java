@@ -142,18 +142,25 @@ public class CadastroTransacao extends javax.swing.JDialog {
 
         String descricao = campoDescricao.getText().trim();
         double valor = (double) campoValor.getValue();
+        if (valor > 0 && !descricao.isEmpty()) {
+            Transacao transacao = new Transacao(0, valor, agora, descricao);
 
-        Transacao transacao = new Transacao(0, valor, agora, descricao);
-
-        OperacoesTransacao novaTransacao = new OperacoesTransacao();
-        int resultado = novaTransacao.insere(transacao);
-        if (resultado == 0) {
-            JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!");
-            this.dispose();
-        } else if (resultado == -2) {
-            JOptionPane.showMessageDialog(null, "Não foi possível realizar o cadastro! Esta transação já existe no sistema.");
+            OperacoesTransacao novaTransacao = new OperacoesTransacao();
+            int resultado = novaTransacao.insere(transacao);
+            if (resultado == 0) {
+                JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!");
+                this.dispose();
+            } else if (resultado == -2) {
+                JOptionPane.showMessageDialog(null, "Não foi possível realizar o cadastro! Esta transação já existe no sistema.");
+            } else {
+                JOptionPane.showMessageDialog(null, "Não foi possível realizar o cadastro! Tente novamente mais tarde.");
+            }
         } else {
-            JOptionPane.showMessageDialog(null, "Não foi possível realizar o cadastro! Tente novamente mais tarde.");
+            if (valor <= 0) {
+                JOptionPane.showMessageDialog(null, "Não é possivel inserir transações sem valor!");
+            } else {
+                JOptionPane.showMessageDialog(null, "Não é possivel inserir transações sem descrição!");
+            }
         }
 
     }//GEN-LAST:event_botaoCadastrarActionPerformed
